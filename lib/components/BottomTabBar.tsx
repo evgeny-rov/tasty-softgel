@@ -28,37 +28,49 @@ const styles = StyleSheet.create({
 });
 
 const BottomTabBar: React.FC<Props> = ({navigator}) => {
+  const [activeRoute, setActiveRoute] = useState('Home');
   const buttonRipple = {color: '#574574', radius: 50};
 
   const navigate = (routeName: string) => {
     navigator.current?.navigate(routeName);
   };
 
+  const changeRoute = (routeName: string) => {
+    navigate(routeName);
+    setActiveRoute(routeName);
+  };
+
   return (
     <View style={styles.tabbar}>
       <Pressable
         style={styles.button}
-        onPress={() => navigate('Home')}
+        onPress={() => changeRoute('Home')}
         android_ripple={buttonRipple}>
-        <HomeIcon fill="#fff" />
+        <HomeIcon fill={activeRoute === 'Home' ? '#ff9494' : '#fff'} />
       </Pressable>
       <Pressable
         style={styles.button}
-        onPress={() => navigate('SecondScreen')}
+        onPress={() => changeRoute('SecondScreen')}
         android_ripple={buttonRipple}>
-        <PillListIcon fill="#fff" />
+        <PillListIcon
+          fill={activeRoute === 'SecondScreen' ? '#ff9494' : '#fff'}
+        />
       </Pressable>
       <Pressable
         style={styles.button}
-        onPress={() => navigate('ThirdScreen')}
+        onPress={() => changeRoute('ThirdScreen')}
         android_ripple={buttonRipple}>
-        <ClipBoardListIcon fill="#fff" />
+        <ClipBoardListIcon
+          fill={activeRoute === 'ThirdScreen' ? '#ff9494' : '#fff'}
+        />
       </Pressable>
       <Pressable
         style={styles.button}
-        onPress={() => navigate('ThirdScreen')}
+        onPress={() => changeRoute('ThirdScreen')}
         android_ripple={buttonRipple}>
-        <ShoppingBagIcon fill="#fff" />
+        <ShoppingBagIcon
+          fill={activeRoute === 'ThirdScreen' ? '#ff9494' : '#fff'}
+        />
       </Pressable>
     </View>
   );
