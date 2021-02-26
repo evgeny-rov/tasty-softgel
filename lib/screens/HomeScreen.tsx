@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {ImageBackground, StatusBar, StyleSheet, Text, View} from 'react-native';
 import FloatingActionButton from '../components/FloatingActionButton';
-import MedicineModal from '../components/MedicineModal';
+import MedicineModal from '../components/MedicineModal/MedicineModal';
 import SizedBox from '../components/SizedBox';
 
 const styles = StyleSheet.create({

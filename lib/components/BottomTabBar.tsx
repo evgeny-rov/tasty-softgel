@@ -1,5 +1,5 @@
 import {NavigationContainerRef} from '@react-navigation/native';
-import React, {RefObject, useState} from 'react';
+import React, {RefObject, useEffect, useState} from 'react';
 import {View, Pressable, StyleSheet} from 'react-native';
 import {
   HomeIcon,
@@ -10,7 +10,7 @@ import {
 
 interface Props {
   notificationService: any;
-  navigator: RefObject<NavigationContainerRef>;
+  navigatorRef: RefObject<NavigationContainerRef>;
 }
 
 const styles = StyleSheet.create({
@@ -27,17 +27,25 @@ const styles = StyleSheet.create({
   },
 });
 
-const BottomTabBar: React.FC<Props> = ({navigator}) => {
+const BottomTabBar: React.FC<Props> = ({navigatorRef}) => {
   const [activeRoute, setActiveRoute] = useState('Home');
   const buttonRipple = {color: '#574574', radius: 50};
 
   const navigate = (routeName: string) => {
-    navigator.current?.navigate(routeName);
+    console.log('navigate call');
+    navigatorRef.current?.navigate(routeName);
   };
+
+  useEffect(() => {
+    const subscription = navigatorRef.current?.addListener('state', () => {
+      const currentRoute = navigatorRef.current?.getCurrentRoute();
+      currentRoute && setActiveRoute(currentRoute.name);
+    });
+    return subscription;
+  });
 
   const changeRoute = (routeName: string) => {
     navigate(routeName);
-    setActiveRoute(routeName);
   };
 
   return (

@@ -9,9 +9,7 @@ import {View, StatusBar, StyleSheet} from 'react-native';
 import NotificationService from './services/NotificationService';
 
 import BottomTabBar from './components/BottomTabBar';
-import HomeScreen from './screens/HomeScreen';
-import SecondScreen from './screens/SecondScreen';
-import ThirdScreen from './screens/ThirdScreen';
+import routes from './routes';
 
 const onNotificationRegistration = (token: any) => console.log(token);
 const onNotification = (notification: any) => console.log(notification);
@@ -27,13 +25,17 @@ const App = () => {
   return (
     <View style={styles.wrapper}>
       <NavigationContainer ref={navigationRef}>
-        <Stack.Navigator headerMode="none" initialRouteName="Home">
-          <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="SecondScreen" component={SecondScreen} />
-          <Stack.Screen name="ThirdScreen" component={ThirdScreen} />
+        <Stack.Navigator headerMode="none" initialRouteName={routes[0].name}>
+          {routes.map((route, idx) => (
+            <Stack.Screen
+              key={idx}
+              name={route.name}
+              component={route.component}
+            />
+          ))}
         </Stack.Navigator>
       </NavigationContainer>
-      <BottomTabBar notificationService={notify} navigator={navigationRef} />
+      <BottomTabBar notificationService={notify} navigatorRef={navigationRef} />
     </View>
   );
 };

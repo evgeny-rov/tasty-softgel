@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {DatePicker} from '@davidgovea/react-native-wheel-datepicker';
 import {Button, ImageBackground, StyleSheet} from 'react-native';
 import {ScrollView, TextInput} from 'react-native-gesture-handler';
 import {Card} from '../components/Card';
@@ -33,13 +32,6 @@ const PillForm: React.FC = () => {
         placeholderTextColor="#aaaaaa"
         keyboardType="numbers-and-punctuation"
         style={styles.inputfield}
-      />
-      <DatePicker
-        mode="time"
-        minuteInterval={15}
-        onDateChange={(date) => console.log(date)}
-        textColor="white"
-        style={{backgroundColor: 'rgba(0, 0, 0, 0.0)'}}
       />
       <Button title="Add pill" onPress={() => console.log(pillData)} />
     </Card>
