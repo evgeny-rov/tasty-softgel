@@ -1,11 +1,16 @@
 import HomeScreen from '../screens/HomeScreen';
-import SecondScreen from '../screens/SecondScreen';
-import ThirdScreen from '../screens/ThirdScreen';
+import MedicineScreen from '../screens/MedicineScreen';
+import RemindersScreen from '../screens/RemindersScreen';
+import {HomeIcon, ClipBoardListIcon, PillListIcon} from '../components/icons';
 
 const routes = [
-  {name: 'Home', component: HomeScreen},
-  {name: 'SecondScreen', component: SecondScreen},
-  {name: 'ThirdScreen', component: ThirdScreen},
+  {name: 'Home', component: HomeScreen, icon: HomeIcon},
+  {name: 'MedicineScreen', component: MedicineScreen, icon: PillListIcon},
+  {
+    name: 'RemindersScreen',
+    component: RemindersScreen,
+    icon: ClipBoardListIcon,
+  },
 ];
 
 export default routes;

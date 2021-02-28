@@ -1,6 +1,6 @@
 import React from 'react';
 import {GestureResponderEvent} from 'react-native';
-import {Pressable, StyleSheet, Text} from 'react-native';
+import {Pressable, StyleSheet} from 'react-native';
 import {AddPillIcon} from './icons';
 
 interface Props {

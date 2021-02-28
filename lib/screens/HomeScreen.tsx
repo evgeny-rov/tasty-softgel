@@ -48,30 +48,17 @@ const HomeScreen: React.FC = () => {
         source={require('../assets/images/bg2.png')}
         style={styles.flex}>
         <View style={styles.container}>
-          <Text style={styles.cardTitle}>Today's pill plan</Text>
+          <Text style={styles.cardTitle}>Ежедневный план</Text>
           <SizedBox height={35} />
-          <View style={styles.cardSection}>
-            <Text style={{...styles.cardText, ...styles.active}}>10:00</Text>
-            <SizedBox width={50} />
-            <View style={styles.flex}>
-              <Text style={{...styles.cardText, ...styles.active}}>
-                Aertal, Nise, Combucha, Asskilla
-              </Text>
-            </View>
-          </View>
-          <SizedBox height={25} />
-          <View style={styles.cardSection}>
-            <Text style={styles.cardText}>21:00</Text>
-            <SizedBox width={50} />
-            <View style={styles.flex}>
-              <Text style={styles.cardText}>
-                Aertal, Nise, Combucha, Asskilla
-              </Text>
-            </View>
-          </View>
         </View>
-        <FloatingActionButton onPress={() => setModalVisible(true)} />
+        <FloatingActionButton
+          onPress={() => {
+            setModalVisible(true);
+          }}
+        />
         <MedicineModal
+          title={'Новое лекарство'}
+          mode={'add'}
           modalVisible={modalVisible}
           setVisibility={setModalVisible}
         />

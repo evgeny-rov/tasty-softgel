@@ -1,42 +1,37 @@
 import React from 'react';
+import {Provider} from 'react-redux';
 import {createStackNavigator} from '@react-navigation/stack';
 import {
   NavigationContainer,
   NavigationContainerRef,
 } from '@react-navigation/native';
-import {View, StatusBar, StyleSheet} from 'react-native';
-
-import NotificationService from './services/NotificationService';
-
-import BottomTabBar from './components/BottomTabBar';
+import {View, StyleSheet} from 'react-native';
 import routes from './routes';
+import {store} from './redux';
 
-const onNotificationRegistration = (token: any) => console.log(token);
-const onNotification = (notification: any) => console.log(notification);
+import BottomTabBar from './components/BottomTabBar/BottomTabBar';
 
 const Stack = createStackNavigator();
 const navigationRef = React.createRef<NavigationContainerRef>();
-const notify = new NotificationService(
-  onNotificationRegistration,
-  onNotification,
-);
 
 const App = () => {
   return (
-    <View style={styles.wrapper}>
-      <NavigationContainer ref={navigationRef}>
-        <Stack.Navigator headerMode="none" initialRouteName={routes[0].name}>
-          {routes.map((route, idx) => (
-            <Stack.Screen
-              key={idx}
-              name={route.name}
-              component={route.component}
-            />
-          ))}
-        </Stack.Navigator>
-      </NavigationContainer>
-      <BottomTabBar notificationService={notify} navigatorRef={navigationRef} />
-    </View>
+    <Provider store={store}>
+      <View style={styles.wrapper}>
+        <NavigationContainer ref={navigationRef}>
+          <Stack.Navigator headerMode="none" initialRouteName={routes[0].name}>
+            {routes.map((route) => (
+              <Stack.Screen
+                key={route.name}
+                name={route.name}
+                component={route.component}
+              />
+            ))}
+          </Stack.Navigator>
+        </NavigationContainer>
+        <BottomTabBar navigatorRef={navigationRef} />
+      </View>
+    </Provider>
   );
 };
 

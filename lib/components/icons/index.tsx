@@ -87,3 +87,21 @@ export const AddPillIcon = (props: SvgProps) => {
     </Svg>
   );
 };
+
+export const ArrowIcon = (props: SvgProps) => {
+  return (
+    <Svg
+      width={5}
+      height={12}
+      rotation={props.rotation ?? 0}
+      viewBox="0 0 5 12">
+      <Path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M0 11.958L5 6.37 0 .78v11.177z"
+        fill={props.fill ?? 'black'}
+        fillOpacity={0.87}
+      />
+    </Svg>
+  );
+};

@@ -1,65 +1,60 @@
 import React, {useState} from 'react';
-import {Animated, Modal, Pressable, Switch, Text, View} from 'react-native';
-import Picker from '@gregfrench/react-native-wheel-picker';
+import {Modal, Pressable, StyleSheet, Switch, Text, View} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
-import {formStyles, textStyles, styles} from './styles';
-import {CloseIcon} from '../icons';
+import {useDispatch} from 'react-redux';
+import {Medicine, medicineActions} from '../../redux';
+
+import generalStyles from '../../styles/general';
+import {formStyles, styles} from './styles';
+import {ArrowIcon, CloseIcon} from '../icons';
 import SizedBox from '../SizedBox';
 
 interface Props {
+  title: string;
+  data?: Medicine;
+  mode: 'update' | 'add';
   modalVisible: boolean;
   setVisibility: Function;
 }
 
-const HOURS_AS_STRING_ARRAY = new Array(24)
-  .fill(null)
-  .map((_, idx) => `${idx}:00`.padStart(5, '0'));
+const MedicineModal: React.FC<Props> = ({
+  modalVisible,
+  setVisibility,
+  data,
+}) => {
+  const dispatch = useDispatch();
+  const [medicineName, setMedicineName] = useState(data?.name ?? '');
+  const [medicineCurrentAmount, setMedicineCurrentAmount] = useState(
+    data?.currentAmount ?? 30,
+  );
+  const [medicineInitialAmount, setMedicineInitialAmount] = useState(
+    data?.initialAmount ?? 30,
+  );
 
-const MedicineModal: React.FC<Props> = ({modalVisible, setVisibility}) => {
-  const [medicineData, setMedicineData] = useState({
-    name: '',
-    amount: '',
-    hasRemindTime: false,
-    remindTime: 12,
-  });
-
-  const changeMedicineData = (
-    fieldName: keyof typeof medicineData,
-    value: string | boolean | number,
-  ) => {
-    setMedicineData({...medicineData, [fieldName]: value});
-  };
-
-  const renderPicker = () => {
-    return (
-      <>
-        <SizedBox height={50} />
-        <Animated.View style={[styles.section, {alignItems: 'flex-start'}]}>
-          <Text style={textStyles.h2}>Время напоминания:</Text>
-          <Picker
-            style={{width: 80, height: 100}}
-            lineGradientColorFrom="#1a1a1a"
-            lineGradientColorTo="#FFF"
-            selectedValue={11}
-            onValueChange={(value) => console.log(value)}>
-            {HOURS_AS_STRING_ARRAY.map((value, idx) => (
-              <Picker.Item label={value} value={idx} key={idx} />
-            ))}
-          </Picker>
-        </Animated.View>
-      </>
-    );
+  const handleSubmit = () => {
+    if (medicineName.trim()) {
+      const preparedMedicineData: Medicine = {
+        name: medicineName,
+        currentAmount: medicineCurrentAmount,
+        initialAmount: medicineInitialAmount,
+      };
+      dispatch(medicineActions.addMedicine(preparedMedicineData));
+      setMedicineName('');
+      setMedicineCurrentAmount(30);
+      setMedicineInitialAmount(30);
+      setVisibility(false);
+    }
   };
 
   return (
     <Modal
       animationType="slide"
-      transparent={true}
       visible={modalVisible}
+      transparent={true}
       onRequestClose={() => setVisibility(!modalVisible)}>
       <View style={styles.container}>
-        <View style={styles.section}>
-          <Text style={textStyles.h1}>Новое лекарство</Text>
+        <View style={[generalStyles.row, styles.section]}>
+          <Text style={generalStyles.h1}>Новое лекарство</Text>
           <Pressable
             android_ripple={{radius: 20, color: 'gray'}}
             onPress={() => setVisibility(false)}
@@ -67,38 +62,61 @@ const MedicineModal: React.FC<Props> = ({modalVisible, setVisibility}) => {
             <CloseIcon fill="#fff" width={12} height={12} />
           </Pressable>
         </View>
-        <SizedBox height={70} />
-        <View style={styles.section}>
-          <View style={{flex: 1}}>
-            <Text style={textStyles.h2}>Название:</Text>
+        <SizedBox height={60} />
+        <View style={[generalStyles.row, styles.section]}>
+          <View style={generalStyles.flex}>
+            <Text style={generalStyles.h2}>Наименование:</Text>
             <TextInput
               style={formStyles.input}
-              value={medicineData.name}
-              onChangeText={(text) => changeMedicineData('name', text)}
+              autoCapitalize="words"
+              value={medicineName}
+              onChangeText={setMedicineName}
+              blurOnSubmit
             />
           </View>
         </View>
         <SizedBox height={50} />
-        <View style={styles.section}>
-          <Text style={textStyles.h2}>Количество:</Text>
-          <Text style={textStyles.h2}>30</Text>
+        <View
+          style={[generalStyles.row, styles.section, {alignItems: 'center'}]}>
+          <Text style={generalStyles.h2}>Количество:</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Pressable
+              style={{
+                padding: 15,
+                borderRadius: 100,
+              }}
+              android_ripple={{radius: 15, color: 'gray'}}
+              onPress={() =>
+                setMedicineInitialAmount(medicineInitialAmount - 1)
+              }>
+              <ArrowIcon fill="white" rotation={180} />
+            </Pressable>
+            <Text style={[generalStyles.h2, {paddingHorizontal: 40}]}>
+              {medicineInitialAmount}
+            </Text>
+            <Pressable
+              style={{
+                padding: 15,
+                borderRadius: 100,
+              }}
+              android_ripple={{radius: 15, color: 'gray'}}
+              onPress={() =>
+                setMedicineInitialAmount(medicineInitialAmount + 1)
+              }>
+              <ArrowIcon fill="white" />
+            </Pressable>
+          </View>
         </View>
-        <SizedBox height={50} />
-        <View style={styles.section}>
-          <Text style={textStyles.h2}>Включить напоминание</Text>
-          <Switch
-            value={medicineData.hasRemindTime}
-            trackColor={{false: 'gray', true: 'gray'}}
-            thumbColor="#b494ff"
-            onValueChange={() => {
-              changeMedicineData('hasRemindTime', !medicineData.hasRemindTime);
-            }}
-          />
-        </View>
-        {medicineData.hasRemindTime && renderPicker()}
-        <SizedBox height={50} />
-        <View style={styles.section}>
-          <Pressable onPress={() => {}} style={formStyles.button}>
+        <View
+          style={[
+            styles.section,
+            {
+              alignSelf: 'flex-end',
+              justifyContent: 'flex-end',
+              flex: 1,
+            },
+          ]}>
+          <Pressable onPress={handleSubmit} style={formStyles.button}>
             <Text style={formStyles.buttonText}>Сохранить</Text>
           </Pressable>
         </View>
@@ -108,3 +126,77 @@ const MedicineModal: React.FC<Props> = ({modalVisible, setVisibility}) => {
 };
 
 export default MedicineModal;
+
+/*
+const Clicker = () => {
+    const [amount, setAmount] = useState(30);
+    const [pressedIn, setPressedIn] = useState(false);
+
+    useEffect(() => {
+      setTimeout(() => {
+        setAmount(amount + 1);
+      }, 0);
+    }, []);
+
+    const changeAmount = () => {
+      setPressedIn(true);
+    };
+
+    return (
+      <View style={[styles.section]}>
+        <Text style={generalStyles.h2}>Количество:</Text>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Pressable
+            android_ripple={{radius: 10, color: 'gray'}}
+            style={[styles.closebtn, {paddingHorizontal: 40}]}
+            onPressIn={() => changeAmount()}
+            onPressOut={() => setPressedIn(false)}>
+            <ArrowIcon fill="white" rotation={180} />
+          </Pressable>
+          <Text style={generalStyles.h2}>{amount}</Text>
+          <Pressable
+            android_ripple={{radius: 10, color: 'gray'}}
+            style={[styles.closebtn, {paddingHorizontal: 40}]}
+            onPressIn={() => changeAmount()}
+            onPressOut={() => setPressedIn(false)}>
+            <ArrowIcon fill="white" />
+          </Pressable>
+        </View>
+      </View>
+    );
+  };
+
+
+  const renderPicker = () => {
+    return (
+      <>
+        <SizedBox height={50} />
+        <View style={[styles.section]}>
+          <Text style={generalStyles.h2}>Время напоминания:</Text>
+          <Picker
+            style={styles.picker}
+            lineGradientColorFrom="#1a1a1a"
+            lineGradientColorTo="#FFF"
+            selectedValue={medicineReminderHour}
+            onValueChange={setMedicineReminderHour}>
+            {HOURS_AS_STRING_ARRAY.map((value, idx) => (
+              <Picker.Item key={value} label={value} value={idx} />
+            ))}
+          </Picker>
+        </View>
+      </>
+    );
+  };
+
+  <View style={[styles.section]}>
+          <Text style={generalStyles.h2}>Включить напоминание</Text>
+          <Switch
+            value={medicineReminderEnabled}
+            trackColor={{false: 'gray', true: 'gray'}}
+            thumbColor="#b4a2dd"
+            onValueChange={() =>
+              setMedicineReminderEnabled(!medicineReminderEnabled)
+            }
+          />
+        </View>
+  */
