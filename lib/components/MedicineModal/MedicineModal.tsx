@@ -33,7 +33,7 @@ const MedicineModal: React.FC<Props> = ({
 
   const handleSubmit = () => {
     if (medicineName.trim()) {
-      const preparedMedicineData: Medicine = {
+      const preparedMedicineData = {
         name: medicineName,
         currentAmount: medicineCurrentAmount,
         initialAmount: medicineInitialAmount,

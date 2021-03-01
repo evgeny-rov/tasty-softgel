@@ -13,7 +13,6 @@ interface Props {
 const BottomTabBar: React.FC<Props> = ({navigatorRef}) => {
   const [activeRoute, setActiveRoute] = useState('Home');
   const buttonRipple = {color: '#574574', radius: 50};
-  console.log('tabbar init');
 
   const navigate = (routeName: string) => {
     navigatorRef.current?.navigate(routeName);

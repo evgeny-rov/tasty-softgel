@@ -9,12 +9,12 @@ const generalStyles = StyleSheet.create({
   },
   h1: {
     color: 'white',
-    fontWeight: '800',
+    fontWeight: '700',
     fontSize: 22,
   },
   h2: {
     color: 'white',
-    fontWeight: '800',
+    fontWeight: '700',
     fontSize: 16,
   },
 });

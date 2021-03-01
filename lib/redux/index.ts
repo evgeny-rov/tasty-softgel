@@ -2,6 +2,7 @@ import {createSlice, nanoid} from '@reduxjs/toolkit';
 import {configureStore} from '@reduxjs/toolkit';
 
 export type Medicine = {
+  id: string;
   name: string;
   initialAmount: number;
   currentAmount: number;
@@ -32,13 +33,33 @@ const medicineSlice = createSlice({
       const newId = nanoid();
       state.allIds.push(newId);
       state.byId[newId] = {
+        id: newId,
         name,
         initialAmount,
         currentAmount,
       };
     },
+    assignMedicine(state, action) {
+      const {id, hour} = action.payload;
+      if (!state.byTime[hour]) {
+        state.byTime[hour] = [id];
+      } else {
+        const index = state.byTime[hour].findIndex((item) => item === id);
+        index === -1
+          ? state.byTime[hour].push(id)
+          : state.byTime[hour].splice(index, 1);
+      }
+    },
   },
 });
+
+export const selectByTime = (state: AppState, hour: number) => {
+  return state.allIds.map((id) => {
+    const assignedToSelectedTime =
+      state.byTime[hour] && state.byTime[hour].includes(id);
+    return {...state.byId[id], assignedToSelectedTime};
+  });
+};
 
 const rootReducer = medicineSlice.reducer;
 

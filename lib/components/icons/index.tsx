@@ -105,3 +105,16 @@ export const ArrowIcon = (props: SvgProps) => {
     </Svg>
   );
 };
+
+export const BellIcon = (props: SvgProps) => {
+  return (
+    <Svg width={15} height={17} viewBox="0 0 15 17">
+      <Path
+        d="M9.2 14.877c-.1.8-.7 1.6-1.5 1.7-1.1.2-2.1-.7-2.1-1.7h3.6zM14.7 12.576v.2c0 .5-.5 1-1 1H1c-.5 0-1-.5-1-1v-.2c0-.6.3-1.2.8-1.6.7-.6 1.1-1.4 1.1-2.3v-3c0-2.7 1.9-5.2 4.6-5.6 1.9-.3 3.6.3 4.8 1.5 1 1 1.6 2.4 1.6 3.9v3.2c0 .9.4 1.7 1.1 2.3.5.5.7 1 .7 1.6z"
+        fill={props.fill ?? 'black'}
+        stroke={props.stroke ?? 'black'}
+        strokeWidth={1}
+      />
+    </Svg>
+  );
+};
