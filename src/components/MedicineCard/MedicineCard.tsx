@@ -4,8 +4,8 @@ import {TextInput} from 'react-native-gesture-handler';
 import {useDispatch} from 'react-redux';
 import {Medicine, medicineActions} from '../../redux';
 
-import generalStyles from '../../styles/general';
-import {formStyles, styles} from './styles';
+import generalStyles from '../../styles/global';
+import {formStyles, styles} from './MedicineCardStyles';
 import {ArrowIcon, CloseIcon} from '../icons';
 import SizedBox from '../SizedBox';
 

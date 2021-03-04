@@ -12,8 +12,8 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {useDispatch, useSelector} from 'react-redux';
 import {BellIcon} from '../components/icons';
 import {AppState, Medicine, medicineActions, selectByTime} from '../redux';
-import generalStyles from '../styles/general';
-import hourToString from '../utils/hourToString';
+import generalStyles from '../styles/global';
+import hourToString from '../utils/hourToTimeString';
 
 const HOURS_AS_STRING_ARRAY = Array(24)
   .fill(null)

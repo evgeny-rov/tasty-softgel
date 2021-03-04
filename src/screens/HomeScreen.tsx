@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {ImageBackground, StatusBar, StyleSheet, Text, View} from 'react-native';
 import FloatingActionButton from '../components/FloatingActionButton';
-import MedicineModal from '../components/MedicineModal/MedicineModal';
+import MedicineModal from '../components/MedicineCard/MedicineCard';
 import SizedBox from '../components/SizedBox';
 
 const styles = StyleSheet.create({
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const HomeScreen: React.FC = () => {
+const HomeScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   return (

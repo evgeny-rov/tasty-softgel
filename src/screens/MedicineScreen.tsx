@@ -3,7 +3,7 @@ import {Image, StatusBar, StyleSheet, Text, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useSelector} from 'react-redux';
 import FloatingActionButton from '../components/FloatingActionButton';
-import MedicineModal from '../components/MedicineModal/MedicineModal';
+import MedicineModal from '../components/MedicineCard/MedicineCard';
 import SizedBox from '../components/SizedBox';
 import {AppState, Medicine} from '../redux';
 
