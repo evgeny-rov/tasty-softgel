@@ -1,7 +1,7 @@
 import React from 'react';
 import {GestureResponderEvent} from 'react-native';
 import {Pressable, StyleSheet} from 'react-native';
-import {AddPillIcon} from './icons';
+import {AddPillIcon} from '../Icons';
 
 interface Props {
   onPress: (event: GestureResponderEvent) => void;

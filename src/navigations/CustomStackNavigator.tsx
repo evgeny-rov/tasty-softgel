@@ -27,7 +27,7 @@ type DefaultProps = DefaultNavigatorOptions<StackNavigationOptions> &
   StackNavigationConfig;
 
 interface Props extends DefaultProps {
-  renderTabBar: (
+  renderTabBar?: (
     navigation: StackNavigationHelpers,
     state: StackNavigationState<ParamListBase>,
   ) => ReactNode;
@@ -102,7 +102,7 @@ function StackNavigator({
         descriptors={descriptors}
         navigation={navigation}
       />
-      {renderTabBar(navigation, state)}
+      {renderTabBar && renderTabBar(navigation, state)}
     </View>
   );
 }

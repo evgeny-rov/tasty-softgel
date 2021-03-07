@@ -1,4 +1,10 @@
-import {StyleSheet} from 'react-native';
+import {PressableAndroidRippleConfig, StyleSheet} from 'react-native';
+
+export const androidRipple: PressableAndroidRippleConfig = {
+  borderless: true,
+  color: '#574574',
+  radius: 50,
+};
 
 export default StyleSheet.create({
   tabbar: {

@@ -3,7 +3,7 @@ import {PressableAndroidRippleConfig, StyleSheet} from 'react-native';
 export const androidRipple: PressableAndroidRippleConfig = {
   borderless: true,
   color: '#574574',
-  radius: 50,
+  radius: 30,
 };
 
 const globalStyles = StyleSheet.create({

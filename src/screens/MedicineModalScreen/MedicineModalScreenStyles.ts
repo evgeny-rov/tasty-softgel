@@ -6,6 +6,7 @@ const styles = StyleSheet.create({
     padding: 30,
     borderTopLeftRadius: 30,
     borderTopEndRadius: 30,
+    marginTop: 50,
     backgroundColor: 'rgba(0, 0, 0, 0.9)',
   },
   section: {
@@ -13,13 +14,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-start',
   },
-  closebtn: {
-    padding: 15,
-    borderRadius: 100,
+  centeredVertically: {
+    alignItems: 'center',
   },
   picker: {
     width: 80,
     height: 100,
+  },
+  flex_end: {
+    alignSelf: 'flex-end',
+    justifyContent: 'flex-end',
+  },
+  amountPad: {
+    paddingHorizontal: 40,
   },
 });
 
@@ -29,7 +36,6 @@ const formStyles = StyleSheet.create({
     borderColor: '#fff',
     borderBottomWidth: 1,
     padding: 5,
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
     color: '#fff',
   },
   button: {
