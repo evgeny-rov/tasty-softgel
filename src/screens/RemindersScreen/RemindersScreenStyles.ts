@@ -47,9 +47,9 @@ export const styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
-    paddingVertical: 20,
     backgroundColor: 'rgba(23, 23, 77, 0.479)',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
+    overflow: 'hidden',
   },
 });

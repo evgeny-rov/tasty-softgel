@@ -1,15 +1,27 @@
 import React from 'react';
 import {GestureResponderEvent} from 'react-native';
 import {Pressable, StyleSheet} from 'react-native';
-import {AddPillIcon} from '../Icons';
+import {AddPillIcon} from '../icons';
+import {theme} from '@styles/';
 
 interface Props {
   onPress: (event: GestureResponderEvent) => void;
 }
 
+const FloatingActionButton: React.FC<Props> = ({onPress}) => {
+  return (
+    <Pressable
+      android_ripple={theme.configs.ripple_contained}
+      style={styles.floatingActionBtn}
+      onPress={onPress}>
+      <AddPillIcon />
+    </Pressable>
+  );
+};
+
 const styles = StyleSheet.create({
-  floatingAction: {
-    backgroundColor: 'rgba(255, 255, 255, 1)',
+  floatingActionBtn: {
+    backgroundColor: theme.colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
@@ -20,16 +32,5 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
 });
-
-const FloatingActionButton: React.FC<Props> = ({onPress}) => {
-  return (
-    <Pressable
-      android_ripple={{color: 'rgba(0, 0, 0, 0.1)', radius: 30}}
-      style={styles.floatingAction}
-      onPress={onPress}>
-      <AddPillIcon />
-    </Pressable>
-  );
-};
 
 export default FloatingActionButton;

@@ -1,9 +1,9 @@
 import React from 'react';
-import createCustomStackNavigator from '../CustomStackNavigator';
+import createCustomStackNavigator from '@components/CustomStackNavigator';
 import {CardStyleInterpolators} from '@react-navigation/stack';
-import routes from '../routes';
-import MainAppNavigator from '../MainAppNavigator';
-import MedicineModalScreen from '../../screens/MedicineModalScreen';
+import MainAppNavigator from './MainAppNavigator';
+import MedicineModalScreen from '../screens/ModalNewMedicineScreen';
+import routes from './routes';
 
 const Stack = createCustomStackNavigator();
 
@@ -15,7 +15,7 @@ export default () => {
       initialRouteName={routes.main}>
       <Stack.Screen name={routes.main} component={MainAppNavigator} />
       <Stack.Screen
-        name={routes.medicine_modal}
+        name={routes.modal_new_medicine}
         component={MedicineModalScreen}
         options={{
           cardStyle: {backgroundColor: 'transparent'},

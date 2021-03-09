@@ -1,6 +1,6 @@
 import React, {useState, useEffect, ReactNode} from 'react';
 import {Pressable} from 'react-native';
-import {androidRipple} from '../styles/global';
+import {theme} from '@styles/';
 
 interface Props {
   action: () => void;
@@ -19,7 +19,7 @@ const RepeatingButton = ({action, children}: Props) => {
   return (
     <Pressable
       delayLongPress={400}
-      android_ripple={androidRipple}
+      android_ripple={theme.configs.ripple_sm}
       hitSlop={20}
       onLongPress={() => setPressedIn(true)}
       onPressOut={() => setPressedIn(false)}

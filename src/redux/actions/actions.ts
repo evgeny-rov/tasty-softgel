@@ -1,29 +1,29 @@
 import {nanoid} from '@reduxjs/toolkit';
-import {ADD_MEDICINE, TOGGLE_ASSIGNED_TIME} from './actionTypes';
-
-export type Medicine = {
-  id: string;
-  name: string;
-  initialAmount: number;
-  currentAmount: number;
-};
+import {Medicine} from 'src/types';
+import {
+  ADD_MEDICINE,
+  ASSIGN_TIME,
+  UNASSIGN_TIME,
+  UPDATE_SELECTED_HOUR,
+} from './actionTypes';
 
 export type AddMedicineActionType = {
   type: typeof ADD_MEDICINE;
   payload: Medicine;
 };
 
-export type toggleAssignedTimeActionType = {
-  type: typeof TOGGLE_ASSIGNED_TIME;
+export type updateAssignedTimeActionType = {
+  type: typeof ASSIGN_TIME | typeof UNASSIGN_TIME;
   payload: {
     id: string;
     hour: number;
   };
 };
 
-export type MedicineActionTypes =
-  | AddMedicineActionType
-  | toggleAssignedTimeActionType;
+export type UpdateSelectedHour = {
+  type: typeof UPDATE_SELECTED_HOUR;
+  payload: number;
+};
 
 export const addMedicine = ({
   name,
@@ -38,19 +38,44 @@ export const addMedicine = ({
     name,
     initialAmount: amount,
     currentAmount: amount,
+    intakeHours: [],
   },
 });
 
-export const toggleAssignedTime = ({
+export const assignTime = ({
   id,
   hour,
 }: {
   id: string;
   hour: number;
-}): toggleAssignedTimeActionType => ({
-  type: TOGGLE_ASSIGNED_TIME,
+}): updateAssignedTimeActionType => ({
+  type: ASSIGN_TIME,
   payload: {
     id,
     hour,
   },
 });
+
+export const unassignTime = ({
+  id,
+  hour,
+}: {
+  id: string;
+  hour: number;
+}): updateAssignedTimeActionType => ({
+  type: UNASSIGN_TIME,
+  payload: {
+    id,
+    hour,
+  },
+});
+
+export const updateSelecterHour = (hour: number) => ({
+  type: UPDATE_SELECTED_HOUR,
+  payload: hour,
+});
+
+export type MedicineActionTypes =
+  | AddMedicineActionType
+  | updateAssignedTimeActionType
+  | UpdateSelectedHour;

@@ -19,8 +19,8 @@ import type {
   StackNavigationEventMap,
   StackNavigationHelpers,
 } from '@react-navigation/stack/src/types';
-import generalStyles from '../styles/global';
 import {ReactNode} from 'react';
+import {common} from '@styles/';
 
 type DefaultProps = DefaultNavigatorOptions<StackNavigationOptions> &
   StackRouterOptions &
@@ -95,7 +95,7 @@ function StackNavigator({
   );
 
   return (
-    <View style={generalStyles.flex}>
+    <View style={common.styles.flex}>
       <StackView
         {...rest}
         state={state}

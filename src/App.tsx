@@ -3,6 +3,8 @@ import {Provider} from 'react-redux';
 import store from './redux';
 import AppNavigation from './navigations';
 
+store.subscribe(() => console.log(store.getState()));
+
 const App = () => {
   return (
     <Provider store={store}>
