@@ -7,7 +7,7 @@ import {addMedicine} from '../../redux/actions/actions';
 import {common, theme, typography} from '@styles/';
 import RepeatedActionButton from '@components/RepeatedActionButton';
 import SizedBox from '../../components/SizedBox';
-import {CloseIcon, ArrowIcon} from '../../icons';
+import {CloseIcon, ArrowIcon} from '@icons/';
 
 interface Props {
   navigation: StackNavigationHelpers;
