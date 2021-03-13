@@ -1,0 +1,2 @@
+export const ADD_MEDICINE = 'ADD_MEDICINE';
+export const UPDATE_MEDICINE = 'UPDATE_MEDICINE';

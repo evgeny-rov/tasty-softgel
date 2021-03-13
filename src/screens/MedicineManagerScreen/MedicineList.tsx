@@ -1,12 +1,13 @@
 import React from 'react';
 import {ScrollView} from 'react-native';
 import {useSelector} from 'react-redux';
+import {allMedicinesSelector} from 'src/redux/entities/medicines/selectors';
 import {AppState} from 'src/types';
 import MedicineListItem from './MedicineListItem';
 
 const MedicineList = () => {
   const medicines = useSelector((state: AppState) =>
-    state.allIds.map((id) => state.byId[id]),
+    allMedicinesSelector(state.medicines),
   );
 
   return (

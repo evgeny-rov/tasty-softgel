@@ -5,6 +5,7 @@ import FloatingActionButton from '../../components/FloatingActionButton';
 import BgImage from '../../components/BgImage';
 import NotifService from '../../services/NotificationService';
 import {openNewMedicineModal} from '../../navigations/helpers';
+import DailyMedicinePlan from './DailyMedicinePlan';
 
 interface Props {
   navigation: StackNavigationHelpers;
@@ -20,6 +21,7 @@ const HomeScreen = ({navigation}: Props) => {
     <>
       <StatusBar translucent backgroundColor={'transparent'} />
       <BgImage source={require('../../assets/images/bg2.png')} />
+      <DailyMedicinePlan />
       <FloatingActionButton onPress={() => openNewMedicineModal(navigation)} />
     </>
   );

@@ -7,6 +7,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
   },
+  spaced: {
+    justifyContent: 'space-between',
+  },
   col: {
     flex: 1,
     flexDirection: 'column',

@@ -1,23 +1,31 @@
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import {unassignTime, assignTime} from '../../redux/actions/actions';
+import {sharedActions} from '../../redux/sharedActions';
 import {BellIcon} from '@icons/';
 import {AppState, Medicine} from 'src/types';
-import {common, theme, typography} from 'src/styles';
+import {common, theme, typography} from '@styles/';
 
 const RemindersMedicinesListItem = (props: Medicine) => {
-  const selectedHour = useSelector(
-    (state: AppState) => state.selectedRemindersHour,
-  );
+  const selectedHour = useSelector((state: AppState) => state.picker.value);
   const dispatch = useDispatch();
 
-  const isAssignedToSelectedHour = props.intakeHours.includes(selectedHour);
+  const isAssignedToSelectedHour = props.reminders.includes(selectedHour);
 
   const updateAssignedStatus = () => {
     return isAssignedToSelectedHour
-      ? dispatch(unassignTime({hour: selectedHour, id: props.id}))
-      : dispatch(assignTime({hour: selectedHour, id: props.id}));
+      ? dispatch(
+          sharedActions.unassignReminder({
+            hour: selectedHour,
+            medicineId: props.id,
+          }),
+        )
+      : dispatch(
+          sharedActions.assignReminder({
+            hour: selectedHour,
+            medicineId: props.id,
+          }),
+        );
   };
 
   return (

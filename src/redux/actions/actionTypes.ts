@@ -1,4 +1,0 @@
-export const ADD_MEDICINE = 'ADD_MEDICINE';
-export const ASSIGN_TIME = 'ASSIGN_TIME';
-export const UNASSIGN_TIME = 'UNASSIGN_TIME';
-export const UPDATE_SELECTED_HOUR = 'UPDATE_SELECTED_HOUR'; 

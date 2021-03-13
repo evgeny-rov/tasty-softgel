@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
 import {StackNavigationHelpers} from '@react-navigation/stack/src/types';
 import {useDispatch} from 'react-redux';
-import {addMedicine} from '../../redux/actions/actions';
+import {medicineActions} from '../../redux/entities/medicines/actions';
 
 import {common, theme, typography} from '@styles/';
 import RepeatedActionButton from '@components/RepeatedActionButton';
@@ -24,8 +24,9 @@ const ModalNewMedicineScreen = ({navigation}: Props) => {
   const decrementAmount = () => amount > 0 && setAmount(amount - 1);
 
   const handleSubmit = () => {
-    if (name.trim()) {
-      dispatch(addMedicine({name, amount}));
+    const preparedNameData = name.trim();
+    if (preparedNameData) {
+      dispatch(medicineActions.addMedicine({name: preparedNameData, amount}));
       goBack();
     }
   };

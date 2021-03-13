@@ -1,8 +1,8 @@
 import {createSelector} from 'reselect';
-import {AppState} from 'src/types';
+import {MedicinesState} from 'src/types';
 
-const getIds = (state: AppState) => state.allIds;
-const getMedicines = (state: AppState) => state.byId;
+const getIds = (state: MedicinesState) => state.allIds;
+const getMedicines = (state: MedicinesState) => state.byId;
 
 export const allMedicinesSelector = createSelector(
   [getIds, getMedicines],
