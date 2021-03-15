@@ -16,7 +16,7 @@ const pickerReducer = (
       return {
         ...state,
         value:
-          action.payload > 0 && action.payload < 23
+          action.payload >= 0 && action.payload < 24
             ? action.payload
             : state.value,
       };

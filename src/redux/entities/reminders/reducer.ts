@@ -24,15 +24,15 @@ const remindersReducer = (
         medicines: [],
       });
 
-      newHourItem.medicines = [...newHourItem.medicines, medicineId];
-      const newAllHours = union(state.allHours, [hour]);
-
       return {
         ...state,
-        allHours: newAllHours,
+        allHours: union(state.allHours, [hour]),
         byHour: {
           ...state.byHour,
-          [hour]: newHourItem,
+          [hour]: {
+            ...newHourItem,
+            medicines: [...newHourItem.medicines, medicineId],
+          },
         },
       };
     }

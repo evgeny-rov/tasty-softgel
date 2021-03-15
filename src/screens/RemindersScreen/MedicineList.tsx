@@ -17,7 +17,7 @@ const RemindersMedicinesList = () => {
       {medicinesList.map((medicine) => {
         return (
           <RemindersMedicinesListItem
-            key={medicine.name}
+            key={medicine.id}
             id={medicine.id}
             name={medicine.name}
             currentAmount={medicine.currentAmount}

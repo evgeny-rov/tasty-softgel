@@ -21,10 +21,11 @@ const RemindersScreen = () => {
   const dispatch = useDispatch();
 
   const pickerValueChangeHandler = (val: number) => {
+    console.log(val);
     if (val === selectedHour) {
       return;
     }
-
+    console.log('dispatch')
     dispatch(pickerActions.updatePickerValue(val));
   };
 
@@ -67,7 +68,6 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 20,
   },
   picker: {
     flex: 1,

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import SizedBox from '@components/SizedBox';
-import {typography} from 'src/styles';
+import {theme, typography} from 'src/styles';
 import {ScrollView} from 'react-native-gesture-handler';
 import {AppState, Reminder} from 'src/types';
 import {useSelector} from 'react-redux';
@@ -14,6 +14,12 @@ const PlanItem = ({reminder}: {reminder: Reminder}) => {
 
   const medicinesNames = medicines.join(', ');
 
+  const hasToRemind = Math.abs(new Date().getHours() - reminder.hour) <= 1;
+
+  const textColor = {
+    color: hasToRemind ? theme.colors.accent2 : theme.colors.primary,
+  };
+
   return (
     <View
       style={{
@@ -22,12 +28,15 @@ const PlanItem = ({reminder}: {reminder: Reminder}) => {
         flexDirection: 'row',
         marginVertical: 10,
       }}>
-      <Text style={typography.styles.body_bold}>
+      <Text style={[typography.styles.body_bold, textColor]}>
         {hourToTimeString(reminder.hour)}
       </Text>
       <SizedBox width={50} />
       <Text
-        style={[typography.styles.body_bold, {textAlign: 'right', flex: 1}]}>
+        style={[
+          typography.styles.body_bold,
+          {textAlign: 'right', flex: 1, ...textColor},
+        ]}>
         {medicinesNames}
       </Text>
     </View>
@@ -41,11 +50,11 @@ const PlanList = () => {
       .map((hour) => state.reminders.byHour[hour]),
   );
   return (
-    <ScrollView>
+    <View>
       {reminders.map((reminder) => (
         <PlanItem key={reminder.hour} reminder={reminder} />
       ))}
-    </ScrollView>
+    </View>
   );
 };
 
