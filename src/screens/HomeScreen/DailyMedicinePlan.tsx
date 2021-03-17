@@ -2,19 +2,18 @@ import React from 'react';
 import {View, Text} from 'react-native';
 import SizedBox from '@components/SizedBox';
 import {theme, typography} from 'src/styles';
-import {ScrollView} from 'react-native-gesture-handler';
-import {AppState, Reminder} from 'src/types';
 import {useSelector} from 'react-redux';
 import hourToTimeString from 'src/utils/hourToTimeString';
+import {byHourMedicinesSelector} from 'src/redux/selectors';
 
-const PlanItem = ({reminder}: {reminder: Reminder}) => {
-  const medicines = useSelector((state: AppState) =>
-    reminder.medicines.map((id) => state.medicines.byId[id].name),
-  );
-
-  const medicinesNames = medicines.join(', ');
-
-  const hasToRemind = Math.abs(new Date().getHours() - reminder.hour) <= 1;
+const PlanItem = ({
+  hour,
+  medicinesNames,
+}: {
+  hour: string;
+  medicinesNames: string[];
+}) => {
+  const hasToRemind = Math.abs(new Date().getHours() - Number(hour)) <= 1;
 
   const textColor = {
     color: hasToRemind ? theme.colors.accent2 : theme.colors.primary,
@@ -29,7 +28,7 @@ const PlanItem = ({reminder}: {reminder: Reminder}) => {
         marginVertical: 10,
       }}>
       <Text style={[typography.styles.body_bold, textColor]}>
-        {hourToTimeString(reminder.hour)}
+        {hourToTimeString(Number(hour))}
       </Text>
       <SizedBox width={50} />
       <Text
@@ -37,22 +36,22 @@ const PlanItem = ({reminder}: {reminder: Reminder}) => {
           typography.styles.body_bold,
           {textAlign: 'right', flex: 1, ...textColor},
         ]}>
-        {medicinesNames}
+        {medicinesNames.join(', ')}
       </Text>
     </View>
   );
 };
 
 const PlanList = () => {
-  const reminders = useSelector((state: AppState) =>
-    state.reminders.allHours
-      .sort((a, b) => a - b)
-      .map((hour) => state.reminders.byHour[hour]),
-  );
+  const hourlyPlan = useSelector(byHourMedicinesSelector);
   return (
     <View>
-      {reminders.map((reminder) => (
-        <PlanItem key={reminder.hour} reminder={reminder} />
+      {hourlyPlan.map((hourItem, idx) => (
+        <PlanItem
+          key={idx}
+          hour={hourItem.hour}
+          medicinesNames={hourItem.medicinesNames}
+        />
       ))}
     </View>
   );

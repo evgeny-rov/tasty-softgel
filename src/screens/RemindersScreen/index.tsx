@@ -2,22 +2,22 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import Picker from '@gregfrench/react-native-wheel-picker';
-import {pickerActions} from '../../redux/entities/picker/actions';
 
 import BgImage from '../../components/BgImage';
 import MedicineList from './MedicineList';
 import hourToTimeString from '../../utils/hourToTimeString';
 import {typography} from '@styles/';
 import {AppState} from 'src/types';
-import IconButton from '@components/IconButton';
-import {ArrowIcon} from 'src/icons';
+import {actions} from 'src/redux/actions';
 
 const HOURS_AS_STRING_ARRAY = Array(24)
   .fill(null)
   .map((_, idx) => hourToTimeString(idx));
 
 const RemindersScreen = () => {
-  const selectedHour = useSelector((state: AppState) => state.picker.value);
+  const selectedHour = useSelector(
+    (state: AppState) => state.pickerSelectedValue,
+  );
   const dispatch = useDispatch();
 
   const pickerValueChangeHandler = (val: number) => {
@@ -25,8 +25,8 @@ const RemindersScreen = () => {
     if (val === selectedHour) {
       return;
     }
-    console.log('dispatch')
-    dispatch(pickerActions.updatePickerValue(val));
+    console.log('dispatch');
+    dispatch(actions.updatePickerValue({value: val}));
   };
 
   return (

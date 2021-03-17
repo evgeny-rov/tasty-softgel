@@ -1,32 +1,18 @@
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import {sharedActions} from '../../redux/sharedActions';
 import {BellIcon} from '@icons/';
 import {AppState, Medicine} from 'src/types';
 import {common, theme, typography} from '@styles/';
+import { actions } from 'src/redux/actions';
 
 const RemindersMedicinesListItem = (props: Medicine) => {
-  const selectedHour = useSelector((state: AppState) => state.picker.value);
+  const selectedHour = useSelector((state: AppState) => state.pickerSelectedValue);
   const dispatch = useDispatch();
 
-  const isAssignedToSelectedHour = props.reminders.includes(selectedHour);
+  const isAssignedToSelectedHour = props.hours.some((hour) => hour === selectedHour);
 
-  const updateAssignedStatus = () => {
-    return isAssignedToSelectedHour
-      ? dispatch(
-          sharedActions.unassignReminder({
-            hour: selectedHour,
-            medicineId: props.id,
-          }),
-        )
-      : dispatch(
-          sharedActions.assignReminder({
-            hour: selectedHour,
-            medicineId: props.id,
-          }),
-        );
-  };
+  const updateStatus = () => dispatch(actions.updateReminders({hour: selectedHour, id: props.id}));
 
   return (
     <View style={styles.container}>
@@ -39,7 +25,7 @@ const RemindersMedicinesListItem = (props: Medicine) => {
       <Pressable
         android_ripple={theme.configs.ripple_sm}
         hitSlop={15}
-        onPress={updateAssignedStatus}>
+        onPress={updateStatus}>
         <BellIcon
           fill={isAssignedToSelectedHour ? theme.colors.primary : 'transparent'}
           stroke={theme.colors.primary}

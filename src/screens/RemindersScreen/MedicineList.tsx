@@ -1,12 +1,11 @@
 import React from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
-import { AppState } from 'src/types';
-import {allMedicinesSelector} from '../../redux/entities/medicines/selectors';
+import { medicinesSelector } from 'src/redux/selectors';
 import RemindersMedicinesListItem from './MedicineListItem';
 
 const RemindersMedicinesList = () => {
-  const medicinesList = useSelector((state: AppState) => allMedicinesSelector(state.medicines));
+  const medicinesList = useSelector(medicinesSelector);
 
   return (
     <ScrollView
@@ -21,7 +20,7 @@ const RemindersMedicinesList = () => {
             id={medicine.id}
             name={medicine.name}
             currentAmount={medicine.currentAmount}
-            reminders={medicine.reminders}
+            hours={medicine.hours}
             initialAmount={30}
           />
         );

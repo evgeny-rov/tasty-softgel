@@ -2,12 +2,12 @@ import React, {useState} from 'react';
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
 import {StackNavigationHelpers} from '@react-navigation/stack/src/types';
 import {useDispatch} from 'react-redux';
-import {medicineActions} from '../../redux/entities/medicines/actions';
 
 import {common, theme, typography} from '@styles/';
 import RepeatedActionButton from '@components/RepeatedActionButton';
 import SizedBox from '../../components/SizedBox';
 import {CloseIcon, ArrowIcon} from '@icons/';
+import { actions } from 'src/redux/actions';
 
 interface Props {
   navigation: StackNavigationHelpers;
@@ -26,7 +26,7 @@ const ModalNewMedicineScreen = ({navigation}: Props) => {
   const handleSubmit = () => {
     const preparedNameData = name.trim();
     if (preparedNameData) {
-      dispatch(medicineActions.addMedicine({name: preparedNameData, amount}));
+      dispatch(actions.addMedicine({name: preparedNameData, amount}));
       goBack();
     }
   };

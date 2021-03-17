@@ -1,14 +1,11 @@
 import React from 'react';
 import {ScrollView} from 'react-native';
 import {useSelector} from 'react-redux';
-import {allMedicinesSelector} from 'src/redux/entities/medicines/selectors';
-import {AppState} from 'src/types';
+import {medicinesSelector} from 'src/redux/selectors';
 import MedicineListItem from './MedicineListItem';
 
 const MedicineList = () => {
-  const medicines = useSelector((state: AppState) =>
-    allMedicinesSelector(state.medicines),
-  );
+  const medicines = useSelector(medicinesSelector);
 
   return (
     <ScrollView

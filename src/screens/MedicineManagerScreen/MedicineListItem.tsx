@@ -6,8 +6,8 @@ import {common, typography} from '@styles/';
 import hourToTimeString from 'src/utils/hourToTimeString';
 import {ScrollView} from 'react-native-gesture-handler';
 
-const MedicineListItem = ({name, currentAmount, reminders}: Medicine) => {
-  const remindersHoursString = reminders.map(hourToTimeString).sort().join(', ');
+const MedicineListItem = ({name, currentAmount, hours}: Medicine) => {
+  const remindersHoursString = hours.map(hourToTimeString).sort().join(', ');
 
   return (
     <View style={styles.container}>
