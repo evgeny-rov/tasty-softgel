@@ -2,7 +2,7 @@ import {without} from 'lodash';
 import {AppState} from 'src/types';
 import {actionTypes} from '../actions';
 
-type TypedAction =
+export type TypedAction =
   | actionTypes.TypedAddMedicineAction
   | actionTypes.TypedUpdateRemindersAction
   | actionTypes.TypedUpdatePickerValueAction;
