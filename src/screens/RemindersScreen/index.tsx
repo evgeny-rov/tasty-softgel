@@ -2,13 +2,13 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import Picker from '@gregfrench/react-native-wheel-picker';
-import {updateSelecterHour} from '../../redux/actions/actions';
 
 import BgImage from '../../components/BgImage';
 import MedicineList from './MedicineList';
 import hourToTimeString from '../../utils/hourToTimeString';
 import {typography} from '@styles/';
 import {AppState} from 'src/types';
+import {updatePickerValue} from 'src/redux/entities/picker/picker.actions';
 
 const HOURS_AS_STRING_ARRAY = Array(24)
   .fill(null)
@@ -16,12 +16,15 @@ const HOURS_AS_STRING_ARRAY = Array(24)
 
 const RemindersScreen = () => {
   const selectedHour = useSelector(
-    (state: AppState) => state.selectedRemindersHour,
+    (state: AppState) => state.pickerSelectedValue,
   );
   const dispatch = useDispatch();
 
   const pickerValueChangeHandler = (val: number) => {
-    dispatch(updateSelecterHour(val));
+    if (val === selectedHour) {
+      return;
+    }
+    dispatch(updatePickerValue({value: val}));
   };
 
   return (
@@ -61,16 +64,16 @@ export const styles = StyleSheet.create({
   },
   picker_container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 30,
   },
   picker: {
+    flex: 1,
     width: '100%',
     height: '100%',
   },
   list_container: {
-    flex: 3,
+    flex: 2,
     backgroundColor: 'rgba(23, 23, 77, 0.479)',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,

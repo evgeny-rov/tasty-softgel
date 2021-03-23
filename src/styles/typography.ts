@@ -17,6 +17,11 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontSize: theme.size.m,
   },
+  body_sm: {
+    color: theme.colors.primary,
+    fontWeight: 'bold',
+    fontSize: theme.size.sm,
+  },
   body_sub_gray: {
     color: theme.colors.secondary,
     fontSize: theme.size.sm,
