@@ -4,15 +4,28 @@ import {useSelector, useDispatch} from 'react-redux';
 import {BellIcon} from '@icons/';
 import {AppState, Medicine} from 'src/types';
 import {common, theme, typography} from '@styles/';
-import { actions } from 'src/redux/actions';
+import {
+  assignReminder,
+  unassignReminder,
+} from 'src/redux/shared/shared.actions';
 
 const RemindersMedicinesListItem = (props: Medicine) => {
-  const selectedHour = useSelector((state: AppState) => state.pickerSelectedValue);
+  const selectedHour = useSelector(
+    (state: AppState) => state.pickerSelectedValue,
+  );
   const dispatch = useDispatch();
 
-  const isAssignedToSelectedHour = props.hours.some((hour) => hour === selectedHour);
+  const isAssignedToSelectedHour = props.reminders.some(
+    (hour) => hour === selectedHour,
+  );
 
-  const updateStatus = () => dispatch(actions.updateReminders({hour: selectedHour, id: props.id}));
+  const toggleReminderStatus = () => {
+    if (isAssignedToSelectedHour) {
+      dispatch(unassignReminder({medicineId: props.id, hour: selectedHour}));
+    } else {
+      dispatch(assignReminder({medicineId: props.id, hour: selectedHour}));
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -25,7 +38,7 @@ const RemindersMedicinesListItem = (props: Medicine) => {
       <Pressable
         android_ripple={theme.configs.ripple_sm}
         hitSlop={15}
-        onPress={updateStatus}>
+        onPress={toggleReminderStatus}>
         <BellIcon
           fill={isAssignedToSelectedHour ? theme.colors.primary : 'transparent'}
           stroke={theme.colors.primary}

@@ -3,7 +3,7 @@ import {View, Pressable, StyleSheet} from 'react-native';
 import {StackNavigationState, ParamListBase} from '@react-navigation/native';
 import {StackNavigationHelpers} from '@react-navigation/stack/src/types';
 
-import routes from '../navigations/routes';
+import routes from '../navigation/routes';
 import {ClipBoardListIcon, HomeIcon, PillListIcon} from '@icons/';
 import {theme, common} from '@styles/';
 

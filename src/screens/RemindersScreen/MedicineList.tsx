@@ -1,7 +1,7 @@
 import React from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
-import { medicinesSelector } from 'src/redux/selectors';
+import {medicinesSelector} from 'src/redux/entities/medicines/medicines.selectors';
 import RemindersMedicinesListItem from './MedicineListItem';
 
 const RemindersMedicinesList = () => {
@@ -20,7 +20,7 @@ const RemindersMedicinesList = () => {
             id={medicine.id}
             name={medicine.name}
             currentAmount={medicine.currentAmount}
-            hours={medicine.hours}
+            reminders={medicine.reminders}
             initialAmount={30}
           />
         );

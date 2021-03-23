@@ -8,7 +8,7 @@ import MedicineList from './MedicineList';
 import hourToTimeString from '../../utils/hourToTimeString';
 import {typography} from '@styles/';
 import {AppState} from 'src/types';
-import {actions} from 'src/redux/actions';
+import {updatePickerValue} from 'src/redux/entities/picker/picker.actions';
 
 const HOURS_AS_STRING_ARRAY = Array(24)
   .fill(null)
@@ -21,12 +21,10 @@ const RemindersScreen = () => {
   const dispatch = useDispatch();
 
   const pickerValueChangeHandler = (val: number) => {
-    console.log(val);
     if (val === selectedHour) {
       return;
     }
-    console.log('dispatch');
-    dispatch(actions.updatePickerValue({value: val}));
+    dispatch(updatePickerValue({value: val}));
   };
 
   return (

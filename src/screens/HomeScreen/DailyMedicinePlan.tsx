@@ -4,16 +4,14 @@ import SizedBox from '@components/SizedBox';
 import {theme, typography} from 'src/styles';
 import {useSelector} from 'react-redux';
 import hourToTimeString from 'src/utils/hourToTimeString';
-import {byHourMedicinesSelector} from 'src/redux/selectors';
+import {byHourMedicinesSelector} from 'src/redux/shared/shared.selectors';
+import {AppState, Medicine} from 'src/types';
 
-const PlanItem = ({
-  hour,
-  medicinesNames,
-}: {
-  hour: string;
-  medicinesNames: string[];
-}) => {
-  const hasToRemind = Math.abs(new Date().getHours() - Number(hour)) <= 1;
+const PlanItem = ({hour, medicines}: {hour: number; medicines: Medicine[]}) => {
+  const medicinesNames = useSelector((state: AppState) =>
+    medicines.map(({id}) => state.medicines.byId[id].name),
+  );
+  const hasToRemind = new Date().getHours() === hour;
 
   const textColor = {
     color: hasToRemind ? theme.colors.accent2 : theme.colors.primary,
@@ -50,7 +48,7 @@ const PlanList = () => {
         <PlanItem
           key={idx}
           hour={hourItem.hour}
-          medicinesNames={hourItem.medicinesNames}
+          medicines={hourItem.medicines}
         />
       ))}
     </View>
