@@ -4,11 +4,8 @@ import {
   UNASSIGN_REMINDER,
   TypedUpdateRemindersAction,
 } from 'src/redux/shared/shared.actions';
-import {AppState} from 'src/types';
-import {
-  getScheduledNotifications,
-  updateNotifications,
-} from './NotificationManager';
+import {AppStateType} from 'src/types';
+import {updateDailyNotifications} from './NotificationManager';
 
 type ExpectedAction = TypedUpdateRemindersAction;
 
@@ -20,10 +17,8 @@ const testMiddleware: Middleware = ({getState}) => (next) => (
   const result = next(action);
 
   if (triggerActions.includes(action.type)) {
-    const nextState: AppState = getState();
-    getScheduledNotifications(console.log);
-    updateNotifications(nextState.reminders.allHours);
-    getScheduledNotifications(console.log);
+    const nextState: AppStateType = getState();
+    updateDailyNotifications(nextState.reminders.allHours);
   }
 
   return result;

@@ -1,10 +1,10 @@
 import {createSelector} from 'reselect';
-import {AppState} from 'src/types';
+import {AppStateType} from 'src/types';
 
-const getMedicinesIds = (state: AppState) => state.medicines.allIds;
-const getMedicines = (state: AppState) => state.medicines.byId;
-const getAllHours = (state: AppState) => state.reminders.allHours;
-const getByHoursReminders = (state: AppState) => state.reminders.byHour;
+const getMedicinesIds = (state: AppStateType) => state.medicines.allIds;
+const getMedicines = (state: AppStateType) => state.medicines.byId;
+const getAllHours = (state: AppStateType) => state.reminders.allHours;
+const getByHoursReminders = (state: AppStateType) => state.reminders.byHour;
 
 export const byHourMedicinesSelector = createSelector(
   [getMedicines, getAllHours, getByHoursReminders],

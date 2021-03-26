@@ -25,7 +25,7 @@ export type RemindersState = {
   };
 };
 
-export type AppState = {
+export type AppStateType = {
   medicines: MedicinesState;
   reminders: RemindersState;
   pickerSelectedValue: number;
