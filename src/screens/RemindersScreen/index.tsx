@@ -7,7 +7,7 @@ import BgImage from '../../components/BgImage';
 import MedicineList from './MedicineList';
 import hourToTimeString from '../../utils/hourToTimeString';
 import {typography} from '@styles/';
-import {AppState} from 'src/types';
+import {AppStateType} from 'src/types';
 import {updatePickerValue} from 'src/redux/entities/picker/picker.actions';
 
 const HOURS_AS_STRING_ARRAY = Array(24)
@@ -16,7 +16,7 @@ const HOURS_AS_STRING_ARRAY = Array(24)
 
 const RemindersScreen = () => {
   const selectedHour = useSelector(
-    (state: AppState) => state.pickerSelectedValue,
+    (state: AppStateType) => state.pickerSelectedValue,
   );
   const dispatch = useDispatch();
 

@@ -41,6 +41,7 @@ export default (state = initlaState, action: TypedActions): RemindersState => {
         ...reminder,
         medicinesIds: without(reminder.medicinesIds, medicineId),
       };
+
       const newAllHours =
         newReminder.medicinesIds.length < 1
           ? without(state.allHours, hour)
@@ -48,7 +49,7 @@ export default (state = initlaState, action: TypedActions): RemindersState => {
       const newByHour =
         newReminder.medicinesIds.length < 1
           ? omit(state.byHour, hour)
-          : {...state.byHour};
+          : {...state.byHour, [hour]: newReminder };
 
       return {
         ...state,

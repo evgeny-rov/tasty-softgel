@@ -5,10 +5,10 @@ import {theme, typography} from 'src/styles';
 import {useSelector} from 'react-redux';
 import hourToTimeString from 'src/utils/hourToTimeString';
 import {byHourMedicinesSelector} from 'src/redux/shared/shared.selectors';
-import {AppState, Medicine} from 'src/types';
+import {AppStateType, Medicine} from 'src/types';
 
 const PlanItem = ({hour, medicines}: {hour: number; medicines: Medicine[]}) => {
-  const medicinesNames = useSelector((state: AppState) =>
+  const medicinesNames = useSelector((state: AppStateType) =>
     medicines.map(({id}) => state.medicines.byId[id].name),
   );
   const hasToRemind = new Date().getHours() === hour;

@@ -2,7 +2,7 @@ import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {BellIcon} from '@icons/';
-import {AppState, Medicine} from 'src/types';
+import {AppStateType, Medicine} from 'src/types';
 import {common, theme, typography} from '@styles/';
 import {
   assignReminder,
@@ -11,7 +11,7 @@ import {
 
 const RemindersMedicinesListItem = (props: Medicine) => {
   const selectedHour = useSelector(
-    (state: AppState) => state.pickerSelectedValue,
+    (state: AppStateType) => state.pickerSelectedValue,
   );
   const dispatch = useDispatch();
 
