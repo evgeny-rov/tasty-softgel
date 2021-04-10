@@ -4,6 +4,8 @@ import {PersistGate} from 'redux-persist/integration/react';
 import {store, persistor} from './redux/store';
 import AppNavigation from './navigation';
 
+store.subscribe(() => console.log(store.getState()));
+
 const App = () => {
   return (
     <Provider store={store}>

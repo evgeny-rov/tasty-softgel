@@ -1,13 +1,21 @@
 import {MedicinesState} from 'src/types';
-import {TypedAddMedicineAction, ADD_MEDICINE} from './medicines.actionTypes';
+import {
+  TypedAddMedicineAction,
+  TypedRemoveMedicineAction,
+  REMOVE_MEDICINE,
+  ADD_MEDICINE,
+} from './medicines.actionTypes';
 import {
   ASSIGN_REMINDER,
   UNASSIGN_REMINDER,
   TypedUpdateRemindersAction,
 } from '../reminders/reminders.actionTypes';
-import {without} from 'lodash';
+import {omit, without} from 'lodash';
 
-type TypedAction = TypedAddMedicineAction | TypedUpdateRemindersAction;
+type TypedAction =
+  | TypedAddMedicineAction
+  | TypedUpdateRemindersAction
+  | TypedRemoveMedicineAction;
 
 const initialState: MedicinesState = {
   allIds: [],
@@ -32,6 +40,15 @@ export default (state = initialState, action: TypedAction): MedicinesState => {
             reminders: [],
           },
         },
+      };
+    }
+    case REMOVE_MEDICINE: {
+      const {id} = action.payload;
+
+      return {
+        ...state,
+        allIds: without(state.allIds, id),
+        byId: omit(state.byId, id),
       };
     }
     case ASSIGN_REMINDER: {

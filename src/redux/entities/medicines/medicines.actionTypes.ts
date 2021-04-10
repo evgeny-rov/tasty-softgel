@@ -1,4 +1,4 @@
-import { Medicine } from "src/types";
+import {Medicine} from 'src/types';
 
 export const ADD_MEDICINE = 'ADD_MEDICINE';
 export const EDIT_MEDICINE = 'EDIT_MEDICINE';
