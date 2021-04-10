@@ -1,10 +1,10 @@
 import {MedicinesState} from 'src/types';
-import {TypedAddMedicineAction, ADD_MEDICINE} from './medicines.actions';
+import {TypedAddMedicineAction, ADD_MEDICINE} from './medicines.actionTypes';
 import {
   ASSIGN_REMINDER,
   UNASSIGN_REMINDER,
   TypedUpdateRemindersAction,
-} from '../../shared/shared.actions';
+} from '../reminders/reminders.actionTypes';
 import {without} from 'lodash';
 
 type TypedAction = TypedAddMedicineAction | TypedUpdateRemindersAction;

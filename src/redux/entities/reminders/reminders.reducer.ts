@@ -1,10 +1,10 @@
-import {omit, uniq, without} from 'lodash';
 import {RemindersState} from 'src/types';
 import {
   ASSIGN_REMINDER,
   UNASSIGN_REMINDER,
   TypedUpdateRemindersAction,
-} from '../../shared/shared.actions';
+} from './reminders.actionTypes';
+import {omit, uniq, without} from 'lodash';
 
 type TypedActions = TypedUpdateRemindersAction;
 
@@ -49,7 +49,7 @@ export default (state = initlaState, action: TypedActions): RemindersState => {
       const newByHour =
         newReminder.medicinesIds.length < 1
           ? omit(state.byHour, hour)
-          : {...state.byHour, [hour]: newReminder };
+          : {...state.byHour, [hour]: newReminder};
 
       return {
         ...state,

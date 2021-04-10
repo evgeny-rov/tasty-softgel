@@ -7,7 +7,7 @@ import AppNavigation from './navigation';
 const App = () => {
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+      <PersistGate persistor={persistor}>
         <AppNavigation />
       </PersistGate>
     </Provider>

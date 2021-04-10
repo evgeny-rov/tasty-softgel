@@ -1,12 +1,5 @@
-import { nanoid } from "@reduxjs/toolkit";
-
-export const ADD_MEDICINE = 'ADD_MEDICINE';
-export const EDIT_MEDICINE = 'EDIT_MEDICINE';
-
-export type TypedAddMedicineAction = {
-  type: typeof ADD_MEDICINE;
-  payload: {id: string; name: string; amount: number};
-};
+import {nanoid} from '@reduxjs/toolkit';
+import {ADD_MEDICINE, TypedAddMedicineAction} from './medicines.actionTypes';
 
 export const addMedicine = ({
   name,

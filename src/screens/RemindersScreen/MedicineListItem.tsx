@@ -7,7 +7,7 @@ import {common, theme, typography} from '@styles/';
 import {
   assignReminder,
   unassignReminder,
-} from 'src/redux/shared/shared.actions';
+} from 'src/redux/entities/reminders/reminders.actions';
 
 const RemindersMedicinesListItem = (props: Medicine) => {
   const selectedHour = useSelector(

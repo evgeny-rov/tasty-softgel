@@ -1,6 +1,7 @@
 import {nanoid} from '@reduxjs/toolkit';
 import {Platform} from 'react-native';
 import PushNotification from 'react-native-push-notification';
+import { actionCreator, persistor, store } from 'src/redux/store';
 import hourToTimeString from 'src/utils/hourToTimeString';
 
 const channels = {
@@ -55,6 +56,7 @@ export const scheduleDailyNotification = (hour: number) => {
     date: scheduledDate,
     title: 'Напоминание о приеме',
     message: 'Не забудьте выпить лекарства!',
+    group: 'daily-reminder',
     repeatType: 'day',
     vibrate: true,
     vibration: 500,
@@ -62,7 +64,7 @@ export const scheduleDailyNotification = (hour: number) => {
 };
 
 export const updateDailyNotifications = (hours: number[]) => {
-  PushNotification.getScheduledLocalNotifications(console.log)
+  PushNotification.getScheduledLocalNotifications(console.log);
   cancelNotifications({type: 'daily-reminder'});
   hours.forEach((hour) => scheduleDailyNotification(hour));
 };
@@ -83,11 +85,44 @@ const configureChannels = () => {
   });
 };
 
+export const fireScheduledTestNotification = () => {
+  const scheduledDate = new Date(Date.now() + 5000);
+  const hour = 10;
+
+  PushNotification.localNotificationSchedule({
+    userInfo: {id: nanoid(), hour, type: 'test'},
+    channelId: channels.byId.test_channel.channelId,
+    subText: hourToTimeString(hour),
+    date: scheduledDate,
+    actions: ['poop'],
+    invokeApp: false,
+    title: 'Напоминание о приеме',
+    message: 'Не забудьте выпить лекарства!',
+    group: 'daily-reminder',
+  });
+};
+
+export const fireTestNotification = () => {
+  PushNotification.localNotification({
+    userInfo: {id: nanoid(), type: 'test'},
+    channelId: channels.byId.test_channel.channelId,
+    title: 'TEST!',
+    message: 'Это тестовое оповещение',
+    vibrate: true,
+    vibration: 500,
+  });
+};
+
 PushNotification.configure({
   // onRegister: (token) => console.log('notif registration, token:', token),
-  // onNotification: (notification) => null,
+  // onNotification: (notification) => {
+  //   console.log('onNotification event');
+  //   // store.dispatch(updatePickerValue({value: Math.floor(Math.random() * 23)}));
+  // },
+  onAction: actionCreator,
   requestPermissions: Platform.OS === 'ios',
 });
 
 configureChannels();
-PushNotification.setApplicationIconBadgeNumber(0);
+
+PushNotification.removeAllDeliveredNotifications();

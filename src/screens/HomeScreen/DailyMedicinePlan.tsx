@@ -4,7 +4,7 @@ import SizedBox from '@components/SizedBox';
 import {theme, typography} from 'src/styles';
 import {useSelector} from 'react-redux';
 import hourToTimeString from 'src/utils/hourToTimeString';
-import {byHourMedicinesSelector} from 'src/redux/shared/shared.selectors';
+import {byHourMedicinesSelector} from 'src/redux/entities/reminders/reminders.selectors';
 import {AppStateType, Medicine} from 'src/types';
 
 const PlanItem = ({hour, medicines}: {hour: number; medicines: Medicine[]}) => {

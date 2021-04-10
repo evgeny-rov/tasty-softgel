@@ -1,12 +1,10 @@
-import {applyMiddleware, combineReducers, createStore} from 'redux';
+import {combineReducers, createStore} from 'redux';
 import {persistStore, persistReducer} from 'redux-persist';
 import AsyncStorage from '@react-native-community/async-storage';
 import {AppStateType} from 'src/types';
 import medicinesReducer from '../entities/medicines/medicines.reducer';
 import remindersReducer from '../entities/reminders/reminders.reducer';
 import pickerReducer from '../entities/picker/picker.reducer';
-import testMiddleware from 'src/services/notifications/NotificationMiddleware';
-
 
 const persistConfig = {
   key: 'root-state',
@@ -25,7 +23,7 @@ const persistedReducer = persistReducer<AppStateType, any>(
 );
 
 // add middleware
-const store = createStore(persistedReducer, applyMiddleware(testMiddleware));
+const store = createStore(persistedReducer);
 const persistor = persistStore(store);
 
 export {store, persistor};
