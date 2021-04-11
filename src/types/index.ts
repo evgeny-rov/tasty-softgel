@@ -25,8 +25,14 @@ export type RemindersState = {
   };
 };
 
+export type SystemState = {
+  currentHour: number;
+  isDataUpdated: boolean;
+  lastConfirmationAt: number;
+};
+
 export type AppStateType = {
   medicines: MedicinesState;
   reminders: RemindersState;
-  pickerSelectedValue: number;
+  system: SystemState;
 };

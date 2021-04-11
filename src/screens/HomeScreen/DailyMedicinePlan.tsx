@@ -1,21 +1,40 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, Button} from 'react-native';
 import SizedBox from '@components/SizedBox';
 import {theme, typography} from 'src/styles';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import hourToTimeString from 'src/utils/hourToTimeString';
 import {byHourMedicinesSelector} from 'src/redux/entities/reminders/reminders.selectors';
 import {AppStateType, Medicine} from 'src/types';
+import {confirmConsumption} from 'src/redux/entities/system/system.actions';
 
-const PlanItem = ({hour, medicines}: {hour: number; medicines: Medicine[]}) => {
+const PlanItem = ({
+  hour,
+  medicines,
+  isActive,
+}: {
+  hour: number;
+  medicines: Medicine[];
+  isActive: boolean;
+}) => {
+  const dispatch = useDispatch();
   const medicinesNames = useSelector((state: AppStateType) =>
     medicines.map(({id}) => state.medicines.byId[id].name),
   );
-  const hasToRemind = new Date().getHours() === hour;
+
+  const isConsumptionConfirmed = useSelector(
+    (state: AppStateType) => state.system.isDataUpdated,
+  );
 
   const textColor = {
-    color: hasToRemind ? theme.colors.accent2 : theme.colors.primary,
+    color: isActive ? theme.colors.accent2 : theme.colors.primary,
   };
+
+  const confirmationBtn = (
+    <Button
+      title="confirm"
+      onPress={() => dispatch(confirmConsumption())}></Button>
+  );
 
   return (
     <View
@@ -29,6 +48,7 @@ const PlanItem = ({hour, medicines}: {hour: number; medicines: Medicine[]}) => {
         {hourToTimeString(Number(hour))}
       </Text>
       <SizedBox width={50} />
+      {!isConsumptionConfirmed && isActive && confirmationBtn}
       <Text
         style={[
           typography.styles.body_bold,
@@ -42,6 +62,12 @@ const PlanItem = ({hour, medicines}: {hour: number; medicines: Medicine[]}) => {
 
 const PlanList = () => {
   const hourlyPlan = useSelector(byHourMedicinesSelector);
+  const currentSystemHour = useSelector(
+    (state: AppStateType) => state.system.currentHour,
+  );
+
+  console.log('homepage render, current hour is:', currentSystemHour);
+
   return (
     <View>
       {hourlyPlan.map((hourItem, idx) => (
@@ -49,6 +75,7 @@ const PlanList = () => {
           key={idx}
           hour={hourItem.hour}
           medicines={hourItem.medicines}
+          isActive={hourItem.hour === currentSystemHour}
         />
       ))}
     </View>

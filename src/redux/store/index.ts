@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {AppStateType} from 'src/types';
 import medicinesReducer from '../entities/medicines/medicines.reducer';
 import remindersReducer from '../entities/reminders/reminders.reducer';
-import pickerReducer from '../entities/picker/picker.reducer';
+import systemReducer from '../entities/system/system.reducer';
 
 const persistConfig = {
   key: 'root-state',
@@ -14,7 +14,7 @@ const persistConfig = {
 const rootReducer = combineReducers<AppStateType>({
   medicines: medicinesReducer,
   reminders: remindersReducer,
-  pickerSelectedValue: pickerReducer,
+  system: systemReducer,
 });
 
 const persistedReducer = persistReducer<AppStateType, any>(

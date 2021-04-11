@@ -1,30 +1,24 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
 import Picker from '@gregfrench/react-native-wheel-picker';
 
 import BgImage from '../../components/BgImage';
 import MedicineList from './MedicineList';
 import hourToTimeString from '../../utils/hourToTimeString';
 import {typography} from '@styles/';
-import {AppStateType} from 'src/types';
-import {updatePickerValue} from 'src/redux/entities/picker/picker.actions';
 
 const HOURS_AS_STRING_ARRAY = Array(24)
   .fill(null)
   .map((_, idx) => hourToTimeString(idx));
 
 const RemindersScreen = () => {
-  const selectedHour = useSelector(
-    (state: AppStateType) => state.pickerSelectedValue,
-  );
-  const dispatch = useDispatch();
+  const [pickerSelectedHour, setPickerSelectedHour] = useState(12);
 
   const pickerValueChangeHandler = (val: number) => {
-    if (val === selectedHour) {
+    if (val === pickerSelectedHour) {
       return;
     }
-    dispatch(updatePickerValue({value: val}));
+    setPickerSelectedHour(val);
   };
 
   return (
@@ -39,7 +33,7 @@ const RemindersScreen = () => {
             style={styles.picker}
             lineGradientColorFrom="#1a1a1a"
             lineGradientColorTo="#FFF"
-            selectedValue={selectedHour}
+            selectedValue={pickerSelectedHour}
             onValueChange={pickerValueChangeHandler}>
             {HOURS_AS_STRING_ARRAY.map((value, idx) => (
               <Picker.Item key={value} label={value} value={idx} />
@@ -47,7 +41,7 @@ const RemindersScreen = () => {
           </Picker>
         </View>
         <View style={styles.list_container}>
-          <MedicineList />
+          <MedicineList pickerSelectedHour={pickerSelectedHour} />
         </View>
       </View>
     </>

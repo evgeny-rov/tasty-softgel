@@ -1,7 +1,12 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import {nanoid} from '@reduxjs/toolkit';
-import {Platform} from 'react-native';
-import PushNotification from 'react-native-push-notification';
-import { actionCreator, persistor, store } from 'src/redux/store';
+import {AppState, Platform} from 'react-native';
+import PushNotification, {
+  ReceivedNotification,
+} from 'react-native-push-notification';
+import {updateMedicinesAmounts} from 'src/redux/entities/medicines/medicines.actions';
+import {notificationAction, store} from 'src/redux/store';
+import {AppStateType} from 'src/types';
 import hourToTimeString from 'src/utils/hourToTimeString';
 
 const channels = {
@@ -94,7 +99,7 @@ export const fireScheduledTestNotification = () => {
     channelId: channels.byId.test_channel.channelId,
     subText: hourToTimeString(hour),
     date: scheduledDate,
-    actions: ['poop'],
+    actions: ['poop', 'not poop'],
     invokeApp: false,
     title: 'Напоминание о приеме',
     message: 'Не забудьте выпить лекарства!',
@@ -113,13 +118,58 @@ export const fireTestNotification = () => {
   });
 };
 
+const offlineStoreTest = async (not: ReceivedNotification) => {
+  const data = await AsyncStorage.getItem('persist:root-state');
+  const state: AppStateType = data && JSON.parse(data);
+  if (!state) return;
+
+  console.log('data type', data);
+  console.log('state keys:', Object.keys(state));
+  console.log('state keys:', Object.keys(state.medicines));
+
+  console.log('saved state', typeof state.reminders.allHours);
+  console.log('saved state', state.medicines.allIds);
+
+  const medicinesIds = state.medicines.allIds;
+  const updatedMedicines = {...state.medicines.byId};
+
+  medicinesIds.forEach((id) => {
+    const {currentAmount} = updatedMedicines[id];
+    if (currentAmount < 1) return;
+
+    updatedMedicines[id].currentAmount -= 1;
+  });
+
+  const newState: AppStateType = {
+    ...state,
+    medicines: {
+      ...state.medicines,
+      byId: updatedMedicines,
+    },
+  };
+
+  const newStateString = JSON.stringify(newState);
+  await AsyncStorage.setItem('persist:root-state', newStateString);
+};
+
 PushNotification.configure({
   // onRegister: (token) => console.log('notif registration, token:', token),
   // onNotification: (notification) => {
   //   console.log('onNotification event');
   //   // store.dispatch(updatePickerValue({value: Math.floor(Math.random() * 23)}));
   // },
-  onAction: actionCreator,
+  onAction: async (notification) => {
+    console.log(notification);
+    // offlineStoreTest(notification);
+    await AsyncStorage.getAllKeys((err, keys) => {
+      store.dispatch(
+        updateMedicinesAmounts({
+          medicinesIds: store.getState().medicines.allIds,
+        }),
+      );
+      fireScheduledTestNotification();
+    });
+  },
   requestPermissions: Platform.OS === 'ios',
 });
 

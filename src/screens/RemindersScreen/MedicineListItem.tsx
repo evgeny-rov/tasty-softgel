@@ -1,38 +1,45 @@
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
-import {useSelector, useDispatch} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {BellIcon} from '@icons/';
-import {AppStateType, Medicine} from 'src/types';
+import {Medicine} from 'src/types';
 import {common, theme, typography} from '@styles/';
 import {
   assignReminder,
   unassignReminder,
 } from 'src/redux/entities/reminders/reminders.actions';
 
-const RemindersMedicinesListItem = (props: Medicine) => {
-  const selectedHour = useSelector(
-    (state: AppStateType) => state.pickerSelectedValue,
-  );
+type medicine = {
+  medicine: Medicine;
+  pickerSelectedHour: number;
+  isActive: boolean;
+};
+
+const RemindersMedicinesListItem = ({
+  medicine,
+  isActive,
+  pickerSelectedHour,
+}: medicine) => {
   const dispatch = useDispatch();
 
-  const isAssignedToSelectedHour = props.reminders.some(
-    (hour) => hour === selectedHour,
-  );
-
   const toggleReminderStatus = () => {
-    if (isAssignedToSelectedHour) {
-      dispatch(unassignReminder({medicineId: props.id, hour: selectedHour}));
+    if (isActive) {
+      dispatch(
+        unassignReminder({medicineId: medicine.id, hour: pickerSelectedHour}),
+      );
     } else {
-      dispatch(assignReminder({medicineId: props.id, hour: selectedHour}));
+      dispatch(
+        assignReminder({medicineId: medicine.id, hour: pickerSelectedHour}),
+      );
     }
   };
 
   return (
     <View style={styles.container}>
       <View style={common.styles.col}>
-        <Text style={typography.styles.body}>{props.name}</Text>
+        <Text style={typography.styles.body}>{medicine.name}</Text>
         <Text style={typography.styles.body_sub_gray}>
-          {props.currentAmount} шт.
+          {medicine.currentAmount} шт.
         </Text>
       </View>
       <Pressable
@@ -40,7 +47,7 @@ const RemindersMedicinesListItem = (props: Medicine) => {
         hitSlop={15}
         onPress={toggleReminderStatus}>
         <BellIcon
-          fill={isAssignedToSelectedHour ? theme.colors.primary : 'transparent'}
+          fill={isActive ? theme.colors.primary : 'transparent'}
           stroke={theme.colors.primary}
         />
       </Pressable>

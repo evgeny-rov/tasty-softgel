@@ -4,7 +4,11 @@ import {useSelector} from 'react-redux';
 import {medicinesSelector} from 'src/redux/entities/medicines/medicines.selectors';
 import RemindersMedicinesListItem from './MedicineListItem';
 
-const RemindersMedicinesList = () => {
+type Props = {
+  pickerSelectedHour: number;
+};
+
+const RemindersMedicinesList = ({pickerSelectedHour}: Props) => {
   const medicinesList = useSelector(medicinesSelector);
 
   return (
@@ -17,11 +21,9 @@ const RemindersMedicinesList = () => {
         return (
           <RemindersMedicinesListItem
             key={medicine.id}
-            id={medicine.id}
-            name={medicine.name}
-            currentAmount={medicine.currentAmount}
-            reminders={medicine.reminders}
-            initialAmount={30}
+            medicine={medicine}
+            pickerSelectedHour={pickerSelectedHour}
+            isActive={medicine.reminders.includes(pickerSelectedHour)}
           />
         );
       })}

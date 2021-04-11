@@ -2,8 +2,10 @@ import {MedicinesState} from 'src/types';
 import {
   TypedAddMedicineAction,
   TypedRemoveMedicineAction,
+  TypedUpdateMedicinesAmounts,
   REMOVE_MEDICINE,
   ADD_MEDICINE,
+  UPDATE_MEDICINES_AMOUNTS,
 } from './medicines.actionTypes';
 import {
   ASSIGN_REMINDER,
@@ -15,6 +17,7 @@ import {omit, without} from 'lodash';
 type TypedAction =
   | TypedAddMedicineAction
   | TypedUpdateRemindersAction
+  | TypedUpdateMedicinesAmounts
   | TypedRemoveMedicineAction;
 
 const initialState: MedicinesState = {
@@ -81,6 +84,22 @@ export default (state = initialState, action: TypedAction): MedicinesState => {
             reminders: without(medicineItem.reminders, hour),
           },
         },
+      };
+    }
+    case UPDATE_MEDICINES_AMOUNTS: {
+      const {medicinesIds} = action.payload;
+      const updatedMedicines = {...state.byId};
+
+      medicinesIds.forEach((id) => {
+        const {currentAmount} = updatedMedicines[id];
+        if (currentAmount < 1) return;
+
+        updatedMedicines[id].currentAmount -= 1;
+      });
+
+      return {
+        ...state,
+        byId: updatedMedicines,
       };
     }
     default: {
