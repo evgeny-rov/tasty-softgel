@@ -1,3 +1,4 @@
+import isDayPassed from 'src/utils/isDayPassed';
 import {
   SYSTEM_STEP,
   CONFIRM_CONSUMPTION,
@@ -7,30 +8,26 @@ import {
   TypedConfirmConsumptionAction,
 } from './system.actionTypes';
 
-const checkIfStale = (timestamp1: number, timestamp2: number) => {
-  const oneHourInMs = 1000 * 60 * 60;
-
-  return Math.abs(timestamp1 - timestamp2) > oneHourInMs;
-};
-
 export const systemStep = (): TypedSystemStepAction => ({
   type: SYSTEM_STEP,
   payload: {nextHour: new Date().getHours()},
 });
 
-export const confirmConsumption = (): TypedConfirmConsumptionAction => ({
+export const confirmConsumption = (
+  hour: number,
+): TypedConfirmConsumptionAction => ({
   type: CONFIRM_CONSUMPTION,
-  payload: {timestamp: Date.now()},
+  payload: {timestamp: Date.now(), hour},
 });
 
 export const systemRevive = ({
-  lastConfirmationAt,
+  lastConsumptionConfirmationAt,
 }: {
-  lastConfirmationAt: number;
+  lastConsumptionConfirmationAt: number;
 }): TypedSystemReviveAction => ({
   type: SYSTEM_REVIVE,
   payload: {
-    isStale: checkIfStale(Date.now(), lastConfirmationAt),
+    isDayPassed: isDayPassed(lastConsumptionConfirmationAt),
     hour: new Date().getHours(),
   },
 });

@@ -15,8 +15,8 @@ type TypedAction =
 
 const initialState: SystemState = {
   currentHour: new Date().getHours(),
-  isDataUpdated: false,
-  lastConfirmationAt: 0,
+  consumptionConfirmedHours: [],
+  lastConsumptionConfirmationAt: 0,
 };
 
 export default (state = initialState, action: TypedAction): SystemState => {
@@ -27,28 +27,28 @@ export default (state = initialState, action: TypedAction): SystemState => {
       return {
         ...state,
         currentHour: nextHour,
-        isDataUpdated: false,
+        consumptionConfirmedHours:
+          nextHour === 0 ? [] : state.consumptionConfirmedHours,
       };
     }
     case CONFIRM_CONSUMPTION: {
-      const {timestamp} = action.payload;
+      const {timestamp, hour} = action.payload;
 
       return {
         ...state,
-        isDataUpdated: true,
-        lastConfirmationAt: timestamp,
+        lastConsumptionConfirmationAt: timestamp,
+        consumptionConfirmedHours: [...state.consumptionConfirmedHours, hour],
       };
     }
     case SYSTEM_REVIVE: {
-      const {isStale, hour} = action.payload;
-
-      const shouldDataBeUpdated = !isStale && state.currentHour === hour;
-      console.log('revive', shouldDataBeUpdated);
+      const {isDayPassed, hour} = action.payload;
 
       return {
         ...state,
         currentHour: hour,
-        isDataUpdated: shouldDataBeUpdated,
+        consumptionConfirmedHours: isDayPassed
+          ? []
+          : state.consumptionConfirmedHours,
       };
     }
     default: {

@@ -12,18 +12,16 @@ const PlanItem = ({
   hour,
   medicines,
   isActive,
+  canBeConfirmed,
 }: {
   hour: number;
   medicines: Medicine[];
   isActive: boolean;
+  canBeConfirmed: boolean;
 }) => {
   const dispatch = useDispatch();
   const medicinesNames = useSelector((state: AppStateType) =>
     medicines.map(({id}) => state.medicines.byId[id].name),
-  );
-
-  const isConsumptionConfirmed = useSelector(
-    (state: AppStateType) => state.system.isDataUpdated,
   );
 
   const textColor = {
@@ -33,7 +31,7 @@ const PlanItem = ({
   const confirmationBtn = (
     <Button
       title="confirm"
-      onPress={() => dispatch(confirmConsumption())}></Button>
+      onPress={() => dispatch(confirmConsumption(hour))}></Button>
   );
 
   return (
@@ -48,7 +46,7 @@ const PlanItem = ({
         {hourToTimeString(Number(hour))}
       </Text>
       <SizedBox width={50} />
-      {!isConsumptionConfirmed && isActive && confirmationBtn}
+      {canBeConfirmed && confirmationBtn}
       <Text
         style={[
           typography.styles.body_bold,
@@ -62,21 +60,13 @@ const PlanItem = ({
 
 const PlanList = () => {
   const hourlyPlan = useSelector(byHourMedicinesSelector);
-  const currentSystemHour = useSelector(
-    (state: AppStateType) => state.system.currentHour,
-  );
 
-  console.log('homepage render, current hour is:', currentSystemHour);
+  console.log('homepage render, current hour is:', hourlyPlan);
 
   return (
     <View>
       {hourlyPlan.map((hourItem, idx) => (
-        <PlanItem
-          key={idx}
-          hour={hourItem.hour}
-          medicines={hourItem.medicines}
-          isActive={hourItem.hour === currentSystemHour}
-        />
+        <PlanItem key={idx} {...hourItem} />
       ))}
     </View>
   );

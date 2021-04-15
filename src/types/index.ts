@@ -27,8 +27,8 @@ export type RemindersState = {
 
 export type SystemState = {
   currentHour: number;
-  isDataUpdated: boolean;
-  lastConfirmationAt: number;
+  consumptionConfirmedHours: number[];
+  lastConsumptionConfirmationAt: number;
 };
 
 export type AppStateType = {
