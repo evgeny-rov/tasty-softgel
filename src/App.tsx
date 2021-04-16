@@ -5,18 +5,22 @@ import {store, persistor} from './redux/store';
 import AppNavigation from './navigation';
 import {systemRevive, systemStep} from './redux/entities/system/system.actions';
 import {AppStateType} from './types';
+import {initNotifications} from './services/notifications/NotificationManager';
+
+initNotifications(store);
 
 const App = () => {
   const dispatch = useDispatch();
-  const systemState = useSelector((state: AppStateType) => state.system);
 
   const updateSystemState = () => {
     dispatch(systemStep());
   };
 
+  console.log('app render');
+
   useEffect(() => {
     const intervalId = setInterval(() => {
-      const currentSystemHour = systemState.currentHour;
+      const currentSystemHour = store.getState().system.currentHour;
       const currentHour = new Date().getHours();
 
       console.log('state recheck', currentSystemHour, currentHour);
@@ -25,8 +29,8 @@ const App = () => {
 
     dispatch(
       systemRevive({
-        lastConsumptionConfirmationAt:
-          systemState.lastConsumptionConfirmationAt,
+        lastConsumptionConfirmationAt: store.getState().system
+          .lastConsumptionConfirmationAt,
       }),
     );
 

@@ -1,10 +1,15 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import {nanoid} from '@reduxjs/toolkit';
+import {nanoid, Store} from '@reduxjs/toolkit';
 import {AppState, Platform} from 'react-native';
 import PushNotification, {
   ReceivedNotification,
 } from 'react-native-push-notification';
+import {PersistPartial} from 'redux-persist/es/persistReducer';
 import {updateMedicinesAmounts} from 'src/redux/entities/medicines/medicines.actions';
+import {
+  confirmConsumption,
+  systemRevive,
+} from 'src/redux/entities/system/system.actions';
 import {notificationAction, store} from 'src/redux/store';
 import {AppStateType} from 'src/types';
 import hourToTimeString from 'src/utils/hourToTimeString';
@@ -51,18 +56,20 @@ export const cancelAllNotifications = () => {
   PushNotification.cancelAllLocalNotifications();
 };
 
-export const scheduleDailyNotification = (hour: number) => {
+export const scheduleNotification = (hour: number) => {
   const scheduledDate = createDate(hour);
 
   PushNotification.localNotificationSchedule({
     userInfo: {id: nanoid(), hour, type: 'daily-reminder'},
     channelId: channels.byId.daily_notifications.channelId,
-    subText: hourToTimeString(hour),
+    showWhen: true,
+    when: scheduledDate.getTime(),
     date: scheduledDate,
+    actions: ['poop'],
     title: 'Напоминание о приеме',
     message: 'Не забудьте выпить лекарства!',
     group: 'daily-reminder',
-    repeatType: 'day',
+    invokeApp: false,
     vibrate: true,
     vibration: 500,
   });
@@ -90,6 +97,80 @@ const configureChannels = () => {
   });
 };
 
+export const setNotification = (
+  hour: number,
+  prevState: AppStateType,
+  nextState: AppStateType,
+) => {
+  const alreadyExists = prevState.reminders.allHours.includes(hour);
+  console.log('not should be set', hour, alreadyExists);
+  if (alreadyExists) {
+    return;
+  }
+  scheduleNotification(hour);
+};
+
+export const unsetNotification = (
+  hour: number,
+  prevState: AppStateType,
+  nextState: AppStateType,
+) => {
+  const stillExists = nextState.reminders.allHours.includes(hour);
+  if (stillExists) {
+    return;
+  }
+  cancelNotifications({hour: hour.toString()});
+};
+
+export const setNextNotification = (
+  hour: number,
+  prevState: AppStateType,
+  nextState: AppStateType,
+) => {
+  cancelNotifications({hour: hour.toString()});
+
+  const remainingAmounts = nextState.reminders.byHour[hour].medicinesIds.reduce(
+    (acc, medId) => acc + nextState.medicines.byId[medId].currentAmount,
+    0,
+  );
+
+  if (remainingAmounts > 0) {
+    scheduleNotification(hour);
+  }
+};
+
+export const initNotifications = (
+  store: Store<AppStateType & PersistPartial, any>,
+) => {
+  PushNotification.configure({
+    // onRegister: (token) => console.log('notif registration, token:', token),
+    // onNotification: (notification) => {
+    //   console.log('onNotification event');
+    //   // store.dispatch(updatePickerValue({value: Math.floor(Math.random() * 23)}));
+    // },
+    onAction: async (notification) => {
+      await AsyncStorage.getAllKeys((err, keys) => {
+        const state = store.getState();
+        console.log('on action current state', state);
+        store.dispatch(
+          systemRevive({
+            lastConsumptionConfirmationAt:
+              state.system.lastConsumptionConfirmationAt,
+          }),
+        );
+
+        const notificationData = (notification.userInfo as unknown) as string;
+        const notificationDataJSON = JSON.parse(notificationData);
+
+        store.dispatch(confirmConsumption(notificationDataJSON.hour));
+      });
+    },
+    requestPermissions: Platform.OS === 'ios',
+  });
+
+  configureChannels();
+};
+
 export const fireScheduledTestNotification = () => {
   const scheduledDate = new Date(Date.now() + 5000);
   const hour = 10;
@@ -106,73 +187,3 @@ export const fireScheduledTestNotification = () => {
     group: 'daily-reminder',
   });
 };
-
-export const fireTestNotification = () => {
-  PushNotification.localNotification({
-    userInfo: {id: nanoid(), type: 'test'},
-    channelId: channels.byId.test_channel.channelId,
-    title: 'TEST!',
-    message: 'Это тестовое оповещение',
-    vibrate: true,
-    vibration: 500,
-  });
-};
-
-const offlineStoreTest = async (not: ReceivedNotification) => {
-  const data = await AsyncStorage.getItem('persist:root-state');
-  const state: AppStateType = data && JSON.parse(data);
-  if (!state) return;
-
-  console.log('data type', data);
-  console.log('state keys:', Object.keys(state));
-  console.log('state keys:', Object.keys(state.medicines));
-
-  console.log('saved state', typeof state.reminders.allHours);
-  console.log('saved state', state.medicines.allIds);
-
-  const medicinesIds = state.medicines.allIds;
-  const updatedMedicines = {...state.medicines.byId};
-
-  medicinesIds.forEach((id) => {
-    const {currentAmount} = updatedMedicines[id];
-    if (currentAmount < 1) return;
-
-    updatedMedicines[id].currentAmount -= 1;
-  });
-
-  const newState: AppStateType = {
-    ...state,
-    medicines: {
-      ...state.medicines,
-      byId: updatedMedicines,
-    },
-  };
-
-  const newStateString = JSON.stringify(newState);
-  await AsyncStorage.setItem('persist:root-state', newStateString);
-};
-
-PushNotification.configure({
-  // onRegister: (token) => console.log('notif registration, token:', token),
-  // onNotification: (notification) => {
-  //   console.log('onNotification event');
-  //   // store.dispatch(updatePickerValue({value: Math.floor(Math.random() * 23)}));
-  // },
-  onAction: async (notification) => {
-    console.log(notification);
-    // offlineStoreTest(notification);
-    await AsyncStorage.getAllKeys((err, keys) => {
-      store.dispatch(
-        updateMedicinesAmounts({
-          medicinesIds: store.getState().medicines.allIds,
-        }),
-      );
-      fireScheduledTestNotification();
-    });
-  },
-  requestPermissions: Platform.OS === 'ios',
-});
-
-configureChannels();
-
-PushNotification.removeAllDeliveredNotifications();
