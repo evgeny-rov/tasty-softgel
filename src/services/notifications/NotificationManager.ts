@@ -1,67 +1,34 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import {nanoid, Store} from '@reduxjs/toolkit';
-import {AppState, Platform} from 'react-native';
-import PushNotification, {
-  ReceivedNotification,
-} from 'react-native-push-notification';
+import {Store} from '@reduxjs/toolkit';
+import {Platform} from 'react-native';
+import PushNotification from 'react-native-push-notification';
 import {PersistPartial} from 'redux-persist/es/persistReducer';
-import {updateMedicinesAmounts} from 'src/redux/entities/medicines/medicines.actions';
 import {
   confirmConsumption,
   systemRevive,
 } from 'src/redux/entities/system/system.actions';
-import {notificationAction, store} from 'src/redux/store';
 import {AppStateType} from 'src/types';
-import hourToTimeString from 'src/utils/hourToTimeString';
-
-const channels = {
-  ids: ['daily_notifications', 'test_channel'],
-  byId: {
-    daily_notifications: {
-      channelId: 'daily_notifications',
-      channelName: 'Daily Notifications',
-      importance: 4,
-      vibrate: true,
-    },
-    test_channel: {
-      channelId: 'test_channel',
-      channelName: 'Test Channel',
-      importance: 4,
-      vibrate: true,
-    },
-  },
-} as const;
-
-const createDate = (hour: number) => {
-  const currentDate = new Date();
-  const newDate = new Date();
-  newDate.setHours(hour, 0, 0, 0);
-
-  if (currentDate.getTime() >= newDate.getTime()) {
-    newDate.setDate(newDate.getDate() + 1);
-  }
-
-  return newDate;
-};
+import getAvailableDateFromHour from 'src/utils/getAvailableDateFromHour';
+import {channels} from './configs';
 
 export const getScheduledNotifications = (callback: any) => {
   PushNotification.getScheduledLocalNotifications(callback);
 };
 
-export const cancelNotifications = (details: {[prop: string]: string}) => {
-  PushNotification.cancelLocalNotifications(details);
+export const cancelNotificationByHour = (hour: number) => {
+  PushNotification.clearLocalNotification('reminder', hour);
+  PushNotification.cancelLocalNotifications({hour});
 };
 
 export const cancelAllNotifications = () => {
   PushNotification.cancelAllLocalNotifications();
 };
 
-export const scheduleNotification = (hour: number) => {
-  const scheduledDate = createDate(hour);
-
+export const scheduleNotification = (scheduledDate: Date) => {
   PushNotification.localNotificationSchedule({
-    userInfo: {id: nanoid(), hour, type: 'daily-reminder'},
     channelId: channels.byId.daily_notifications.channelId,
+    id: scheduledDate.getHours(),
+    tag: 'reminder',
     showWhen: true,
     when: scheduledDate.getTime(),
     date: scheduledDate,
@@ -75,10 +42,47 @@ export const scheduleNotification = (hour: number) => {
   });
 };
 
-export const updateDailyNotifications = (hours: number[]) => {
-  PushNotification.getScheduledLocalNotifications(console.log);
-  cancelNotifications({type: 'daily-reminder'});
-  hours.forEach((hour) => scheduleDailyNotification(hour));
+export const setNotification = (
+  hour: number,
+  prevState: AppStateType,
+  nextState: AppStateType,
+) => {
+  const alreadyExists = prevState.reminders.allHours.includes(hour);
+  if (alreadyExists) {
+    return;
+  }
+  scheduleNotification(getAvailableDateFromHour(hour));
+};
+
+export const unsetNotification = (
+  hour: number,
+  prevState: AppStateType,
+  nextState: AppStateType,
+) => {
+  const shouldExist = nextState.reminders.allHours.includes(hour);
+  if (shouldExist) {
+    return;
+  }
+  cancelNotificationByHour(hour);
+};
+
+export const setNextNotification = (
+  hour: number,
+  prevState: AppStateType,
+  nextState: AppStateType,
+) => {
+  cancelNotificationByHour(hour);
+
+  const remainingAmounts = nextState.reminders.byHour[hour].medicinesIds.reduce(
+    (acc, medId) => acc + nextState.medicines.byId[medId].currentAmount,
+    0,
+  );
+
+  console.log('calced amounts', remainingAmounts);
+
+  if (remainingAmounts > 0) {
+    scheduleNotification(getAvailableDateFromHour(hour));
+  }
 };
 
 const configureChannels = () => {
@@ -95,48 +99,6 @@ const configureChannels = () => {
       PushNotification.createChannel(channels.byId[id], () => null),
     );
   });
-};
-
-export const setNotification = (
-  hour: number,
-  prevState: AppStateType,
-  nextState: AppStateType,
-) => {
-  const alreadyExists = prevState.reminders.allHours.includes(hour);
-  console.log('not should be set', hour, alreadyExists);
-  if (alreadyExists) {
-    return;
-  }
-  scheduleNotification(hour);
-};
-
-export const unsetNotification = (
-  hour: number,
-  prevState: AppStateType,
-  nextState: AppStateType,
-) => {
-  const stillExists = nextState.reminders.allHours.includes(hour);
-  if (stillExists) {
-    return;
-  }
-  cancelNotifications({hour: hour.toString()});
-};
-
-export const setNextNotification = (
-  hour: number,
-  prevState: AppStateType,
-  nextState: AppStateType,
-) => {
-  cancelNotifications({hour: hour.toString()});
-
-  const remainingAmounts = nextState.reminders.byHour[hour].medicinesIds.reduce(
-    (acc, medId) => acc + nextState.medicines.byId[medId].currentAmount,
-    0,
-  );
-
-  if (remainingAmounts > 0) {
-    scheduleNotification(hour);
-  }
 };
 
 export const initNotifications = (
@@ -159,10 +121,7 @@ export const initNotifications = (
           }),
         );
 
-        const notificationData = (notification.userInfo as unknown) as string;
-        const notificationDataJSON = JSON.parse(notificationData);
-
-        store.dispatch(confirmConsumption(notificationDataJSON.hour));
+        store.dispatch(confirmConsumption(Number(notification.id)));
       });
     },
     requestPermissions: Platform.OS === 'ios',
@@ -171,15 +130,32 @@ export const initNotifications = (
   configureChannels();
 };
 
-export const fireScheduledTestNotification = () => {
-  const scheduledDate = new Date(Date.now() + 5000);
-  const hour = 10;
+// export const fireTestNotif = (id: number) => {
+//   // const scheduledDate = new Date(Date.now() + 2000);
+//   const hour = 10;
+
+//   PushNotification.localNotification({
+//     userInfo: {hour, type: 'test'},
+//     tag: hour.toString(),
+//     id,
+//     channelId: channels.byId.test_channel.channelId,
+//     actions: ['poop', 'not poop'],
+//     invokeApp: false,
+//     title: 'Напоминание о приеме',
+//     message: 'Не забудьте выпить лекарства!',
+//     group: 'daily-reminder',
+//   });
+// };
+
+export const fireTestScheduledNotif = (id: number) => {
+  const hour = 11;
 
   PushNotification.localNotificationSchedule({
-    userInfo: {id: nanoid(), hour, type: 'test'},
+    date: new Date(Date.now() + 5000),
+    tag: hour.toString(),
+    id,
+    userInfo: {hour, type: 'test'},
     channelId: channels.byId.test_channel.channelId,
-    subText: hourToTimeString(hour),
-    date: scheduledDate,
     actions: ['poop', 'not poop'],
     invokeApp: false,
     title: 'Напоминание о приеме',

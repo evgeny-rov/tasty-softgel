@@ -9,11 +9,12 @@ import {
   TypedConfirmConsumptionAction,
 } from 'src/redux/entities/system/system.actionTypes';
 import {AppStateType} from 'src/types';
+
 import {
-  setNextNotification,
-  setNotification,
-  unsetNotification,
-} from './NotificationManager';
+  handleAssignReminder,
+  handleUnassignReminder,
+  handleNextScheduledReminder,
+} from './notifications.manager';
 
 type ExpectedAction =
   | TypedUpdateRemindersAction
@@ -25,10 +26,19 @@ const triggerActions = [
   CONFIRM_CONSUMPTION,
 ];
 
+type params = {
+  hour: number;
+  prevState: AppStateType;
+  nextState: AppStateType;
+};
+
 const triggerResponses = {
-  ASSIGN_REMINDER: setNotification,
-  UNASSIGN_REMINDER: unsetNotification,
-  CONFIRM_CONSUMPTION: setNextNotification,
+  ASSIGN_REMINDER: (params: params) =>
+    handleAssignReminder(params.hour, params.nextState),
+  UNASSIGN_REMINDER: (params: params) =>
+    handleUnassignReminder(params.hour, params.nextState),
+  CONFIRM_CONSUMPTION: (params: params) =>
+    handleNextScheduledReminder(params.hour, params.nextState),
 };
 
 const testMiddleware: Middleware = ({getState}) => (next) => (
@@ -39,7 +49,11 @@ const testMiddleware: Middleware = ({getState}) => (next) => (
 
   if (triggerActions.includes(action.type)) {
     const nextState: AppStateType = getState();
-    triggerResponses[action.type](action.payload.hour, prevState, nextState);
+    triggerResponses[action.type]({
+      hour: action.payload.hour,
+      prevState,
+      nextState,
+    });
   }
 
   return result;
