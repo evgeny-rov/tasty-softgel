@@ -1,13 +1,13 @@
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {useDispatch} from 'react-redux';
-import {BellIcon} from '@icons/';
 import {Medicine} from 'src/types';
 import {common, theme, typography} from '@styles/';
 import {
   assignReminder,
   unassignReminder,
 } from 'src/redux/entities/reminders/reminders.actions';
+import Icon from '@components/Icon';
 
 type medicine = {
   medicine: Medicine;
@@ -46,9 +46,10 @@ const RemindersMedicinesListItem = ({
         android_ripple={theme.configs.ripple_sm}
         hitSlop={15}
         onPress={toggleReminderStatus}>
-        <BellIcon
-          fill={isActive ? theme.colors.primary : 'transparent'}
-          stroke={theme.colors.primary}
+        <Icon
+          name={isActive ? 'notifications' : 'notifications_none'}
+          color={theme.colors.primary}
+          size={24}
         />
       </Pressable>
     </View>

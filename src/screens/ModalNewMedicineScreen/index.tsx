@@ -6,8 +6,9 @@ import {useDispatch} from 'react-redux';
 import {common, theme, typography} from '@styles/';
 import RepeatedActionButton from '@components/RepeatedActionButton';
 import SizedBox from '../../components/SizedBox';
-import {CloseIcon, ArrowIcon} from '@icons/';
 import {addMedicine} from 'src/redux/entities/medicines/medicines.actions';
+import {CloseIcon, ArrowIcon} from '@icons/';
+import Icon from '@components/Icon';
 
 interface Props {
   navigation: StackNavigationHelpers;
@@ -40,7 +41,7 @@ const ModalNewMedicineScreen = ({navigation}: Props) => {
             android_ripple={theme.configs.ripple_sm}
             onPress={goBack}
             hitSlop={25}>
-            <CloseIcon fill="#fff" width={12} height={12} />
+            <Icon name="clear" color={theme.colors.primary} size={20} />
           </Pressable>
         </View>
         <SizedBox height={60} />
@@ -61,13 +62,13 @@ const ModalNewMedicineScreen = ({navigation}: Props) => {
           <Text style={typography.styles.h2}>Количество:</Text>
           <View style={styles.section}>
             <RepeatedActionButton action={decrementAmount}>
-              <ArrowIcon fill="white" rotation={180} />
+              <Icon name="keyboard_arrow_left" color={theme.colors.primary} size={20} />
             </RepeatedActionButton>
             <Text style={[typography.styles.h2, styles.padded_amount]}>
               {amount}
             </Text>
             <RepeatedActionButton action={incrementAmount}>
-              <ArrowIcon fill="white" />
+            <Icon name="keyboard_arrow_right" color={theme.colors.primary} size={20} />
             </RepeatedActionButton>
           </View>
         </View>

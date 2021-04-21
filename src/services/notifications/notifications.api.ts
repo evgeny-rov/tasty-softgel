@@ -26,7 +26,7 @@ type initApiArguments = {
 export const scheduleNotification = (
   params: PushNotificationScheduleObject,
 ) => {
-  PushNotification.scheduleLocalNotification(params);
+  PushNotification.localNotificationSchedule(params);
 };
 
 export const cancelNotification = (tag: string, id: number, details = {}) => {

@@ -1,8 +1,8 @@
 import React from 'react';
-import {GestureResponderEvent, View} from 'react-native';
+import {GestureResponderEvent} from 'react-native';
 import {Pressable, StyleSheet} from 'react-native';
-import {AddPillIcon} from '@icons/';
 import {theme} from '@styles/';
+import Icon from './Icon';
 
 interface Props {
   onPress: (event: GestureResponderEvent) => void;
@@ -14,7 +14,7 @@ const FloatingActionButton: React.FC<Props> = ({onPress}) => {
       style={styles.floatingActionBtn}
       android_ripple={theme.configs.ripple_contained}
       onPress={onPress}>
-      <AddPillIcon />
+      <Icon name="pills" color="#000" size={18} />
     </Pressable>
   );
 };
