@@ -2,22 +2,25 @@ import {MedicinesState} from 'src/types';
 import {
   TypedAddMedicineAction,
   TypedRemoveMedicineAction,
-  TypedUpdateMedicinesAmounts,
   REMOVE_MEDICINE,
   ADD_MEDICINE,
-  UPDATE_MEDICINES_AMOUNTS,
 } from './medicines.actionTypes';
 import {
   ASSIGN_REMINDER,
   UNASSIGN_REMINDER,
   TypedUpdateRemindersAction,
 } from '../reminders/reminders.actionTypes';
+import {
+  CONFIRM_CONSUMPTION,
+  TypedConfirmConsumptionAction,
+} from '../system/system.actionTypes';
+
 import {omit, without} from 'lodash';
 
 type TypedAction =
   | TypedAddMedicineAction
   | TypedUpdateRemindersAction
-  | TypedUpdateMedicinesAmounts
+  | TypedConfirmConsumptionAction
   | TypedRemoveMedicineAction;
 
 const initialState: MedicinesState = {
@@ -86,7 +89,7 @@ export default (state = initialState, action: TypedAction): MedicinesState => {
         },
       };
     }
-    case UPDATE_MEDICINES_AMOUNTS: {
+    case CONFIRM_CONSUMPTION: {
       const {medicinesIds} = action.payload;
       const updatedMedicines = {...state.byId};
 

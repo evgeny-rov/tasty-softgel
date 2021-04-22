@@ -5,7 +5,7 @@ import {AppStateType} from 'src/types';
 import medicinesReducer from '../entities/medicines/medicines.reducer';
 import remindersReducer from '../entities/reminders/reminders.reducer';
 import systemReducer from '../entities/system/system.reducer';
-import testMiddleware from 'src/services/notifications/NotificationMiddleware';
+import testMiddleware from 'src/services/notifications/notifications.middleware';
 
 const persistConfig = {
   key: 'root-state',

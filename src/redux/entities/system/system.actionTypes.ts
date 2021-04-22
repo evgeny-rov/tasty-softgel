@@ -9,10 +9,10 @@ export type TypedSystemStepAction = {
 
 export type TypedConfirmConsumptionAction = {
   type: typeof CONFIRM_CONSUMPTION;
-  payload: {timestamp: number, hour: number};
+  payload: {timestamp: number; hour: number; medicinesIds: string[]};
 };
 
 export type TypedSystemReviveAction = {
   type: typeof SYSTEM_REVIVE;
-  payload: {isDayPassed: boolean, hour: number};
+  payload: {isDayPassed: boolean; hour: number};
 };

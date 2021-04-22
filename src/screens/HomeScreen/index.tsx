@@ -3,7 +3,6 @@ import {StatusBar} from 'react-native';
 import {StackNavigationHelpers} from '@react-navigation/stack/src/types';
 import FloatingActionButton from '../../components/FloatingActionButton';
 import BgImage from '../../components/BgImage';
-import '../../services/notifications/NotificationManager';
 import {openNewMedicineModal} from '../../navigation/helpers';
 import DailyMedicinePlan from './DailyMedicinePlan';
 import {ScrollView} from 'react-native-gesture-handler';

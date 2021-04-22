@@ -31,7 +31,14 @@ const PlanItem = ({
   const confirmationBtn = (
     <Button
       title="confirm"
-      onPress={() => dispatch(confirmConsumption(hour))}></Button>
+      onPress={() =>
+        dispatch(
+          confirmConsumption(
+            hour,
+            medicines.map((med) => med.id),
+          ),
+        )
+      }></Button>
   );
 
   return (

@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
+import {throttle} from 'lodash';
 import {ReceivedNotification} from 'react-native-push-notification';
 import {Store} from 'redux';
 import {PersistPartial} from 'redux-persist/es/persistReducer';
@@ -42,6 +43,8 @@ const handleNotificationAction = async (
 ) => {
   await AsyncStorage.getAllKeys(() => {
     const state = store.getState();
+    const hour = Number(notification.id);
+    const assignedMedicinesIds = state.reminders.byHour[hour].medicinesIds;
 
     store.dispatch(
       systemRevive({
@@ -50,7 +53,11 @@ const handleNotificationAction = async (
       }),
     );
 
-    store.dispatch(confirmConsumption(Number(notification.id)));
+    if (store.getState().system.consumptionConfirmedHours.includes(hour)) {
+      return;
+    }
+
+    store.dispatch(confirmConsumption(hour, assignedMedicinesIds));
   });
 };
 
@@ -74,6 +81,7 @@ const scheduleDailyReminder = (scheduledDate: Date, message: string) => {
     message,
     invokeApp: false,
     autoCancel: false,
+    repeatType: 'day',
   });
 };
 

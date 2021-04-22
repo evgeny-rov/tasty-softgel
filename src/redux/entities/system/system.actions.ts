@@ -15,9 +15,10 @@ export const systemStep = (): TypedSystemStepAction => ({
 
 export const confirmConsumption = (
   hour: number,
+  medicinesIds: string[],
 ): TypedConfirmConsumptionAction => ({
   type: CONFIRM_CONSUMPTION,
-  payload: {timestamp: Date.now(), hour},
+  payload: {timestamp: Date.now(), hour, medicinesIds},
 });
 
 export const systemRevive = ({
