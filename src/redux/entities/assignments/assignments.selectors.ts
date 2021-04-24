@@ -2,18 +2,19 @@ import {createSelector} from 'reselect';
 import {AppStateType} from 'src/types';
 
 const getMedicines = (state: AppStateType) => state.medicines.byId;
-const getAllHours = (state: AppStateType) => state.reminders.allHours;
-const getByHoursReminders = (state: AppStateType) => state.reminders.byHour;
-const getCurrentSystemHour = (state: AppStateType) => state.system.currentHour;
+const getAllHours = (state: AppStateType) => state.assignments.allHours;
+const getByHoursAssignments = (state: AppStateType) => state.assignments.byHour;
+const getCurrentConsumptionsHour = (state: AppStateType) =>
+  state.consumptions.currentHour;
 const getCurrentlyConfirmedHours = (state: AppStateType) =>
-  state.system.consumptionConfirmedHours;
+  state.consumptions.confirmedHours;
 
 export const byHourMedicinesSelector = createSelector(
   [
     getMedicines,
     getAllHours,
-    getByHoursReminders,
-    getCurrentSystemHour,
+    getByHoursAssignments,
+    getCurrentConsumptionsHour,
     getCurrentlyConfirmedHours,
   ],
   (

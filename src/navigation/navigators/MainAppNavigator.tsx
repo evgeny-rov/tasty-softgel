@@ -1,10 +1,10 @@
 import React from 'react';
-import createCustomStackNavigator from '@components/CustomStackNavigator';
+import createCustomStackNavigator from '../StackNavigatorConstructor';
 import BottomTabBar from '@components/BottomTabBar';
-import HomeScreen from '../screens/HomeScreen';
-import MedicineManagerScreen from '../screens/MedicineManagerScreen';
-import RemindersScreen from '../screens/RemindersScreen';
-import routes from './routes';
+import HomeScreen from '../../screens/HomeScreen';
+import MedicineManagerScreen from '../../screens/MedicineManagerScreen';
+import RemindersScreen from '../../screens/RemindersScreen';
+import routes from '../routes';
 import { CardStyleInterpolators } from '@react-navigation/stack';
 
 const Stack = createCustomStackNavigator();

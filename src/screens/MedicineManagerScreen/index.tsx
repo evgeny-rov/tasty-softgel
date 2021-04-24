@@ -15,7 +15,7 @@ const MedicineManagerScreen = ({navigation}: Props) => {
   return (
     <>
       <StatusBar translucent backgroundColor={'transparent'} />
-      <BgImage source={require('../../assets/images/bg1.png')} />
+      <BgImage source={require('../../assets/images/bg_02.jpg')} />
       <View style={common.styles.flex}>
         <View style={styles.container}>
           <Text style={typography.styles.h1}>Ваши лекарства</Text>
@@ -34,7 +34,7 @@ export const styles = StyleSheet.create({
     padding: 30,
     borderTopLeftRadius: 30,
     borderTopEndRadius: 30,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    backgroundColor: 'rgba(255, 255, 255, 0.03)',
   },
 });
 

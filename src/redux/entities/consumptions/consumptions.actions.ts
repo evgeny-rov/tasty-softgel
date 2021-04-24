@@ -1,15 +1,15 @@
 import isDayPassed from 'src/utils/isDayPassed';
 import {
-  SYSTEM_STEP,
+  UPDATE_HOUR,
   CONFIRM_CONSUMPTION,
-  SYSTEM_REVIVE,
-  TypedSystemReviveAction,
-  TypedSystemStepAction,
+  CONSUMPTIONS_RENEW,
+  TypedConsumptionsRenewAction,
+  TypedUpdateHourAction,
   TypedConfirmConsumptionAction,
-} from './system.actionTypes';
+} from './consumptions.actionTypes';
 
-export const systemStep = (): TypedSystemStepAction => ({
-  type: SYSTEM_STEP,
+export const updateHour = (): TypedUpdateHourAction => ({
+  type: UPDATE_HOUR,
   payload: {nextHour: new Date().getHours()},
 });
 
@@ -21,14 +21,14 @@ export const confirmConsumption = (
   payload: {timestamp: Date.now(), hour, medicinesIds},
 });
 
-export const systemRevive = ({
-  lastConsumptionConfirmationAt,
+export const consumptionsRenew = ({
+  lastConfirmationAt,
 }: {
-  lastConsumptionConfirmationAt: number;
-}): TypedSystemReviveAction => ({
-  type: SYSTEM_REVIVE,
+  lastConfirmationAt: number;
+}): TypedConsumptionsRenewAction => ({
+  type: CONSUMPTIONS_RENEW,
   payload: {
-    isDayPassed: isDayPassed(lastConsumptionConfirmationAt),
+    isDayPassed: isDayPassed(lastConfirmationAt),
     hour: new Date().getHours(),
   },
 });

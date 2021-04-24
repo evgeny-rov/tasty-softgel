@@ -1,9 +1,9 @@
 import React from 'react';
-import createCustomStackNavigator from '@components/CustomStackNavigator';
+import createCustomStackNavigator from '../StackNavigatorConstructor';
 import {CardStyleInterpolators} from '@react-navigation/stack';
 import MainAppNavigator from './MainAppNavigator';
-import MedicineModalScreen from '../screens/ModalNewMedicineScreen';
-import routes from './routes';
+import MedicineModalScreen from '../../screens/ModalNewMedicineScreen';
+import routes from '../routes';
 
 const Stack = createCustomStackNavigator();
 

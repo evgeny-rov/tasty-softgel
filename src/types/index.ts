@@ -3,7 +3,7 @@ export type Medicine = {
   name: string;
   initialAmount: number;
   currentAmount: number;
-  reminders: number[];
+  assignments: number[];
 };
 
 export type MedicinesState = {
@@ -13,26 +13,26 @@ export type MedicinesState = {
   };
 };
 
-export type Reminder = {
+export type Assignment = {
   hour: number;
   medicinesIds: string[];
 };
 
-export type RemindersState = {
+export type AssignmentsState = {
   allHours: number[];
   byHour: {
-    [hour: number]: Reminder;
+    [hour: number]: Assignment;
   };
 };
 
-export type SystemState = {
+export type ConsumptionsState = {
   currentHour: number;
-  consumptionConfirmedHours: number[];
-  lastConsumptionConfirmationAt: number;
+  confirmedHours: number[];
+  lastConfirmationAt: number;
 };
 
 export type AppStateType = {
   medicines: MedicinesState;
-  reminders: RemindersState;
-  system: SystemState;
+  assignments: AssignmentsState;
+  consumptions: ConsumptionsState;
 };

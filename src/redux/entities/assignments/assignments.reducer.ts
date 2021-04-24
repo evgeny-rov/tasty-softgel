@@ -1,27 +1,27 @@
-import {RemindersState} from 'src/types';
+import {AssignmentsState} from 'src/types';
 import {
-  ASSIGN_REMINDER,
-  UNASSIGN_REMINDER,
-  TypedUpdateRemindersAction,
-} from './reminders.actionTypes';
+  ASSIGN_MEDICINE,
+  UNASSIGN_MEDICINE,
+  TypedUpdateAssignmentsAction,
+} from './assignments.actionTypes';
 import {
   REMOVE_MEDICINE,
   TypedRemoveMedicineAction,
 } from '../medicines/medicines.actionTypes';
 import {omit, uniq, without} from 'lodash';
 
-type TypedActions = TypedUpdateRemindersAction | TypedRemoveMedicineAction;
+type TypedActions = TypedUpdateAssignmentsAction | TypedRemoveMedicineAction;
 
-const initlaState: RemindersState = {
+const initlaState: AssignmentsState = {
   allHours: [],
   byHour: {},
 };
 
 const getNewStateWithoutReminder = (
-  state: RemindersState,
+  state: AssignmentsState,
   hour: number,
   medicineId: string,
-): RemindersState => {
+): AssignmentsState => {
   const reminder = state.byHour[hour];
   const updatedReminder = {
     ...reminder,
@@ -40,13 +40,16 @@ const getNewStateWithoutReminder = (
   return {allHours: newAllHours, byHour: newByHourItems};
 };
 
-export default (state = initlaState, action: TypedActions): RemindersState => {
+export default (
+  state = initlaState,
+  action: TypedActions,
+): AssignmentsState => {
   switch (action.type) {
     case REMOVE_MEDICINE: {
       const medicine = action.payload;
       const newState = {...state};
 
-      medicine.reminders.forEach((hour) => {
+      medicine.assignments.forEach((hour) => {
         const updatedState = getNewStateWithoutReminder(
           newState,
           hour,
@@ -62,7 +65,7 @@ export default (state = initlaState, action: TypedActions): RemindersState => {
         byHour: newState.byHour,
       };
     }
-    case ASSIGN_REMINDER: {
+    case ASSIGN_MEDICINE: {
       const {medicineId, hour} = action.payload;
 
       const reminder = state.byHour[hour] ?? {hour, medicinesIds: []};
@@ -80,7 +83,7 @@ export default (state = initlaState, action: TypedActions): RemindersState => {
         },
       };
     }
-    case UNASSIGN_REMINDER: {
+    case UNASSIGN_MEDICINE: {
       const {medicineId, hour} = action.payload;
 
       const newState = getNewStateWithoutReminder(state, hour, medicineId);

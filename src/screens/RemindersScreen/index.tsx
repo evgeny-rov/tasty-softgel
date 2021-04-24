@@ -23,7 +23,7 @@ const RemindersScreen = () => {
 
   return (
     <>
-      <BgImage source={require('../../assets/images/bg1.png')} />
+      <BgImage source={require('../../assets/images/bg_03.jpg')} />
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={typography.styles.h1}>Напоминания по часам</Text>
@@ -31,7 +31,7 @@ const RemindersScreen = () => {
         <View style={styles.picker_container}>
           <Picker
             style={styles.picker}
-            lineGradientColorFrom="#1a1a1a"
+            lineGradientColorFrom="#6d6767"
             lineGradientColorTo="#FFF"
             selectedValue={pickerSelectedHour}
             onValueChange={pickerValueChangeHandler}>
@@ -49,7 +49,7 @@ const RemindersScreen = () => {
 };
 
 export const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.3)'},
+  container: {flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.2)'},
   header: {
     flex: 0,
     paddingHorizontal: 20,
@@ -58,17 +58,18 @@ export const styles = StyleSheet.create({
   },
   picker_container: {
     flex: 1,
-    justifyContent: 'space-between',
     alignItems: 'center',
+    justifyContent: 'center',
+    // backgroundColor: 'rgba(200, 0, 0, 0.5)'
   },
   picker: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
+    flex: 0,
+    width: '80%',
+    height: '80%',
   },
   list_container: {
-    flex: 2,
-    backgroundColor: 'rgba(23, 23, 77, 0.479)',
+    flex: 3,
+    backgroundColor: 'rgba(23, 23, 77, 0.1)',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     overflow: 'hidden',
