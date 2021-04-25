@@ -7,7 +7,6 @@ import {common, theme, typography} from '@styles/';
 import RepeatedActionButton from '@components/RepeatedActionButton';
 import SizedBox from '../../components/SizedBox';
 import {addMedicine} from 'src/redux/entities/medicines/medicines.actions';
-import {CloseIcon, ArrowIcon} from '@icons/';
 import Icon from '@components/Icon';
 
 interface Props {
@@ -62,13 +61,21 @@ const ModalNewMedicineScreen = ({navigation}: Props) => {
           <Text style={typography.styles.h2}>Количество:</Text>
           <View style={styles.section}>
             <RepeatedActionButton action={decrementAmount}>
-              <Icon name="keyboard_arrow_left" color={theme.colors.primary} size={20} />
+              <Icon
+                name="keyboard_arrow_left"
+                color={theme.colors.primary}
+                size={20}
+              />
             </RepeatedActionButton>
             <Text style={[typography.styles.h2, styles.padded_amount]}>
               {amount}
             </Text>
             <RepeatedActionButton action={incrementAmount}>
-            <Icon name="keyboard_arrow_right" color={theme.colors.primary} size={20} />
+              <Icon
+                name="keyboard_arrow_right"
+                color={theme.colors.primary}
+                size={20}
+              />
             </RepeatedActionButton>
           </View>
         </View>

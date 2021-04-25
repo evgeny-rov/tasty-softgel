@@ -23,7 +23,7 @@ const RemindersMedicinesList = ({pickerSelectedHour}: Props) => {
             key={medicine.id}
             medicine={medicine}
             pickerSelectedHour={pickerSelectedHour}
-            isActive={medicine.reminders.includes(pickerSelectedHour)}
+            isActive={medicine.assignments.includes(pickerSelectedHour)}
           />
         );
       })}

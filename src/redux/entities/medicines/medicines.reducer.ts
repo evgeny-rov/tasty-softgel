@@ -6,20 +6,20 @@ import {
   ADD_MEDICINE,
 } from './medicines.actionTypes';
 import {
-  ASSIGN_REMINDER,
-  UNASSIGN_REMINDER,
-  TypedUpdateRemindersAction,
-} from '../reminders/reminders.actionTypes';
+  ASSIGN_MEDICINE,
+  UNASSIGN_MEDICINE,
+  TypedUpdateAssignmentsAction,
+} from '../assignments/assignments.actionTypes';
 import {
   CONFIRM_CONSUMPTION,
   TypedConfirmConsumptionAction,
-} from '../system/system.actionTypes';
+} from '../consumptions/consumptions.actionTypes';
 
 import {omit, without} from 'lodash';
 
 type TypedAction =
   | TypedAddMedicineAction
-  | TypedUpdateRemindersAction
+  | TypedUpdateAssignmentsAction
   | TypedConfirmConsumptionAction
   | TypedRemoveMedicineAction;
 
@@ -43,7 +43,7 @@ export default (state = initialState, action: TypedAction): MedicinesState => {
             name,
             currentAmount: amount,
             initialAmount: amount,
-            reminders: [],
+            assignments: [],
           },
         },
       };
@@ -57,7 +57,7 @@ export default (state = initialState, action: TypedAction): MedicinesState => {
         byId: omit(state.byId, id),
       };
     }
-    case ASSIGN_REMINDER: {
+    case ASSIGN_MEDICINE: {
       const {medicineId, hour} = action.payload;
 
       const medicineItem = state.byId[medicineId];
@@ -68,12 +68,12 @@ export default (state = initialState, action: TypedAction): MedicinesState => {
           ...state.byId,
           [medicineId]: {
             ...medicineItem,
-            reminders: [...medicineItem.reminders, hour],
+            assignments: [...medicineItem.assignments, hour],
           },
         },
       };
     }
-    case UNASSIGN_REMINDER: {
+    case UNASSIGN_MEDICINE: {
       const {medicineId, hour} = action.payload;
 
       const medicineItem = state.byId[medicineId];
@@ -84,7 +84,7 @@ export default (state = initialState, action: TypedAction): MedicinesState => {
           ...state.byId,
           [medicineId]: {
             ...medicineItem,
-            reminders: without(medicineItem.reminders, hour),
+            assignments: without(medicineItem.assignments, hour),
           },
         },
       };

@@ -3,10 +3,10 @@ import {throttle} from 'lodash';
 import {ReceivedNotification} from 'react-native-push-notification';
 import {Store} from 'redux';
 import {PersistPartial} from 'redux-persist/es/persistReducer';
-import {
-  confirmConsumption,
-  systemRevive,
-} from 'src/redux/entities/system/system.actions';
+// import {
+//   confirmConsumption,
+//   systemRevive,
+// } from 'src/redux/entities/system/system.actions';
 import {AppStateType} from 'src/types';
 import getAvailableDateFromHour from 'src/utils/getAvailableDateFromHour';
 import * as Notifications from './notifications.api';

@@ -11,7 +11,7 @@ import Icon from '@components/Icon';
 
 const MedicineListItem = (medicine: Medicine) => {
   const dispatch = useDispatch();
-  const remindersAsHoursString = medicine.reminders
+  const assignmentsAsHoursString = medicine.assignments
     .map(hourToTimeString)
     .sort()
     .join(', ');
@@ -49,7 +49,7 @@ const MedicineListItem = (medicine: Medicine) => {
             horizontal
             showsHorizontalScrollIndicator={false}>
             <Text numberOfLines={1} style={typography.styles.body_sub_gray}>
-              {remindersAsHoursString}
+              {assignmentsAsHoursString}
             </Text>
           </ScrollView>
         </View>

@@ -3,7 +3,7 @@ import {StatusBar, ScrollView} from 'react-native';
 import {StackNavigationHelpers} from '@react-navigation/stack/src/types';
 import FloatingActionButton from '../../components/FloatingActionButton';
 import BgImage from '../../components/BgImage';
-import DailyConsumption from './components/DailyConsumption';
+import DailyConsumptionList from './components/DailyConsumptionList';
 import {openNewMedicineModal} from '../../navigation/helpers';
 
 interface Props {
@@ -16,7 +16,7 @@ const HomeScreen = ({navigation}: Props) => {
       <StatusBar translucent backgroundColor={'transparent'} />
       <BgImage source={require('../../assets/images/bg_01.jpg')} />
       <ScrollView>
-        <DailyConsumption />
+        <DailyConsumptionList />
       </ScrollView>
       <FloatingActionButton onPress={() => openNewMedicineModal(navigation)} />
     </>

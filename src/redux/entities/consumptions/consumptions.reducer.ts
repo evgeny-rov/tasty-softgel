@@ -2,8 +2,8 @@ import {ConsumptionsState} from 'src/types';
 import {
   UPDATE_HOUR,
   CONFIRM_CONSUMPTION,
-  CONSUMPTIONS_RENEW,
-  TypedConsumptionsRenewAction,
+  CONSUMPTIONS_REFRESH,
+  TypedConsumptionsRefreshAction,
   TypedConfirmConsumptionAction,
   TypedUpdateHourAction,
 } from './consumptions.actionTypes';
@@ -11,7 +11,7 @@ import {
 type TypedAction =
   | TypedUpdateHourAction
   | TypedConfirmConsumptionAction
-  | TypedConsumptionsRenewAction;
+  | TypedConsumptionsRefreshAction;
 
 const initialState: ConsumptionsState = {
   currentHour: new Date().getHours(),
@@ -40,7 +40,7 @@ export default (state = initialState, action: TypedAction): ConsumptionsState =>
         confirmedHours: [...state.confirmedHours, hour],
       };
     }
-    case CONSUMPTIONS_RENEW: {
+    case CONSUMPTIONS_REFRESH: {
       const {isDayPassed, hour} = action.payload;
 
       return {

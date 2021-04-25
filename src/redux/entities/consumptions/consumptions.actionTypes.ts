@@ -1,6 +1,6 @@
 export const UPDATE_HOUR = 'UPDATE_HOUR';
 export const CONFIRM_CONSUMPTION = 'CONFIRM_CONSUMPTION';
-export const CONSUMPTIONS_RENEW = 'CONSUMPTIONS_RENEW';
+export const CONSUMPTIONS_REFRESH = 'CONSUMPTIONS_REFRESH';
 
 export type TypedUpdateHourAction = {
   type: typeof UPDATE_HOUR;
@@ -12,7 +12,7 @@ export type TypedConfirmConsumptionAction = {
   payload: {timestamp: number; hour: number; medicinesIds: string[]};
 };
 
-export type TypedConsumptionsRenewAction = {
-  type: typeof CONSUMPTIONS_RENEW;
+export type TypedConsumptionsRefreshAction = {
+  type: typeof CONSUMPTIONS_REFRESH;
   payload: {isDayPassed: boolean; hour: number};
 };

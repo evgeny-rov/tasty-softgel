@@ -4,9 +4,9 @@ import {useDispatch} from 'react-redux';
 import {Medicine} from 'src/types';
 import {common, theme, typography} from '@styles/';
 import {
-  assignReminder,
-  unassignReminder,
-} from 'src/redux/entities/reminders/reminders.actions';
+  assignMedicine,
+  unassignMedicine,
+} from 'src/redux/entities/assignments/assignments.actions';
 import Icon from '@components/Icon';
 
 type medicine = {
@@ -25,11 +25,11 @@ const RemindersMedicinesListItem = ({
   const toggleReminderStatus = () => {
     if (isActive) {
       dispatch(
-        unassignReminder({medicineId: medicine.id, hour: pickerSelectedHour}),
+        unassignMedicine({medicineId: medicine.id, hour: pickerSelectedHour}),
       );
     } else {
       dispatch(
-        assignReminder({medicineId: medicine.id, hour: pickerSelectedHour}),
+        assignMedicine({medicineId: medicine.id, hour: pickerSelectedHour}),
       );
     }
   };
