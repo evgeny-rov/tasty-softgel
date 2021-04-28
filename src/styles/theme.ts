@@ -5,6 +5,7 @@ const palette = {
   black: '#040404',
   white: '#F5F5F5',
   gray: '#D3D3D3',
+  dark_gray: '#555555',
 };
 
 const android_ripple_base = {
@@ -17,6 +18,7 @@ const theme = {
     background: palette.black,
     primary: palette.white,
     secondary: palette.gray,
+    secondary_dark: palette.dark_gray,
     accent: palette.lavender,
     accent2: palette.orange,
   },

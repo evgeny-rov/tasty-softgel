@@ -4,11 +4,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import {byHourMedicinesSelector} from 'src/redux/entities/assignments/assignments.selectors';
 import {typography} from 'src/styles';
 import SizedBox from '@components/SizedBox';
-import DailyConsumptionItem from './DailyConsumptionItem';
+import DailyAssignmentsListItem from './DailyAssignmentsListItem';
 import {updateHour} from 'src/redux/entities/consumptions/consumptions.actions';
 import {getCurrentHour} from 'src/redux/entities/consumptions/consumptions.selectors';
 
-const DailyConsumption = () => {
+const DailyAssignments = () => {
   const dispatch = useDispatch();
   const assignments = useSelector(byHourMedicinesSelector);
   const currentHour = useSelector(getCurrentHour);
@@ -29,7 +29,7 @@ const DailyConsumption = () => {
       <SizedBox height={35} />
       <View>
         {assignments.map((assignmentData, idx) => (
-          <DailyConsumptionItem key={idx} {...assignmentData} />
+          <DailyAssignmentsListItem key={idx} {...assignmentData} />
         ))}
       </View>
     </View>
@@ -45,4 +45,4 @@ const styles = {
   },
 };
 
-export default DailyConsumption;
+export default DailyAssignments;

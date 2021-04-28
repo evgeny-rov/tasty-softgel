@@ -5,18 +5,20 @@ import {Medicine} from 'src/types';
 import {common, theme, typography} from '@styles/';
 import hourToTimeString from 'src/utils/hourToTimeString';
 import {ScrollView} from 'react-native-gesture-handler';
-import {useDispatch} from 'react-redux';
-import {removeMedicine} from 'src/redux/entities/medicines/medicines.actions';
 import Icon from '@components/Icon';
+import {useNavigation} from '@react-navigation/core';
 
 const MedicineListItem = (medicine: Medicine) => {
-  const dispatch = useDispatch();
+  const navigation = useNavigation();
   const assignmentsAsHoursString = medicine.assignments
-    .map(hourToTimeString)
     .sort()
+    .map(hourToTimeString)
     .join(', ');
 
-  const removeItem = () => dispatch(removeMedicine({medicine}));
+  const openMedicineCard = () =>
+    navigation.navigate('modal_medicine_card', {
+      medicine,
+    });
 
   const button = (
     <Pressable
@@ -31,16 +33,21 @@ const MedicineListItem = (medicine: Medicine) => {
         height: 40,
         borderRadius: 100,
       }}
-      android_ripple={theme.configs.ripple_xs}
+      android_ripple={theme.configs.ripple_sm}
       hitSlop={15}
-      onPress={removeItem}>
+      onPress={openMedicineCard}>
       <Icon name="quill" color={theme.colors.primary} size={18} />
     </Pressable>
   );
 
   return (
     <View style={styles.container}>
-      <View style={[common.styles.row, common.styles.spaced, common.styles.centered]}>
+      <View
+        style={[
+          common.styles.row,
+          common.styles.spaced,
+          common.styles.centered,
+        ]}>
         {button}
         <View style={common.styles.flex}>
           <Text style={typography.styles.body_bold}>{medicine.name}</Text>

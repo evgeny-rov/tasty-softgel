@@ -2,8 +2,10 @@ import {MedicinesState} from 'src/types';
 import {
   TypedAddMedicineAction,
   TypedRemoveMedicineAction,
+  TypedUpdateMedicineAction,
   REMOVE_MEDICINE,
   ADD_MEDICINE,
+  UPDATE_MEDICINE,
 } from './medicines.actionTypes';
 import {
   ASSIGN_MEDICINE,
@@ -19,6 +21,7 @@ import {omit, without} from 'lodash';
 
 type TypedAction =
   | TypedAddMedicineAction
+  | TypedUpdateMedicineAction
   | TypedUpdateAssignmentsAction
   | TypedConfirmConsumptionAction
   | TypedRemoveMedicineAction;
@@ -86,6 +89,17 @@ export default (state = initialState, action: TypedAction): MedicinesState => {
             ...medicineItem,
             assignments: without(medicineItem.assignments, hour),
           },
+        },
+      };
+    }
+    case UPDATE_MEDICINE: {
+      const medicine = action.payload;
+
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [medicine.id]: medicine,
         },
       };
     }

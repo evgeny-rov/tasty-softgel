@@ -3,10 +3,10 @@ import {Medicine} from 'src/types';
 import {
   ADD_MEDICINE,
   REMOVE_MEDICINE,
-  UPDATE_MEDICINES_AMOUNTS,
+  UPDATE_MEDICINE,
   TypedAddMedicineAction,
   TypedRemoveMedicineAction,
-  TypedUpdateMedicinesAmounts,
+  TypedUpdateMedicineAction,
 } from './medicines.actionTypes';
 
 export const addMedicine = ({
@@ -33,11 +33,9 @@ export const removeMedicine = ({
   payload: medicine,
 });
 
-export const updateMedicinesAmounts = ({
-  medicinesIds,
-}: {
-  medicinesIds: string[];
-}): TypedUpdateMedicinesAmounts => ({
-  type: UPDATE_MEDICINES_AMOUNTS,
-  payload: {medicinesIds},
+export const updateMedicine = (
+  medicine: Medicine,
+): TypedUpdateMedicineAction => ({
+  type: UPDATE_MEDICINE,
+  payload: medicine,
 });
