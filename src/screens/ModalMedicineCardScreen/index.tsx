@@ -8,6 +8,7 @@ import RepeatedActionButton from '@components/RepeatedActionButton';
 import SizedBox from '../../components/SizedBox';
 import {
   addMedicine,
+  removeMedicine,
   updateMedicine,
 } from 'src/redux/entities/medicines/medicines.actions';
 import Icon from '@components/Icon';
@@ -17,6 +18,7 @@ import {Medicine} from 'src/types';
 type RootStackParamList = {
   modal_medicine_card: {
     medicine: Medicine;
+    mode: 'new' | 'update';
   };
 };
 
@@ -25,52 +27,60 @@ interface Props {
   route: RouteProp<RootStackParamList, 'modal_medicine_card'>;
 }
 
-const ModalEditMedicineScreen = ({navigation, route}: Props) => {
-  const {medicine} = route.params;
-  const [name, setName] = useState(medicine.name);
-  const [initialAmount, setInitialAmount] = useState(medicine.initialAmount);
-  const [currentAmount, setCurrentAmount] = useState(medicine.currentAmount);
-  const [showInitialAmount, setShowInitialAmount] = useState(false);
+const ModalMedicineCardScreen = ({navigation, route}: Props) => {
+  const {mode, medicine} = route.params;
+  const [name, setName] = useState(medicine?.name || '');
+  const [count, setCount] = useState(medicine?.count || 30);
   const dispatch = useDispatch();
 
   const closeScreen = () => setTimeout(() => navigation.goBack(), 0);
 
-  const incrementAmount = () => {
-    if (showInitialAmount) {
-      setInitialAmount(initialAmount + 1);
-    } else {
-      setCurrentAmount(currentAmount + 1);
-    }
-  };
-
-  const decrementAmount = () => {
-    if (showInitialAmount) {
-      initialAmount > 0 && setInitialAmount(initialAmount - 1);
-    } else {
-      currentAmount > 0 && setCurrentAmount(currentAmount - 1);
-    }
-  };
+  const incrementCount = () => setCount(count + 1);
+  const decrementCount = () => count > 0 && setCount(count - 1);
 
   const handleSubmit = () => {
-    const preparedNameData = name.trim();
-    if (preparedNameData) {
-      dispatch(
-        updateMedicine({
-          ...medicine,
-          name,
-          initialAmount,
-          currentAmount,
-        }),
-      );
-      closeScreen();
+    switch (mode) {
+      case 'new': {
+        dispatch(
+          addMedicine({
+            name,
+            count,
+          }),
+        );
+      }
+      case 'update': {
+        dispatch(
+          updateMedicine({
+            ...medicine,
+            name,
+            count,
+          }),
+        );
+      }
     }
+    closeScreen();
   };
+
+  const handleRemove = () => {
+    closeScreen();
+    dispatch(removeMedicine({medicine}));
+  };
+
+  const titleText = mode === 'new' ? 'Новое лекарство' : name;
+
+  const removeButton = mode === 'update' && (
+    <Pressable style={formStyles.button} onPress={handleRemove}>
+      <Text style={[formStyles.buttonText, {color: theme.colors.attention}]}>
+        Удалить
+      </Text>
+    </Pressable>
+  );
 
   return (
     <>
       <View style={styles.container}>
         <View style={styles.section}>
-          <Text style={typography.styles.h1}>Новое лекарство</Text>
+          <Text style={typography.styles.h1}>{titleText}</Text>
           <Pressable
             android_ripple={theme.configs.ripple_sm}
             onPress={closeScreen}
@@ -87,45 +97,16 @@ const ModalEditMedicineScreen = ({navigation, route}: Props) => {
               autoCapitalize="words"
               value={name}
               onChangeText={setName}
+              // onSubmitEditing={handleSubmit}
               blurOnSubmit
             />
           </View>
         </View>
         <SizedBox height={50} />
-        <View style={{flexDirection: 'row'}}>
-          <Pressable onPress={() => setShowInitialAmount(false)}>
-            <Text
-              style={[
-                typography.styles.h2,
-                {
-                  color: showInitialAmount
-                    ? theme.colors.secondary_dark
-                    : theme.colors.primary,
-                },
-              ]}>
-              Текущее
-            </Text>
-          </Pressable>
-          <SizedBox width={20} />
-          <Pressable onPress={() => setShowInitialAmount(true)}>
-            <Text
-              style={[
-                typography.styles.h2,
-                {
-                  color: showInitialAmount
-                    ? theme.colors.primary
-                    : theme.colors.secondary_dark,
-                },
-              ]}>
-              Общее
-            </Text>
-          </Pressable>
-        </View>
-        <SizedBox height={30} />
         <View style={styles.section}>
           <Text style={typography.styles.h2}>Количество:</Text>
           <View style={styles.section}>
-            <RepeatedActionButton action={decrementAmount}>
+            <RepeatedActionButton action={decrementCount}>
               <Icon
                 name="keyboard_arrow_left"
                 color={theme.colors.primary}
@@ -133,9 +114,9 @@ const ModalEditMedicineScreen = ({navigation, route}: Props) => {
               />
             </RepeatedActionButton>
             <Text style={[typography.styles.h2, styles.padded_amount]}>
-              {showInitialAmount ? initialAmount : currentAmount}
+              {count}
             </Text>
-            <RepeatedActionButton action={incrementAmount}>
+            <RepeatedActionButton action={incrementCount}>
               <Icon
                 name="keyboard_arrow_right"
                 color={theme.colors.primary}
@@ -144,8 +125,13 @@ const ModalEditMedicineScreen = ({navigation, route}: Props) => {
             </RepeatedActionButton>
           </View>
         </View>
-        <View style={common.styles.flex_end}>
-          <Pressable style={formStyles.button} onPress={handleSubmit}>
+        <View style={formStyles.button_container}>
+          {removeButton}
+          <Pressable
+            style={formStyles.button}
+            disabled={name.trim().length < 1}
+            onPress={handleSubmit}
+            android_ripple={theme.configs.ripple_xl}>
             <Text style={formStyles.buttonText}>Сохранить</Text>
           </Pressable>
         </View>
@@ -161,7 +147,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     borderTopEndRadius: 30,
     marginTop: 50,
-    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+    backgroundColor: 'rgba(76, 64, 94, 0.95)',
   },
   section: {
     flex: 0,
@@ -182,17 +168,23 @@ const formStyles = StyleSheet.create({
     padding: 5,
     borderBottomWidth: 1,
   },
+  button_container: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'space-evenly',
+  },
   button: {
-    backgroundColor: theme.colors.primary,
+    // backgroundColor: theme.colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
-    borderRadius: 50,
+    // borderRadius: 50,
   },
   buttonText: {
     fontWeight: '700',
-    color: theme.colors.background,
+    color: theme.colors.primary,
   },
 });
 
-export default ModalEditMedicineScreen;
+export default ModalMedicineCardScreen;

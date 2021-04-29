@@ -39,7 +39,7 @@ const RemindersMedicinesListItem = ({
       <View style={common.styles.col}>
         <Text style={typography.styles.body}>{medicine.name}</Text>
         <Text style={typography.styles.body_sub_gray}>
-          {medicine.currentAmount} шт.
+          {medicine.count} шт.
         </Text>
       </View>
       <Pressable

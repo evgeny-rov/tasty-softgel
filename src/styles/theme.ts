@@ -2,6 +2,7 @@ const palette = {
   lavender: '#b794d8',
   dark_lavender: '#574574',
   orange: '#FF4D8D',
+  red: '#FE5C5C',
   black: '#040404',
   white: '#F5F5F5',
   gray: '#D3D3D3',
@@ -21,6 +22,7 @@ const theme = {
     secondary_dark: palette.dark_gray,
     accent: palette.lavender,
     accent2: palette.orange,
+    attention: palette.red,
   },
   size: {
     s: 8,
@@ -40,7 +42,7 @@ const theme = {
     },
     ripple_xl: {
       ...android_ripple_base,
-      radius: 50,
+      radius: 45,
     },
     ripple_contained: {
       ...android_ripple_base,

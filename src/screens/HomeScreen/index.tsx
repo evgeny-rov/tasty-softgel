@@ -4,7 +4,7 @@ import {StackNavigationHelpers} from '@react-navigation/stack/src/types';
 import FloatingActionButton from '../../components/FloatingActionButton';
 import BgImage from '../../components/BgImage';
 import DailyAssignments from './components/DailyAssignments';
-import {openNewMedicineModal} from '../../navigation/helpers';
+import {openMedicineModal} from '../../navigation/helpers';
 
 interface Props {
   navigation: StackNavigationHelpers;
@@ -18,7 +18,9 @@ const HomeScreen = ({navigation}: Props) => {
       <ScrollView>
         <DailyAssignments />
       </ScrollView>
-      <FloatingActionButton onPress={() => openNewMedicineModal(navigation)} />
+      <FloatingActionButton
+        onPress={() => openMedicineModal(navigation, 'new')}
+      />
     </>
   );
 };

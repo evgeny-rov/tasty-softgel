@@ -1,8 +1,7 @@
 export type Medicine = {
   id: string;
   name: string;
-  initialAmount: number;
-  currentAmount: number;
+  count: number;
   assignments: number[];
 };
 

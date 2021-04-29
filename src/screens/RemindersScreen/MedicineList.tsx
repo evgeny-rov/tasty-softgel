@@ -34,7 +34,7 @@ const RemindersMedicinesList = ({pickerSelectedHour}: Props) => {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 30,
-    paddingVertical: 30,
+    paddingVertical: 10,
   },
 });
 

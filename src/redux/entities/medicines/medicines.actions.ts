@@ -11,16 +11,16 @@ import {
 
 export const addMedicine = ({
   name,
-  amount,
+  count,
 }: {
   name: string;
-  amount: number;
+  count: number;
 }): TypedAddMedicineAction => ({
   type: ADD_MEDICINE,
   payload: {
     id: nanoid(),
     name,
-    amount,
+    count,
   },
 });
 

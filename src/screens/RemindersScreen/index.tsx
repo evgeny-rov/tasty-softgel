@@ -7,7 +7,7 @@ import MedicineList from './MedicineList';
 import hourToTimeString from '../../utils/hourToTimeString';
 import {typography} from '@styles/';
 
-const HOURS_AS_STRING_ARRAY = Array(24)
+const HOURS_AS_TIME_STRING = Array(24)
   .fill(null)
   .map((_, idx) => hourToTimeString(idx));
 
@@ -35,7 +35,7 @@ const RemindersScreen = () => {
             lineGradientColorTo="#FFF"
             selectedValue={pickerSelectedHour}
             onValueChange={pickerValueChangeHandler}>
-            {HOURS_AS_STRING_ARRAY.map((value, idx) => (
+            {HOURS_AS_TIME_STRING.map((value, idx) => (
               <Picker.Item key={value} label={value} value={idx} />
             ))}
           </Picker>
@@ -49,7 +49,7 @@ const RemindersScreen = () => {
 };
 
 export const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.2)'},
+  container: {flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.1)'},
   header: {
     flex: 0,
     paddingHorizontal: 20,
@@ -68,8 +68,8 @@ export const styles = StyleSheet.create({
     height: '80%',
   },
   list_container: {
-    flex: 3,
-    backgroundColor: 'rgba(23, 23, 77, 0.1)',
+    flex: 2,
+    // backgroundColor: 'rgba(23, 23, 77, 0.1)',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     overflow: 'hidden',

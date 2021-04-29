@@ -31,7 +31,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 70,
-    padding: 30,
+    padding: 25,
     borderTopLeftRadius: 30,
     borderTopEndRadius: 30,
     backgroundColor: 'rgba(255, 255, 255, 0.03)',

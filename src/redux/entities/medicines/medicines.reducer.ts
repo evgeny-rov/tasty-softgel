@@ -34,7 +34,7 @@ const initialState: MedicinesState = {
 export default (state = initialState, action: TypedAction): MedicinesState => {
   switch (action.type) {
     case ADD_MEDICINE: {
-      const {id, name, amount} = action.payload;
+      const {id, name, count} = action.payload;
 
       return {
         ...state,
@@ -44,8 +44,7 @@ export default (state = initialState, action: TypedAction): MedicinesState => {
           [id]: {
             id,
             name,
-            currentAmount: amount,
-            initialAmount: amount,
+            count,
             assignments: [],
           },
         },
@@ -108,10 +107,10 @@ export default (state = initialState, action: TypedAction): MedicinesState => {
       const updatedMedicines = {...state.byId};
 
       medicinesIds.forEach((id) => {
-        const {currentAmount} = updatedMedicines[id];
-        if (currentAmount < 1) return;
+        const {count} = updatedMedicines[id];
+        if (count < 1) return;
 
-        updatedMedicines[id].currentAmount -= 1;
+        updatedMedicines[id].count -= 1;
       });
 
       return {

@@ -40,7 +40,7 @@ const styles = {
   container: {
     backgroundColor: 'rgba(255, 255, 255, 0.16)',
     paddingVertical: 50,
-    paddingHorizontal: 30,
+    paddingHorizontal: 25,
     borderBottomRightRadius: 70,
   },
 };

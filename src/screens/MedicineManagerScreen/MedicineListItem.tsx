@@ -7,18 +7,14 @@ import hourToTimeString from 'src/utils/hourToTimeString';
 import {ScrollView} from 'react-native-gesture-handler';
 import Icon from '@components/Icon';
 import {useNavigation} from '@react-navigation/core';
+import {openMedicineModal} from 'src/navigation/helpers';
 
 const MedicineListItem = (medicine: Medicine) => {
   const navigation = useNavigation();
   const assignmentsAsHoursString = medicine.assignments
     .sort()
     .map(hourToTimeString)
-    .join(', ');
-
-  const openMedicineCard = () =>
-    navigation.navigate('modal_medicine_card', {
-      medicine,
-    });
+    .join(', ') || 'Прием не назначен';
 
   const button = (
     <Pressable
@@ -35,7 +31,7 @@ const MedicineListItem = (medicine: Medicine) => {
       }}
       android_ripple={theme.configs.ripple_sm}
       hitSlop={15}
-      onPress={openMedicineCard}>
+      onPress={() => openMedicineModal(navigation, 'update', medicine)}>
       <Icon name="quill" color={theme.colors.primary} size={18} />
     </Pressable>
   );
@@ -61,9 +57,7 @@ const MedicineListItem = (medicine: Medicine) => {
           </ScrollView>
         </View>
         <View>
-          <Text style={typography.styles.body_sm}>
-            {medicine.currentAmount} шт.
-          </Text>
+          <Text style={typography.styles.body_sm}>{medicine.count} шт.</Text>
         </View>
       </View>
     </View>

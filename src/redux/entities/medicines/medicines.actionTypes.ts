@@ -6,7 +6,7 @@ export const REMOVE_MEDICINE = 'REMOVE_MEDICINE';
 
 export type TypedAddMedicineAction = {
   type: typeof ADD_MEDICINE;
-  payload: {id: string; name: string; amount: number};
+  payload: {id: string; name: string; count: number};
 };
 
 export type TypedRemoveMedicineAction = {
