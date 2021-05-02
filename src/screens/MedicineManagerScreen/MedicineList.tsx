@@ -12,9 +12,9 @@ const MedicineList = () => {
       bounces
       showsVerticalScrollIndicator={false}
       overScrollMode={'never'}>
-      {medicines.map((medicine) => {
-        return <MedicineListItem key={medicine.id} {...medicine} />;
-      })}
+      {medicines.map((medicine) => (
+        <MedicineListItem key={medicine.id} {...medicine} />
+      ))}
     </ScrollView>
   );
 };

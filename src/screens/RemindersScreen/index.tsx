@@ -7,9 +7,7 @@ import MedicineList from './MedicineList';
 import hourToTimeString from '../../utils/hourToTimeString';
 import {typography} from '@styles/';
 
-const HOURS_AS_TIME_STRING = Array(24)
-  .fill(null)
-  .map((_, idx) => hourToTimeString(idx));
+const HOURS_AS_TIME_STRING = Array.from(Array(24).keys()).map(hourToTimeString);
 
 const RemindersScreen = () => {
   const [pickerSelectedHour, setPickerSelectedHour] = useState(12);

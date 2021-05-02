@@ -80,9 +80,12 @@ const ModalMedicineCardScreen = ({navigation, route}: Props) => {
     <>
       <View style={styles.container}>
         <View style={styles.section}>
-          <Text style={typography.styles.h1}>{titleText}</Text>
+          <Text style={styles.card_title} numberOfLines={1}>
+            {titleText}
+          </Text>
           <Pressable
             android_ripple={theme.configs.ripple_sm}
+            style={styles.close_btn}
             onPress={closeScreen}
             hitSlop={25}>
             <Icon name="clear" color={theme.colors.primary} size={20} />
@@ -158,6 +161,10 @@ const styles = StyleSheet.create({
   padded_amount: {
     paddingHorizontal: 50,
   },
+  close_btn: {
+    marginLeft: 20,
+  },
+  card_title: {...typography.styles.h1, flex: 1},
 });
 
 const formStyles = StyleSheet.create({
