@@ -31,13 +31,21 @@ const BottomTabBar = ({navigation, state}: Props) => {
         style={common.styles.centered}
         onPress={() => navigation.navigate(routes.medicine_manager)}
         android_ripple={theme.configs.ripple_xl}>
-        <Icon name="pills" color={getTabIconColor(routes.medicine_manager)} size={20} />
+        <Icon
+          name="pills"
+          color={getTabIconColor(routes.medicine_manager)}
+          size={20}
+        />
       </Pressable>
       <Pressable
         style={common.styles.centered}
-        onPress={() => navigation.navigate(routes.reminders)}
+        onPress={() => navigation.navigate(routes.medicine_assignments)}
         android_ripple={theme.configs.ripple_xl}>
-        <Icon name="assignment" color={getTabIconColor(routes.reminders)} size={20} />
+        <Icon
+          name="assignment"
+          color={getTabIconColor(routes.medicine_assignments)}
+          size={20}
+        />
       </Pressable>
     </View>
   );

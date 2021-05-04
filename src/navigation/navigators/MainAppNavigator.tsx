@@ -3,7 +3,7 @@ import createCustomStackNavigator from '../StackNavigatorConstructor';
 import BottomTabBar from '@components/BottomTabBar';
 import HomeScreen from '../../screens/HomeScreen';
 import MedicineManagerScreen from '../../screens/MedicineManagerScreen';
-import RemindersScreen from '../../screens/RemindersScreen';
+import AssignmentsScreen from '../../screens/AssignmentsScreen';
 import routes from '../routes';
 import {CardStyleInterpolators} from '@react-navigation/stack';
 
@@ -26,7 +26,10 @@ export default () => {
         name={routes.medicine_manager}
         component={MedicineManagerScreen}
       />
-      <Stack.Screen name={routes.reminders} component={RemindersScreen} />
+      <Stack.Screen
+        name={routes.medicine_assignments}
+        component={AssignmentsScreen}
+      />
     </Stack.Navigator>
   );
 };

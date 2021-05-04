@@ -9,7 +9,7 @@ import {
 } from 'src/redux/entities/assignments/assignments.actions';
 import Icon from '@components/Icon';
 
-type medicine = {
+type Props = {
   medicine: Medicine;
   pickerSelectedHour: number;
   isActive: boolean;
@@ -19,10 +19,10 @@ const RemindersMedicinesListItem = ({
   medicine,
   isActive,
   pickerSelectedHour,
-}: medicine) => {
+}: Props) => {
   const dispatch = useDispatch();
 
-  const toggleReminderStatus = () => {
+  const toggleAssignmentStatus = () => {
     if (isActive) {
       dispatch(
         unassignMedicine({medicineId: medicine.id, hour: pickerSelectedHour}),
@@ -45,7 +45,7 @@ const RemindersMedicinesListItem = ({
       <Pressable
         android_ripple={theme.configs.ripple_sm}
         hitSlop={15}
-        onPress={toggleReminderStatus}>
+        onPress={toggleAssignmentStatus}>
         <Icon
           name={isActive ? 'notifications' : 'notifications_none'}
           color={theme.colors.primary}

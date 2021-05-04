@@ -8,7 +8,7 @@ export const openMedicineModal = (
   mode: 'update' | 'new',
   medicineData?: Medicine,
 ) =>
-  navigation.navigate(routes.modal_medicine_card, {
+  navigation.navigate(routes.medicine_modal_card, {
     medicine: medicineData,
     mode,
   });

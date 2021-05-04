@@ -15,7 +15,7 @@ export default () => {
       initialRouteName={routes.main}>
       <Stack.Screen name={routes.main} component={MainAppNavigator} />
       <Stack.Screen
-        name={routes.modal_medicine_card}
+        name={routes.medicine_modal_card}
         component={ModalMedicineCardScreen}
         options={{
           cardStyle: {backgroundColor: 'transparent'},

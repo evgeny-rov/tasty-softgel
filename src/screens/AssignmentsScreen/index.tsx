@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StatusBar, StyleSheet, Text, View} from 'react-native';
 import Picker from '@gregfrench/react-native-wheel-picker';
 
 import BgImage from '../../components/BgImage';
-import MedicineList from './MedicineList';
+import MedicineList from './components/MedicineList';
 import hourToTimeString from '../../utils/hourToTimeString';
 import {typography} from '@styles/';
 
@@ -11,13 +11,6 @@ const HOURS_AS_TIME_STRING = Array.from(Array(24).keys()).map(hourToTimeString);
 
 const RemindersScreen = () => {
   const [pickerSelectedHour, setPickerSelectedHour] = useState(12);
-
-  const pickerValueChangeHandler = (val: number) => {
-    if (val === pickerSelectedHour) {
-      return;
-    }
-    setPickerSelectedHour(val);
-  };
 
   return (
     <>
@@ -32,7 +25,7 @@ const RemindersScreen = () => {
             lineGradientColorFrom="#6d6767"
             lineGradientColorTo="#FFF"
             selectedValue={pickerSelectedHour}
-            onValueChange={pickerValueChangeHandler}>
+            onValueChange={setPickerSelectedHour}>
             {HOURS_AS_TIME_STRING.map((value, idx) => (
               <Picker.Item key={value} label={value} value={idx} />
             ))}
@@ -47,18 +40,18 @@ const RemindersScreen = () => {
 };
 
 export const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.1)'},
+  container: {
+    flex: 1,
+    marginTop: StatusBar.currentHeight,
+    padding: 20,
+  },
   header: {
     flex: 0,
-    paddingHorizontal: 20,
-    paddingTop: 15,
-    marginTop: 20,
   },
   picker_container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    // backgroundColor: 'rgba(200, 0, 0, 0.5)'
   },
   picker: {
     flex: 0,
@@ -67,9 +60,6 @@ export const styles = StyleSheet.create({
   },
   list_container: {
     flex: 2,
-    // backgroundColor: 'rgba(23, 23, 77, 0.1)',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
     overflow: 'hidden',
   },
 });

@@ -7,7 +7,7 @@ import DailyAssignments from './components/DailyAssignments';
 import {openMedicineModal} from '../../navigation/helpers';
 
 interface Props {
-  navigation: StackNavigationHelpers;
+  navigation: any;
 }
 
 const HomeScreen = ({navigation}: Props) => {
