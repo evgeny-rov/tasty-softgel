@@ -1,24 +1,41 @@
-import { nanoid } from "@reduxjs/toolkit";
-
-export const ADD_MEDICINE = 'ADD_MEDICINE';
-export const EDIT_MEDICINE = 'EDIT_MEDICINE';
-
-export type TypedAddMedicineAction = {
-  type: typeof ADD_MEDICINE;
-  payload: {id: string; name: string; amount: number};
-};
+import {nanoid} from '@reduxjs/toolkit';
+import {Medicine} from 'src/types';
+import {
+  ADD_MEDICINE,
+  REMOVE_MEDICINE,
+  UPDATE_MEDICINE,
+  TypedAddMedicineAction,
+  TypedRemoveMedicineAction,
+  TypedUpdateMedicineAction,
+} from './medicines.actionTypes';
 
 export const addMedicine = ({
   name,
-  amount,
+  count,
 }: {
   name: string;
-  amount: number;
+  count: number;
 }): TypedAddMedicineAction => ({
   type: ADD_MEDICINE,
   payload: {
     id: nanoid(),
     name,
-    amount,
+    count,
   },
+});
+
+export const removeMedicine = ({
+  medicine,
+}: {
+  medicine: Medicine;
+}): TypedRemoveMedicineAction => ({
+  type: REMOVE_MEDICINE,
+  payload: medicine,
+});
+
+export const updateMedicine = (
+  medicine: Medicine,
+): TypedUpdateMedicineAction => ({
+  type: UPDATE_MEDICINE,
+  payload: medicine,
 });

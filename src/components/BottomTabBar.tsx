@@ -4,8 +4,8 @@ import {StackNavigationState, ParamListBase} from '@react-navigation/native';
 import {StackNavigationHelpers} from '@react-navigation/stack/src/types';
 
 import routes from '../navigation/routes';
-import {ClipBoardListIcon, HomeIcon, PillListIcon} from '@icons/';
 import {theme, common} from '@styles/';
+import Icon from './Icon';
 
 interface Props {
   navigation: StackNavigationHelpers;
@@ -25,19 +25,27 @@ const BottomTabBar = ({navigation, state}: Props) => {
         style={common.styles.centered}
         onPress={() => navigation.navigate(routes.home)}
         android_ripple={theme.configs.ripple_xl}>
-        <HomeIcon fill={getTabIconColor(routes.home)} />
+        <Icon name="home" color={getTabIconColor(routes.home)} size={20} />
       </Pressable>
       <Pressable
         style={common.styles.centered}
         onPress={() => navigation.navigate(routes.medicine_manager)}
         android_ripple={theme.configs.ripple_xl}>
-        <PillListIcon fill={getTabIconColor(routes.medicine_manager)} />
+        <Icon
+          name="pills"
+          color={getTabIconColor(routes.medicine_manager)}
+          size={20}
+        />
       </Pressable>
       <Pressable
         style={common.styles.centered}
-        onPress={() => navigation.navigate(routes.reminders)}
+        onPress={() => navigation.navigate(routes.medicine_assignments)}
         android_ripple={theme.configs.ripple_xl}>
-        <ClipBoardListIcon fill={getTabIconColor(routes.reminders)} />
+        <Icon
+          name="assignment"
+          color={getTabIconColor(routes.medicine_assignments)}
+          size={20}
+        />
       </Pressable>
     </View>
   );

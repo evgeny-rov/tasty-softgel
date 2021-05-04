@@ -1,32 +1,42 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {Medicine} from 'src/types';
 
-import {common, typography} from '@styles/';
+import {theme, typography} from '@styles/';
 import hourToTimeString from 'src/utils/hourToTimeString';
-import {ScrollView} from 'react-native-gesture-handler';
+import Icon from '@components/Icon';
+import {useNavigation} from '@react-navigation/core';
+import {openMedicineModal} from 'src/navigation/helpers';
 
-const MedicineListItem = ({name, currentAmount, reminders}: Medicine) => {
-  const remindersAsHoursString = reminders.map(hourToTimeString).sort().join(', ');
+const MedicineListItem = (medicine: Medicine) => {
+  const navigation = useNavigation();
+  const assignmentsList = medicine.assignments
+    .sort()
+    .map(hourToTimeString)
+    .join(', ');
 
   return (
     <View style={styles.container}>
-      <View style={[common.styles.row, common.styles.spaced]}>
-        <View style={common.styles.flex}>
-          <Text style={typography.styles.body_bold}>{name}</Text>
-        </View>
-        <View>
-          <Text style={typography.styles.body_sm}>{currentAmount} шт.</Text>
-        </View>
+      <View style={styles.button_wrapper}>
+        <Pressable
+          style={styles.edit_button}
+          android_ripple={theme.configs.ripple_contained}
+          hitSlop={18}
+          onPress={() => openMedicineModal(navigation, 'update', medicine)}>
+          <Icon name="quill" color={theme.colors.primary} size={18} />
+        </Pressable>
       </View>
-      <ScrollView
-        style={styles.padded}
-        horizontal
-        showsHorizontalScrollIndicator={false}>
-        <Text numberOfLines={1} style={typography.styles.body_sub_gray}>
-          {remindersAsHoursString}
+      <View style={styles.main_content_wrapper}>
+        <Text style={typography.styles.body_bold} numberOfLines={1}>
+          {medicine.name}
         </Text>
-      </ScrollView>
+        <Text numberOfLines={1} style={typography.styles.body_sub_gray}>
+          {assignmentsList || 'Прием не назначен'}
+        </Text>
+      </View>
+      <View>
+        <Text style={typography.styles.body_sm}>{medicine.count} шт.</Text>
+      </View>
     </View>
   );
 };
@@ -34,13 +44,30 @@ const MedicineListItem = ({name, currentAmount, reminders}: Medicine) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    alignItems: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
     marginVertical: 10,
   },
-  padded: {
-    paddingTop: 5,
+  main_content_wrapper: {
+    flex: 1,
+    marginHorizontal: 15,
+  },
+  button_wrapper: {
+    flex: 1,
+    maxHeight: 40,
+    maxWidth: 40,
+    borderRadius: 100,
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  edit_button: {
+    height: '100%',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

@@ -24,7 +24,7 @@
     "react-native-reanimated": "^1.13.2",
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^2.17.1",
-    "react-native-svg": "^12.1.0",
+    "react-native-vector-icons": "^8.1.0",
     "react-redux": "^7.2.2",
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
@@ -38,6 +38,7 @@
     "@types/lodash": "^4.14.168",
     "@types/react-native": "^0.63.2",
     "@types/react-native-push-notification": "^7.0.1",
+    "@types/react-native-vector-icons": "^6.4.6",
     "@types/react-redux": "^7.1.16",
     "@types/react-test-renderer": "^16.9.2",
     "babel-jest": "^25.1.0",
@@ -50,6 +51,11 @@
   },
   "resolutions": {
     "@types/react": "^16"
+  },
+  "rnpm": {
+    "assets": [
+      "./src/assets/fonts/"
+    ]
   },
   "jest": {
     "preset": "react-native",

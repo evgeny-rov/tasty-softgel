@@ -1,26 +1,26 @@
 import React from 'react';
-import {StatusBar} from 'react-native';
+import {StatusBar, ScrollView} from 'react-native';
 import {StackNavigationHelpers} from '@react-navigation/stack/src/types';
 import FloatingActionButton from '../../components/FloatingActionButton';
 import BgImage from '../../components/BgImage';
-import '../../services/notifications/NotificationManager';
-import {openNewMedicineModal} from '../../navigation/helpers';
-import DailyMedicinePlan from './DailyMedicinePlan';
-import {ScrollView} from 'react-native-gesture-handler';
+import DailyAssignments from './components/DailyAssignments';
+import {openMedicineModal} from '../../navigation/helpers';
 
 interface Props {
-  navigation: StackNavigationHelpers;
+  navigation: any;
 }
 
 const HomeScreen = ({navigation}: Props) => {
   return (
     <>
       <StatusBar translucent backgroundColor={'transparent'} />
-      <BgImage source={require('../../assets/images/bg2.png')} />
+      <BgImage source={require('../../assets/images/bg_01.jpg')} />
       <ScrollView>
-        <DailyMedicinePlan />
+        <DailyAssignments />
       </ScrollView>
-      <FloatingActionButton onPress={() => openNewMedicineModal(navigation)} />
+      <FloatingActionButton
+        onPress={() => openMedicineModal(navigation, 'new')}
+      />
     </>
   );
 };

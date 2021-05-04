@@ -1,9 +1,8 @@
 export type Medicine = {
   id: string;
   name: string;
-  initialAmount: number;
-  currentAmount: number;
-  reminders: number[];
+  count: number;
+  assignments: number[];
 };
 
 export type MedicinesState = {
@@ -13,20 +12,26 @@ export type MedicinesState = {
   };
 };
 
-export type Reminder = {
+export type Assignment = {
   hour: number;
   medicinesIds: string[];
 };
 
-export type RemindersState = {
+export type AssignmentsState = {
   allHours: number[];
   byHour: {
-    [hour: number]: Reminder;
+    [hour: number]: Assignment;
   };
+};
+
+export type ConsumptionsState = {
+  currentHour: number;
+  confirmedHours: number[];
+  lastConfirmationAt: number;
 };
 
 export type AppStateType = {
   medicines: MedicinesState;
-  reminders: RemindersState;
-  pickerSelectedValue: number;
+  assignments: AssignmentsState;
+  consumptions: ConsumptionsState;
 };

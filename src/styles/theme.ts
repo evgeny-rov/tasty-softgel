@@ -1,15 +1,17 @@
 const palette = {
   lavender: '#b794d8',
   dark_lavender: '#574574',
-  orange: '#FF9494',
+  orange: '#FF4D8D',
+  red: '#FE5C5C',
   black: '#040404',
   white: '#F5F5F5',
-  gray: '#888888',
+  gray: '#D3D3D3',
+  dark_gray: '#555555',
 };
 
 const android_ripple_base = {
   borderless: true,
-  color: palette.dark_lavender,
+  color: palette.lavender,
 };
 
 const theme = {
@@ -17,8 +19,10 @@ const theme = {
     background: palette.black,
     primary: palette.white,
     secondary: palette.gray,
+    secondary_dark: palette.dark_gray,
     accent: palette.lavender,
     accent2: palette.orange,
+    attention: palette.red,
   },
   size: {
     s: 8,
@@ -28,13 +32,17 @@ const theme = {
     xl: 40,
   },
   configs: {
+    ripple_xs: {
+      ...android_ripple_base,
+      radius: 16,
+    },
     ripple_sm: {
       ...android_ripple_base,
       radius: 25,
     },
     ripple_xl: {
       ...android_ripple_base,
-      radius: 50,
+      radius: 45,
     },
     ripple_contained: {
       ...android_ripple_base,
