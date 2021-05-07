@@ -9,6 +9,6 @@ export const openMedicineModal = (
   medicineData?: Medicine,
 ) =>
   navigation.navigate(routes.medicine_modal_card, {
-    medicine: medicineData,
+    medicine: medicineData || null,
     mode,
   });

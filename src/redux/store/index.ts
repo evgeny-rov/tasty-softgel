@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {AppStateType} from 'src/types';
 import medicinesReducer from '../entities/medicines/medicines.reducer';
 import assignmentsReducer from '../entities/assignments/assignments.reducer';
-import consumptionsState from '../entities/consumptions/consumptions.reducer';
+import consumptionsReducer from '../entities/consumptions/consumptions.reducer';
 import testMiddleware from 'src/services/notifications/notifications.middleware';
 import {PersistPartial} from 'redux-persist/es/persistReducer';
 import {consumptionsRefresh} from '../entities/consumptions/consumptions.actions';
@@ -17,7 +17,7 @@ const persistConfig = {
 const rootReducer = combineReducers<AppStateType>({
   medicines: medicinesReducer,
   assignments: assignmentsReducer,
-  consumptions: consumptionsState,
+  consumptions: consumptionsReducer,
 });
 
 const persistedReducer = persistReducer<AppStateType, any>(
