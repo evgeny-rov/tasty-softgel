@@ -10,7 +10,8 @@ const Stack = createCustomStackNavigator();
 export default () => {
   return (
     <Stack.Navigator
-      mode="modal"
+      // mode="modal"
+      detachInactiveScreens={false}
       headerMode="none"
       initialRouteName={routes.main}>
       <Stack.Screen name={routes.main} component={MainAppNavigator} />
@@ -20,8 +21,8 @@ export default () => {
         options={{
           cardStyle: {backgroundColor: 'transparent'},
           animationEnabled: true,
-          gestureEnabled: true,
-          gestureDirection: 'vertical',
+          // gestureEnabled: true,
+          // gestureDirection: 'vertical',
           cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
         }}
       />

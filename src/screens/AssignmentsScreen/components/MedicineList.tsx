@@ -1,7 +1,8 @@
+import {includes} from 'lodash';
 import React from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
-import {medicinesSelector} from 'src/redux/entities/medicines/medicines.selectors';
+import {medicinesWithAssignmentsSelector} from 'src/redux/entities/medicines/medicines.selectors';
 import MedicineListItem from './MedicineListItem';
 
 type Props = {
@@ -9,7 +10,7 @@ type Props = {
 };
 
 const RemindersMedicinesList = ({pickerSelectedHour}: Props) => {
-  const medicinesList = useSelector(medicinesSelector);
+  const medicinesList = useSelector(medicinesWithAssignmentsSelector);
 
   return (
     <ScrollView
@@ -17,12 +18,12 @@ const RemindersMedicinesList = ({pickerSelectedHour}: Props) => {
       contentContainerStyle={styles.container}
       showsVerticalScrollIndicator={false}
       overScrollMode={'never'}>
-      {medicinesList.map((medicine) => (
+      {medicinesList.map(({medicine, assignments}) => (
         <MedicineListItem
           key={medicine.id}
           medicine={medicine}
+          assignment={assignments.find(({hour}) => hour === pickerSelectedHour)}
           pickerSelectedHour={pickerSelectedHour}
-          isActive={medicine.assignments.includes(pickerSelectedHour)}
         />
       ))}
     </ScrollView>

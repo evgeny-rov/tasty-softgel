@@ -1,6 +1,6 @@
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
-import {Medicine} from 'src/types';
+import {Assignment, Medicine} from 'src/types';
 
 import {theme, typography} from '@styles/';
 import hourToTimeString from 'src/utils/hourToTimeString';
@@ -8,11 +8,15 @@ import Icon from '@components/Icon';
 import {useNavigation} from '@react-navigation/core';
 import {openMedicineModal} from 'src/navigation/helpers';
 
-const MedicineListItem = (medicine: Medicine) => {
+interface Props {
+  medicine: Medicine;
+  assignments: Assignment[];
+}
+
+const MedicineListItem = ({medicine, assignments}: Props) => {
   const navigation = useNavigation();
-  const assignmentsList = medicine.assignments
-    .sort()
-    .map(hourToTimeString)
+  const assignmentsList = assignments
+    .map(({hour}) => hourToTimeString(hour))
     .join(', ');
 
   return (

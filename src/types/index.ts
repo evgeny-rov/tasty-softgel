@@ -2,7 +2,6 @@ export type Medicine = {
   id: string;
   name: string;
   count: number;
-  assignments: number[];
 };
 
 export type MedicinesState = {
@@ -13,14 +12,14 @@ export type MedicinesState = {
 };
 
 export type Assignment = {
+  id: string;
   hour: number;
-  medicinesIds: string[];
+  medicineId: string;
 };
 
 export type AssignmentsState = {
-  allHours: number[];
-  byHour: {
-    [hour: number]: Assignment;
+  byId: {
+    [id: string]: Assignment;
   };
 };
 

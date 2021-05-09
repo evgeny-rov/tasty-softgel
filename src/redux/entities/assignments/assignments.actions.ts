@@ -1,27 +1,27 @@
+import {nanoid} from '@reduxjs/toolkit';
 import {
-  ASSIGN_MEDICINE,
-  UNASSIGN_MEDICINE,
-  TypedUpdateAssignmentsAction,
+  ADD_ASSIGNMENT,
+  REMOVE_ASSIGNMENT,
+  TypedAddAssignmentAction,
+  TypedRemoveAssignmentAction,
 } from './assignments.actionTypes';
 
-export const assignMedicine = ({
+export const addAssignment = ({
   medicineId,
   hour,
 }: {
   medicineId: string;
   hour: number;
-}): TypedUpdateAssignmentsAction => ({
-  type: ASSIGN_MEDICINE,
-  payload: {medicineId, hour},
+}): TypedAddAssignmentAction => ({
+  type: ADD_ASSIGNMENT,
+  payload: {id: nanoid(), medicineId, hour},
 });
 
-export const unassignMedicine = ({
-  medicineId,
-  hour,
+export const removeAssignment = ({
+  id,
 }: {
-  medicineId: string;
-  hour: number;
-}): TypedUpdateAssignmentsAction => ({
-  type: UNASSIGN_MEDICINE,
-  payload: {medicineId, hour},
+  id: string;
+}): TypedRemoveAssignmentAction => ({
+  type: REMOVE_ASSIGNMENT,
+  payload: {id},
 });

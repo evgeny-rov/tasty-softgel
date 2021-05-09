@@ -1,44 +1,44 @@
 import {createSelector} from 'reselect';
 import {AppStateType} from 'src/types';
+import {groupBy} from 'lodash';
 
 const getMedicines = (state: AppStateType) => state.medicines.byId;
-const getAllHours = (state: AppStateType) => state.assignments.allHours;
-const getByHoursAssignments = (state: AppStateType) => state.assignments.byHour;
-const getCurrentConsumptionsHour = (state: AppStateType) =>
+const getAssignments = (state: AppStateType) => state.assignments.byId;
+const getCurrentConsumptionHour = (state: AppStateType) =>
   state.consumptions.currentHour;
 const getCurrentlyConfirmedHours = (state: AppStateType) =>
   state.consumptions.confirmedHours;
 
-export const byHourMedicinesSelector = createSelector(
+export const assignmentsByHourSelector = createSelector(
   [
     getMedicines,
-    getAllHours,
-    getByHoursAssignments,
-    getCurrentConsumptionsHour,
+    getAssignments,
+    getCurrentConsumptionHour,
     getCurrentlyConfirmedHours,
   ],
-  (
-    medicines,
-    hours,
-    byHourReminders,
-    currentSystemHour,
-    currentlyConfirmedHours,
-  ) => {
-    return hours
-      .sort((a, b) => a - b)
-      .map((hour) => {
-        const mappedMedicines = byHourReminders[hour].medicinesIds.map(
-          (medId) => medicines[medId],
-        );
+  (medicines, assignments, currentConsumptionHour, currentlyConfirmedHours) => {
+    const assignmentsByAssignedHour = groupBy(assignments, 'hour');
+
+    const getMedicinesIds = (hour: number) => {
+      const assignments = assignmentsByAssignedHour[hour] || [];
+      return assignments.map(({medicineId}) => medicineId);
+    };
+
+    const assignmentsWithMedicines = Object.keys(assignmentsByAssignedHour).map(
+      (hourKey) => {
+        const hour = Number(hourKey);
 
         return {
           hour,
-          isActive: hour === currentSystemHour,
+          medicinesIds: getMedicinesIds(hour),
+          isActive: hour === currentConsumptionHour,
           canBeConfirmed:
             !currentlyConfirmedHours.includes(hour) &&
-            hour <= currentSystemHour,
-          medicines: mappedMedicines,
+            hour <= currentConsumptionHour,
         };
-      });
+      },
+    );
+
+    return assignmentsWithMedicines;
   },
 );
