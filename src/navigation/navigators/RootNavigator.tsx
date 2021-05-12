@@ -4,7 +4,9 @@ import {CardStyleInterpolators} from '@react-navigation/stack';
 import MainAppNavigator from './MainAppNavigator';
 import routes from '../routes';
 import ModalMedicineCardScreen from 'src/screens/ModalMedicineCardScreen';
+import { enableScreens } from 'react-native-screens';
 
+enableScreens();
 const Stack = createCustomStackNavigator();
 
 export default () => {
