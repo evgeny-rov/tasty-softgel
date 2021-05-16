@@ -73,6 +73,7 @@ export default () => {
     <TabView
       navigationState={{index, routes}}
       onIndexChange={setIndex}
+      lazy={false}
       renderScene={renderScene}
       renderTabBar={BottomTabBar}
       tabBarPosition="bottom"

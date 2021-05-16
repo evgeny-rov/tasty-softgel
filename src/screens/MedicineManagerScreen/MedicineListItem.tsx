@@ -14,7 +14,6 @@ interface Props {
 }
 
 const MedicineListItem = ({medicine, assignments}: Props) => {
-  const navigation = useNavigation();
   const assignmentsList = assignments
     .map(({hour}) => hourToTimeString(hour))
     .join(', ');
@@ -26,7 +25,7 @@ const MedicineListItem = ({medicine, assignments}: Props) => {
           style={styles.edit_button}
           android_ripple={theme.configs.ripple_contained}
           hitSlop={18}
-          onPress={() => openMedicineModal(navigation, 'update', medicine)}>
+          onPress={() => null}>
           <Icon name="quill" color={theme.colors.primary} size={18} />
         </Pressable>
       </View>

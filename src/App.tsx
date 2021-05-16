@@ -4,6 +4,7 @@ import {PersistGate} from 'redux-persist/integration/react';
 import {store, persistor, onStartUp} from './redux/store';
 import AppNavigation from './navigation';
 import {initNotificationsManager} from './services/notifications/notifications.manager';
+import MainAppNavigator from './navigation/navigators/MainAppNavigator';
 
 initNotificationsManager(store);
 
@@ -12,7 +13,7 @@ const App = () => {
     onStartUp(store);
   }, []);
 
-  return <AppNavigation />;
+  return <MainAppNavigator />;
 };
 
 const RootComponent = () => {
