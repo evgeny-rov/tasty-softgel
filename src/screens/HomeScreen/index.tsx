@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {
   StatusBar,
   ScrollView,
-  Modal,
   View,
   Pressable,
   Text,
@@ -19,6 +18,7 @@ import {useNavigation} from '@react-navigation/core';
 import Icon from '@components/Icon';
 import {common, theme, typography} from 'src/styles';
 import SizedBox from '@components/SizedBox';
+import Modal from 'react-native-modal';
 
 interface Props {
   navigation: any;
@@ -31,13 +31,14 @@ const HomeScreen = () => {
   const renderModal = () => {
     return (
       <Modal
-        animationType="slide"
-        // style={{height: 50}}
-        hardwareAccelerated
-        transparent
-        supportedOrientations={['portrait']}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}>
+        swipeDirection="down"
+        isVisible={modalVisible}
+        coverScreen={false}
+        hasBackdrop={false}
+        style={{marginHorizontal: 10, marginVertical: 0}}
+        useNativeDriverForBackdrop
+        onSwipeComplete={() => setModalVisible(false)}
+        onBackButtonPress={() => setModalVisible(false)}>
         <View style={styles.container}>
           <View style={styles.section}>
             <Text style={styles.card_title} numberOfLines={1}>
