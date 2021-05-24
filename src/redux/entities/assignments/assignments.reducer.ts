@@ -1,43 +1,23 @@
 import {AssignmentsState} from 'src/types';
 import {
-  ASSIGN_MEDICINE,
-  UNASSIGN_MEDICINE,
-  TypedUpdateAssignmentsAction,
+  ADD_ASSIGNMENT,
+  REMOVE_ASSIGNMENT,
+  TypedAddAssignmentAction,
+  TypedRemoveAssignmentAction,
 } from './assignments.actionTypes';
 import {
   REMOVE_MEDICINE,
   TypedRemoveMedicineAction,
 } from '../medicines/medicines.actionTypes';
-import {omit, uniq, without} from 'lodash';
+import {pickBy} from 'lodash';
 
-type TypedActions = TypedUpdateAssignmentsAction | TypedRemoveMedicineAction;
+type TypedActions =
+  | TypedAddAssignmentAction
+  | TypedRemoveAssignmentAction
+  | TypedRemoveMedicineAction;
 
 const initlaState: AssignmentsState = {
-  allHours: [],
-  byHour: {},
-};
-
-const getNewStateWithoutReminder = (
-  state: AssignmentsState,
-  hour: number,
-  medicineId: string,
-): AssignmentsState => {
-  const reminder = state.byHour[hour];
-  const updatedReminder = {
-    ...reminder,
-    medicinesIds: without(reminder.medicinesIds, medicineId),
-  };
-
-  const newAllHours =
-    updatedReminder.medicinesIds.length < 1
-      ? without(state.allHours, hour)
-      : [...state.allHours];
-  const newByHourItems =
-    updatedReminder.medicinesIds.length < 1
-      ? omit(state.byHour, hour)
-      : {...state.byHour, [hour]: updatedReminder};
-
-  return {allHours: newAllHours, byHour: newByHourItems};
+  byId: {},
 };
 
 export default (
@@ -45,53 +25,34 @@ export default (
   action: TypedActions,
 ): AssignmentsState => {
   switch (action.type) {
-    case REMOVE_MEDICINE: {
-      const medicine = action.payload;
-      const newState = {...state};
-
-      medicine.assignments.forEach((hour) => {
-        const updatedState = getNewStateWithoutReminder(
-          newState,
-          hour,
-          medicine.id,
-        );
-        newState.allHours = updatedState.allHours;
-        newState.byHour = updatedState.byHour;
-      });
+    case ADD_ASSIGNMENT: {
+      const {id, hour, medicineId} = action.payload;
 
       return {
         ...state,
-        allHours: newState.allHours,
-        byHour: newState.byHour,
-      };
-    }
-    case ASSIGN_MEDICINE: {
-      const {medicineId, hour} = action.payload;
-
-      const reminder = state.byHour[hour] ?? {hour, medicinesIds: []};
-      const newReminder = {
-        ...reminder,
-        medicinesIds: [...reminder.medicinesIds, medicineId],
-      };
-
-      return {
-        ...state,
-        allHours: uniq([...state.allHours, hour]),
-        byHour: {
-          ...state.byHour,
-          [hour]: newReminder,
+        byId: {
+          ...state.byId,
+          [id]: {id, medicineId, hour},
         },
       };
     }
-    case UNASSIGN_MEDICINE: {
-      const {medicineId, hour} = action.payload;
-
-      const newState = getNewStateWithoutReminder(state, hour, medicineId);
+    case REMOVE_ASSIGNMENT: {
+      const {id} = action.payload;
 
       return {
         ...state,
-        allHours: newState.allHours,
-        byHour: newState.byHour,
+        byId: pickBy(state.byId, (assignment) => assignment.id !== id),
+      };
+    }
+    case REMOVE_MEDICINE: {
+      const {id: medicineId} = action.payload;
+
+      return {
+        ...state,
+        byId: pickBy(
+          state.byId,
+          (assignment) => assignment.medicineId !== medicineId,
+        ),
       };
     }
     default: {

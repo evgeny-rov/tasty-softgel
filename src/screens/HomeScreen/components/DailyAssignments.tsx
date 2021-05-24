@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {View, Text} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {byHourMedicinesSelector} from 'src/redux/entities/assignments/assignments.selectors';
+import {assignmentsByHourSelector} from 'src/redux/entities/assignments/assignments.selectors';
 import {typography} from 'src/styles';
 import SizedBox from '@components/SizedBox';
 import DailyAssignmentsListItem from './DailyAssignmentsListItem';
@@ -10,7 +10,7 @@ import {getCurrentHour} from 'src/redux/entities/consumptions/consumptions.selec
 
 const DailyAssignments = () => {
   const dispatch = useDispatch();
-  const assignments = useSelector(byHourMedicinesSelector);
+  const assignments = useSelector(assignmentsByHourSelector);
   const currentHour = useSelector(getCurrentHour);
 
   useEffect(() => {

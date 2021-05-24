@@ -1,35 +1,33 @@
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {useDispatch} from 'react-redux';
-import {Medicine} from 'src/types';
+import {Medicine, Assignment} from 'src/types';
 import {common, theme, typography} from '@styles/';
 import {
-  assignMedicine,
-  unassignMedicine,
+  addAssignment,
+  removeAssignment,
 } from 'src/redux/entities/assignments/assignments.actions';
 import Icon from '@components/Icon';
 
 type Props = {
   medicine: Medicine;
+  assignment: Assignment | undefined;
   pickerSelectedHour: number;
-  isActive: boolean;
 };
 
 const RemindersMedicinesListItem = ({
   medicine,
-  isActive,
   pickerSelectedHour,
+  assignment,
 }: Props) => {
   const dispatch = useDispatch();
 
   const toggleAssignmentStatus = () => {
-    if (isActive) {
-      dispatch(
-        unassignMedicine({medicineId: medicine.id, hour: pickerSelectedHour}),
-      );
+    if (assignment) {
+      dispatch(removeAssignment({id: assignment.id}));
     } else {
       dispatch(
-        assignMedicine({medicineId: medicine.id, hour: pickerSelectedHour}),
+        addAssignment({medicineId: medicine.id, hour: pickerSelectedHour}),
       );
     }
   };
@@ -47,7 +45,7 @@ const RemindersMedicinesListItem = ({
         hitSlop={15}
         onPress={toggleAssignmentStatus}>
         <Icon
-          name={isActive ? 'notifications' : 'notifications_none'}
+          name={assignment ? 'notifications' : 'notifications_none'}
           color={theme.colors.primary}
           size={24}
         />

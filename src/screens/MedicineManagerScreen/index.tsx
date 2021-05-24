@@ -7,6 +7,8 @@ import {typography} from '@styles/';
 import MedicineList from './MedicineList';
 
 const MedicineManagerScreen = () => {
+  console.log('screen render')
+
   return (
     <>
       <StatusBar translucent backgroundColor={'transparent'} />
@@ -25,6 +27,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     marginTop: StatusBar.currentHeight,
     padding: 20,
+    backgroundColor: 'transparent',
   },
 });
 

@@ -10,24 +10,18 @@ import hourToTimeString from 'src/utils/hourToTimeString';
 
 interface Props {
   hour: number;
-  medicines: Medicine[];
+  medicinesIds: string[];
   isActive: boolean;
   canBeConfirmed: boolean;
 }
 
-export default ({hour, medicines, isActive, canBeConfirmed}: Props) => {
+export default ({hour, medicinesIds, isActive, canBeConfirmed}: Props) => {
   const dispatch = useDispatch();
   const medicinesNames = useSelector((state: AppStateType) =>
-    medicines.map(({id}) => state.medicines.byId[id].name),
+    medicinesIds.map((id) => state.medicines.byId[id].name),
   );
 
-  const confirmAction = () =>
-    dispatch(
-      confirmConsumption(
-        hour,
-        medicines.map((med) => med.id),
-      ),
-    );
+  const confirmAction = () => dispatch(confirmConsumption(hour, medicinesIds));
 
   const textColor = {
     color: isActive ? theme.colors.accent2 : theme.colors.primary,
