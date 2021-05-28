@@ -1,12 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {Assignment, Medicine} from 'src/types';
 
 import {theme, typography} from '@styles/';
 import hourToTimeString from 'src/utils/hourToTimeString';
 import Icon from '@components/Icon';
-import {useNavigation} from '@react-navigation/core';
-import {openMedicineModal} from 'src/navigation/helpers';
+import Modal from '../ModalMedicineCardScreen/Modal';
 
 interface Props {
   medicine: Medicine;
@@ -14,18 +13,26 @@ interface Props {
 }
 
 const MedicineListItem = ({medicine, assignments}: Props) => {
+  const [modalVisible, setModalVisible] = useState(false);
   const assignmentsList = assignments
     .map(({hour}) => hourToTimeString(hour))
     .join(', ');
 
   return (
     <View style={styles.container}>
+      <Modal
+        key={medicine.id}
+        isVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        mode="update"
+        medicine={medicine}
+      />
       <View style={styles.button_wrapper}>
         <Pressable
           style={styles.edit_button}
           android_ripple={theme.configs.ripple_contained}
           hitSlop={18}
-          onPress={() => null}>
+          onPress={() => setModalVisible(true)}>
           <Icon name="quill" color={theme.colors.primary} size={18} />
         </Pressable>
       </View>

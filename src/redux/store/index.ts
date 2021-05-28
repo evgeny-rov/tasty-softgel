@@ -34,4 +34,9 @@ export const onStartUp = (store: Store<AppStateType & PersistPartial>) => {
   store.dispatch(consumptionsRefresh({lastConfirmationAt}));
 };
 
+AsyncStorage.getAllKeys(() => {
+  console.log('rehydration event');
+  console.log('store', store.getState());
+});
+
 export {store, persistor};

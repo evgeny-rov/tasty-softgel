@@ -1,24 +1,10 @@
 import React, {useState} from 'react';
-import {
-  StatusBar,
-  ScrollView,
-  View,
-  Pressable,
-  Text,
-  StyleSheet,
-  TextInput,
-  Keyboard,
-} from 'react-native';
-import {StackNavigationHelpers} from '@react-navigation/stack/src/types';
+import {StatusBar, ScrollView, StyleSheet} from 'react-native';
 import FloatingActionButton from '../../components/FloatingActionButton';
 import BgImage from '../../components/BgImage';
 import DailyAssignments from './components/DailyAssignments';
-import {openMedicineModal} from '../../navigation/helpers';
-import {useNavigation} from '@react-navigation/core';
-import Icon from '@components/Icon';
-import {common, theme, typography} from 'src/styles';
-import SizedBox from '@components/SizedBox';
-import Modal from 'react-native-modal';
+import {theme, typography} from 'src/styles';
+import Modal from '../ModalMedicineCardScreen/Modal';
 
 interface Props {
   navigation: any;
@@ -26,98 +12,16 @@ interface Props {
 
 const HomeScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [name, setName] = useState('');
-
-  const renderModal = () => {
-    return (
-      <Modal
-        swipeDirection="down"
-        isVisible={modalVisible}
-        coverScreen={false}
-        hasBackdrop={false}
-        style={{marginHorizontal: 10, marginVertical: 0}}
-        useNativeDriverForBackdrop
-        onSwipeComplete={() => setModalVisible(false)}
-        onBackButtonPress={() => setModalVisible(false)}>
-        <View style={styles.container}>
-          <View style={styles.section}>
-            <Text style={styles.card_title} numberOfLines={1}>
-              Новое лекарство
-            </Text>
-            <Pressable
-              android_ripple={theme.configs.ripple_sm}
-              style={styles.close_btn}
-              onPress={() => setModalVisible(false)}
-              hitSlop={25}>
-              <Icon name="clear" color={theme.colors.primary} size={20} />
-            </Pressable>
-          </View>
-          <SizedBox height={60} />
-          <View style={styles.section}>
-            <View style={common.styles.flex}>
-              <Text style={typography.styles.h2}>Наименование:</Text>
-              <TextInput
-                style={styles.input}
-                autoCapitalize="words"
-                value={name}
-                onChangeText={setName}
-                // onSubmitEditing={handleSubmit}
-                blurOnSubmit
-              />
-            </View>
-          </View>
-          <SizedBox height={60} />
-          <View style={styles.section}>
-            <View style={common.styles.flex}>
-              <Text style={typography.styles.h2}>Наименование:</Text>
-              <TextInput
-                style={styles.input}
-                autoCapitalize="words"
-                value={name}
-                onChangeText={setName}
-                // onSubmitEditing={handleSubmit}
-                blurOnSubmit
-              />
-            </View>
-          </View>
-          <SizedBox height={60} />
-          <View style={styles.section}>
-            <View style={common.styles.flex}>
-              <Text style={typography.styles.h2}>Наименование:</Text>
-              <TextInput
-                style={styles.input}
-                autoCapitalize="words"
-                value={name}
-                onChangeText={setName}
-                // onSubmitEditing={handleSubmit}
-                blurOnSubmit
-              />
-            </View>
-          </View>
-          <SizedBox height={60} />
-          <View style={styles.section}>
-            <View style={common.styles.flex}>
-              <Text style={typography.styles.h2}>Наименование:</Text>
-              <TextInput
-                style={styles.input}
-                autoCapitalize="words"
-                value={name}
-                onChangeText={setName}
-                // onSubmitEditing={handleSubmit}
-                blurOnSubmit
-              />
-            </View>
-          </View>
-        </View>
-      </Modal>
-    );
-  };
 
   return (
     <>
       <StatusBar translucent backgroundColor={'transparent'} />
       <BgImage source={require('../../assets/images/bg_01.jpg')} />
-      {renderModal()}
+      <Modal
+        isVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        mode="new"
+      />
       <ScrollView>
         <DailyAssignments />
       </ScrollView>
