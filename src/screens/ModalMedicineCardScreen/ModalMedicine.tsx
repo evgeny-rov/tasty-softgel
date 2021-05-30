@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
 import Modal from 'react-native-modal';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {common, theme, typography} from '@styles/';
 import RepeatedActionButton from '@components/RepeatedActionButton';
@@ -12,32 +12,31 @@ import {
   updateMedicine,
 } from 'src/redux/entities/medicines/medicines.actions';
 import Icon from '@components/Icon';
-import {Medicine} from 'src/types';
+import {AppStateType} from 'src/types';
+import {hideModalMedicine} from 'src/redux/entities/modal_medicine/modal_medicine.actions';
 
-interface Props {
-  isVisible: boolean;
-  setModalVisible: (nextStatus: boolean) => void;
-  medicine?: Medicine;
-  mode: 'new' | 'update';
-}
+const ModalMedicineCardScreen = () => {
+  const isVisible = useSelector(
+    (state: AppStateType) => state.modal_medicine.isVisible,
+  );
 
-const ModalMedicineCardScreen = ({
-  medicine,
-  mode,
-  isVisible,
-  setModalVisible,
-}: Props) => {
-  const [name, setName] = useState(medicine?.name || '');
-  const [count, setCount] = useState(medicine?.count || 30);
+  const medicine = useSelector(
+    (state: AppStateType) => state.modal_medicine.data,
+  );
+
   const dispatch = useDispatch();
+  const [name, setName] = useState(medicine === null ? '' : medicine.name);
+  const [count, setCount] = useState(medicine === null ? 30 : medicine.count);
 
-  const closeScreen = () => setModalVisible(false);
+  console.log(medicine, name, count);
 
+  const mode = medicine === null ? 'new' : 'update';
+  const closeScreen = () => dispatch(hideModalMedicine());
   const incrementCount = () => setCount(count + 1);
   const decrementCount = () => count > 0 && setCount(count - 1);
 
   const handleSubmit = () => {
-    if (medicine && mode === 'update') {
+    if (medicine !== null && mode === 'update') {
       dispatch(
         updateMedicine({
           ...medicine,
@@ -80,6 +79,7 @@ const ModalMedicineCardScreen = ({
       isVisible={isVisible}
       coverScreen={true}
       hasBackdrop={true}
+      statusBarTranslucent
       style={styles.modal}
       useNativeDriverForBackdrop
       onSwipeComplete={closeScreen}

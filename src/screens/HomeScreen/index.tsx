@@ -4,28 +4,27 @@ import FloatingActionButton from '../../components/FloatingActionButton';
 import BgImage from '../../components/BgImage';
 import DailyAssignments from './components/DailyAssignments';
 import {theme, typography} from 'src/styles';
-import Modal from '../ModalMedicineCardScreen/Modal';
+import {useDispatch} from 'react-redux';
+import {showModalMedicine} from 'src/redux/entities/modal_medicine/modal_medicine.actions';
 
 interface Props {
   navigation: any;
 }
 
 const HomeScreen = () => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const dispatch = useDispatch();
 
+  const showModal = () => dispatch(showModalMedicine());
+  
   return (
     <>
       <StatusBar translucent backgroundColor={'transparent'} />
       <BgImage source={require('../../assets/images/bg_01.jpg')} />
-      <Modal
-        isVisible={modalVisible}
-        setModalVisible={setModalVisible}
-        mode="new"
-      />
+
       <ScrollView>
         <DailyAssignments />
       </ScrollView>
-      <FloatingActionButton onPress={() => setModalVisible(true)} />
+      <FloatingActionButton onPress={showModal} />
     </>
   );
 };

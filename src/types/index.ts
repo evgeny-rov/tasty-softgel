@@ -29,8 +29,14 @@ export type ConsumptionsState = {
   lastConfirmationAt: number;
 };
 
+export type ModalMedicineState = {
+  isVisible: boolean;
+  data: Medicine | null;
+};
+
 export type AppStateType = {
   medicines: MedicinesState;
   assignments: AssignmentsState;
   consumptions: ConsumptionsState;
+  modal_medicine: ModalMedicineState;
 };

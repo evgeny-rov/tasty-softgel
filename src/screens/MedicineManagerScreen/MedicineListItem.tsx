@@ -5,7 +5,8 @@ import {Assignment, Medicine} from 'src/types';
 import {theme, typography} from '@styles/';
 import hourToTimeString from 'src/utils/hourToTimeString';
 import Icon from '@components/Icon';
-import Modal from '../ModalMedicineCardScreen/Modal';
+import {useDispatch} from 'react-redux';
+import {showModalMedicine} from 'src/redux/entities/modal_medicine/modal_medicine.actions';
 
 interface Props {
   medicine: Medicine;
@@ -13,26 +14,21 @@ interface Props {
 }
 
 const MedicineListItem = ({medicine, assignments}: Props) => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const dispatch = useDispatch();
   const assignmentsList = assignments
     .map(({hour}) => hourToTimeString(hour))
     .join(', ');
 
+  const showModal = () => dispatch(showModalMedicine(medicine));
+
   return (
     <View style={styles.container}>
-      <Modal
-        key={medicine.id}
-        isVisible={modalVisible}
-        setModalVisible={setModalVisible}
-        mode="update"
-        medicine={medicine}
-      />
       <View style={styles.button_wrapper}>
         <Pressable
           style={styles.edit_button}
           android_ripple={theme.configs.ripple_contained}
           hitSlop={18}
-          onPress={() => setModalVisible(true)}>
+          onPress={showModal}>
           <Icon name="quill" color={theme.colors.primary} size={18} />
         </Pressable>
       </View>
