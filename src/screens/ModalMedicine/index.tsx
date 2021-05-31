@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
-import {StackNavigationHelpers} from '@react-navigation/stack/src/types';
-import {useDispatch} from 'react-redux';
+import Modal from 'react-native-modal';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {common, theme, typography} from '@styles/';
 import RepeatedActionButton from '@components/RepeatedActionButton';
@@ -12,58 +12,57 @@ import {
   updateMedicine,
 } from 'src/redux/entities/medicines/medicines.actions';
 import Icon from '@components/Icon';
-import {RouteProp} from '@react-navigation/native';
-import {Medicine} from 'src/types';
+import {AppStateType} from 'src/types';
+import {hideModalMedicine} from 'src/redux/entities/modal_medicine/modal_medicine.actions';
 
-type RootStackParamList = {
-  modal_medicine_card: {
-    medicine: Medicine;
-    mode: 'new' | 'update';
-  };
-};
+const MED_DEFAULT_NAME = '';
+const MED_DEFAULT_COUNT = 30;
 
-interface Props {
-  navigation: StackNavigationHelpers;
-  route: RouteProp<RootStackParamList, 'modal_medicine_card'>;
-}
+const ModalMedicineCardScreen = () => {
+  const {isVisible, data: medicine} = useSelector(
+    (state: AppStateType) => state.modal_medicine,
+  );
 
-const ModalMedicineCardScreen = ({navigation, route}: Props) => {
-  const {mode, medicine} = route.params;
-  const [name, setName] = useState(medicine?.name || '');
-  const [count, setCount] = useState(medicine?.count || 30);
   const dispatch = useDispatch();
+  const [name, setName] = useState(MED_DEFAULT_NAME);
+  const [count, setCount] = useState(MED_DEFAULT_COUNT);
 
-  const closeScreen = () => setTimeout(() => navigation.goBack(), 0);
+  useEffect(() => {
+    setName(medicine?.name ?? MED_DEFAULT_NAME);
+    setCount(medicine?.count ?? MED_DEFAULT_COUNT);
+  }, [medicine]);
 
+  const mode = medicine === null ? 'new' : 'update';
+  const closeScreen = () => dispatch(hideModalMedicine());
   const incrementCount = () => setCount(count + 1);
   const decrementCount = () => count > 0 && setCount(count - 1);
 
   const handleSubmit = () => {
-    switch (mode) {
-      case 'new': {
-        dispatch(
-          addMedicine({
-            name,
-            count,
-          }),
-        );
-      }
-      case 'update': {
-        dispatch(
-          updateMedicine({
-            ...medicine,
-            name,
-            count,
-          }),
-        );
-      }
+    if (medicine !== null && mode === 'update') {
+      dispatch(
+        updateMedicine({
+          ...medicine,
+          name,
+          count,
+        }),
+      );
+    } else if (mode === 'new') {
+      dispatch(
+        addMedicine({
+          name,
+          count,
+        }),
+      );
     }
+
     closeScreen();
   };
 
   const handleRemove = () => {
-    closeScreen();
-    dispatch(removeMedicine({medicine}));
+    if (medicine) {
+      dispatch(removeMedicine({medicine}));
+      closeScreen();
+    }
   };
 
   const titleText = mode === 'new' ? 'Новое лекарство' : name;
@@ -77,7 +76,16 @@ const ModalMedicineCardScreen = ({navigation, route}: Props) => {
   );
 
   return (
-    <>
+    <Modal
+      swipeDirection="down"
+      isVisible={isVisible}
+      coverScreen={true}
+      hasBackdrop={true}
+      statusBarTranslucent
+      style={styles.modal}
+      useNativeDriverForBackdrop
+      onSwipeComplete={closeScreen}
+      onBackButtonPress={closeScreen}>
       <View style={styles.container}>
         <View style={styles.section}>
           <Text style={styles.card_title} numberOfLines={1}>
@@ -139,18 +147,22 @@ const ModalMedicineCardScreen = ({navigation, route}: Props) => {
           </Pressable>
         </View>
       </View>
-    </>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
+  modal: {
+    marginHorizontal: 10,
+    marginVertical: 0,
+  },
   container: {
     flex: 1,
     padding: 30,
     borderTopLeftRadius: 30,
     borderTopEndRadius: 30,
     marginTop: 50,
-    backgroundColor: 'rgba(76, 64, 94, 0.95)',
+    backgroundColor: 'rgba(0, 0, 0, 0.384)',
   },
   section: {
     flex: 0,

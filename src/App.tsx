@@ -2,9 +2,9 @@ import React from 'react';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import {store, persistor} from './redux/store';
-import AppNavigation from './navigation/AppNavigation';
 import {initNotificationsManager} from './services/notifications/notifications.manager';
-import ModalMedicine from './screens/ModalMedicineCardScreen/ModalMedicine';
+import AppNavigation from './navigation/AppNavigation';
+import ModalMedicine from './screens/ModalMedicine';
 
 initNotificationsManager(store);
 

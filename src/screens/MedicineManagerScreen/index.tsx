@@ -7,15 +7,16 @@ import {typography} from '@styles/';
 import MedicineList from './MedicineList';
 
 const MedicineManagerScreen = () => {
-  console.log('screen render')
+  console.log('screen render');
 
   return (
     <>
       <StatusBar translucent backgroundColor={'transparent'} />
       <BgImage source={require('../../assets/images/bg_02.jpg')} />
       <View style={styles.container}>
-        <Text style={typography.styles.h1}>Ваши лекарства</Text>
-        <SizedBox height={40} />
+        <View style={styles.title_wrapper}>
+          <Text style={typography.styles.h1}>Ваши лекарства</Text>
+        </View>
         <MedicineList />
       </View>
     </>
@@ -23,11 +24,12 @@ const MedicineManagerScreen = () => {
 };
 
 export const styles = StyleSheet.create({
+  title_wrapper: {
+    padding: 20,
+  },
   container: {
     flex: 1,
     marginTop: StatusBar.currentHeight,
-    padding: 20,
-    backgroundColor: 'transparent',
   },
 });
 
