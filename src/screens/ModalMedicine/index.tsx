@@ -1,19 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
-import Modal from 'react-native-modal';
 import {useDispatch, useSelector} from 'react-redux';
+import Modal from 'react-native-modal';
 
-import {common, theme, typography} from '@styles/';
-import RepeatedActionButton from '@components/RepeatedActionButton';
-import SizedBox from '../../components/SizedBox';
+import {AppStateType} from 'src/types';
 import {
   addMedicine,
   removeMedicine,
   updateMedicine,
 } from 'src/redux/entities/medicines/medicines.actions';
-import Icon from '@components/Icon';
-import {AppStateType} from 'src/types';
 import {hideModalMedicine} from 'src/redux/entities/modal_medicine/modal_medicine.actions';
+
+import Icon from '@components/Icon';
+import RepeatedActionButton from '@components/RepeatedActionButton';
+import SizedBox from '@components/SizedBox';
+import {common, theme, typography} from '@styles/';
 
 const MED_DEFAULT_NAME = '';
 const MED_DEFAULT_COUNT = 30;

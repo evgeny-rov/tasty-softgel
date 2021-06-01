@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {ImageBackground, StyleSheet, View} from 'react-native';
 import {
   NavigationState,
   SceneMap,
@@ -6,10 +7,10 @@ import {
   TabBar,
   TabView,
 } from 'react-native-tab-view';
+
 import HomeScreen from '../screens/HomeScreen';
 import MedicineManagerScreen from '../screens/MedicineManagerScreen';
 import AssignmentsScreen from '../screens/AssignmentsScreen';
-import {StyleSheet} from 'react-native';
 import Icon from '@components/Icon';
 import {theme} from 'src/styles';
 
@@ -68,14 +69,16 @@ export default () => {
   );
 
   return (
-    <TabView
-      navigationState={state}
-      onIndexChange={handleIndexChange}
-      lazy={false}
-      renderScene={renderScene}
-      renderTabBar={renderTabBar}
-      tabBarPosition="bottom"
-    />
+    <>
+      <TabView
+        lazyPreloadDistance={3}
+        navigationState={state}
+        onIndexChange={handleIndexChange}
+        // lazy={false}
+        renderScene={renderScene}
+        renderTabBar={renderTabBar}
+        tabBarPosition="bottom"></TabView>
+    </>
   );
 };
 

@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {StatusBar, ScrollView, StyleSheet} from 'react-native';
 import FloatingActionButton from '../../components/FloatingActionButton';
-import BgImage from '../../components/BgImage';
 import DailyAssignments from './components/DailyAssignments';
 import {theme, typography} from 'src/styles';
 import {useDispatch} from 'react-redux';
@@ -15,12 +14,11 @@ const HomeScreen = () => {
   const dispatch = useDispatch();
 
   const showModal = () => dispatch(showModalMedicine());
-  
+
   return (
     <>
       <StatusBar translucent backgroundColor={'transparent'} />
-      <BgImage source={require('../../assets/images/bg_01.jpg')} />
-
+      {/* <BgImage source={require('../../assets/images/bg_01.jpg')} /> */}
       <ScrollView>
         <DailyAssignments />
       </ScrollView>

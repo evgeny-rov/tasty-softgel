@@ -14,7 +14,7 @@ const RemindersScreen = () => {
 
   return (
     <>
-      <BgImage source={require('../../assets/images/bg_03.jpg')} />
+      {/* <BgImage source={require('../../assets/images/bg_03.jpg')} /> */}
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={typography.styles.h1}>Напоминания по часам</Text>
