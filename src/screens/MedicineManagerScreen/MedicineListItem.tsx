@@ -1,12 +1,10 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {Assignment, Medicine} from 'src/types';
 
-import {theme, typography} from '@styles/';
+import useModalMedicine from 'src/hooks/useModalMedicine';
 import hourToTimeString from 'src/utils/hourToTimeString';
-import Icon from '@components/Icon';
-import {useDispatch} from 'react-redux';
-import {showModalMedicine} from 'src/redux/entities/modal_medicine/modal_medicine.actions';
+import {theme, typography} from '@styles/';
 
 interface Props {
   medicine: Medicine;
@@ -14,12 +12,12 @@ interface Props {
 }
 
 const MedicineListItem = ({medicine, assignments}: Props) => {
-  const dispatch = useDispatch();
+  const {showModalUpdateMedicine} = useModalMedicine();
   const assignmentsList = assignments
     .map(({hour}) => hourToTimeString(hour))
     .join(', ');
 
-  const showModal = () => dispatch(showModalMedicine(medicine));
+  const showModal = () => showModalUpdateMedicine(medicine);
 
   return (
     <Pressable

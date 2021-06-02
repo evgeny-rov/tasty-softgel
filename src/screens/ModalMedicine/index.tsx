@@ -9,7 +9,7 @@ import {
   removeMedicine,
   updateMedicine,
 } from 'src/redux/entities/medicines/medicines.actions';
-import {hideModalMedicine} from 'src/redux/entities/modal_medicine/modal_medicine.actions';
+import useModalMedicine from 'src/hooks/useModalMedicine';
 
 import Icon from '@components/Icon';
 import RepeatedActionButton from '@components/RepeatedActionButton';
@@ -25,6 +25,7 @@ const ModalMedicineCardScreen = () => {
   );
 
   const dispatch = useDispatch();
+  const {hideModalMedicine} = useModalMedicine();
   const [name, setName] = useState(MED_DEFAULT_NAME);
   const [count, setCount] = useState(MED_DEFAULT_COUNT);
 
@@ -34,7 +35,6 @@ const ModalMedicineCardScreen = () => {
   }, [medicine]);
 
   const mode = medicine === null ? 'new' : 'update';
-  const closeScreen = () => dispatch(hideModalMedicine());
   const incrementCount = () => setCount(count + 1);
   const decrementCount = () => count > 0 && setCount(count - 1);
 
@@ -56,13 +56,13 @@ const ModalMedicineCardScreen = () => {
       );
     }
 
-    closeScreen();
+    hideModalMedicine();
   };
 
   const handleRemove = () => {
     if (medicine) {
       dispatch(removeMedicine({medicine}));
-      closeScreen();
+      hideModalMedicine();
     }
   };
 
@@ -85,8 +85,8 @@ const ModalMedicineCardScreen = () => {
       statusBarTranslucent
       style={styles.modal}
       useNativeDriverForBackdrop
-      onSwipeComplete={closeScreen}
-      onBackButtonPress={closeScreen}>
+      onSwipeComplete={hideModalMedicine}
+      onBackButtonPress={hideModalMedicine}>
       <View style={styles.container}>
         <View style={styles.section}>
           <Text style={styles.card_title} numberOfLines={1}>
@@ -95,7 +95,7 @@ const ModalMedicineCardScreen = () => {
           <Pressable
             android_ripple={theme.configs.ripple_sm}
             style={styles.close_btn}
-            onPress={closeScreen}
+            onPress={hideModalMedicine}
             hitSlop={25}>
             <Icon name="clear" color={theme.colors.primary} size={20} />
           </Pressable>
