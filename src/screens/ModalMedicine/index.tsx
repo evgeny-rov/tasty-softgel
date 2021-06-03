@@ -15,6 +15,7 @@ import Icon from '@components/Icon';
 import RepeatedActionButton from '@components/RepeatedActionButton';
 import SizedBox from '@components/SizedBox';
 import {common, theme, typography} from '@styles/';
+import AmountCounter from './components/AmountCounter';
 
 const MED_DEFAULT_NAME = '';
 const MED_DEFAULT_COUNT = 30;
@@ -32,11 +33,9 @@ const ModalMedicineCardScreen = () => {
   useEffect(() => {
     setName(medicine?.name ?? MED_DEFAULT_NAME);
     setCount(medicine?.count ?? MED_DEFAULT_COUNT);
-  }, [medicine]);
+  }, [isVisible]);
 
   const mode = medicine === null ? 'new' : 'update';
-  const incrementCount = () => setCount(count + 1);
-  const decrementCount = () => count > 0 && setCount(count - 1);
 
   const handleSubmit = () => {
     if (medicine !== null && mode === 'update') {
@@ -118,23 +117,7 @@ const ModalMedicineCardScreen = () => {
         <View style={styles.section}>
           <Text style={typography.styles.h2}>Количество:</Text>
           <View style={styles.section}>
-            <RepeatedActionButton action={decrementCount}>
-              <Icon
-                name="keyboard_arrow_left"
-                color={theme.colors.primary}
-                size={20}
-              />
-            </RepeatedActionButton>
-            <Text style={[typography.styles.h2, styles.padded_amount]}>
-              {count}
-            </Text>
-            <RepeatedActionButton action={incrementCount}>
-              <Icon
-                name="keyboard_arrow_right"
-                color={theme.colors.primary}
-                size={20}
-              />
-            </RepeatedActionButton>
+            <AmountCounter count={count} setCount={setCount} />
           </View>
         </View>
         <View style={formStyles.button_container}>
@@ -170,9 +153,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  padded_amount: {
-    paddingHorizontal: 50,
   },
   close_btn: {
     marginLeft: 20,
