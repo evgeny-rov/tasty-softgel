@@ -29,13 +29,13 @@ const ModalMedicineCardScreen = () => {
   const {hideModalMedicine} = useModalMedicine();
   const [name, setName] = useState(MED_DEFAULT_NAME);
   const [count, setCount] = useState(MED_DEFAULT_COUNT);
+  const [mode, setMode] = useState<'new' | 'update'>('new');
 
-  useEffect(() => {
+  const onModalWillShow = () => {
     setName(medicine?.name ?? MED_DEFAULT_NAME);
     setCount(medicine?.count ?? MED_DEFAULT_COUNT);
-  }, [isVisible]);
-
-  const mode = medicine === null ? 'new' : 'update';
+    setMode(medicine ? 'update' : 'new');
+  };
 
   const handleSubmit = () => {
     if (medicine !== null && mode === 'update') {
@@ -81,9 +81,12 @@ const ModalMedicineCardScreen = () => {
       isVisible={isVisible}
       coverScreen={true}
       hasBackdrop={true}
+      swipeThreshold={100}
       statusBarTranslucent
       style={styles.modal}
       useNativeDriverForBackdrop
+      onBackdropPress={hideModalMedicine}
+      onModalWillShow={onModalWillShow}
       onSwipeComplete={hideModalMedicine}
       onBackButtonPress={hideModalMedicine}>
       <View style={styles.container}>
