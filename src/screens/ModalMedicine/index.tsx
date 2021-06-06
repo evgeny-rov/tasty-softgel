@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, Text, TextInput, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import Modal from 'react-native-modal';
 
@@ -11,16 +11,17 @@ import {
 } from 'src/redux/entities/medicines/medicines.actions';
 import useModalMedicine from 'src/hooks/useModalMedicine';
 
-import Icon from '@components/Icon';
-import RepeatedActionButton from '@components/RepeatedActionButton';
 import SizedBox from '@components/SizedBox';
 import {common, theme, typography} from '@styles/';
-import AmountCounter from './components/AmountCounter';
+import ModalAmountCounter from './components/ModalAmountCounter';
+import ModalButtons from './components/ModalButtons';
+import ModalHeader from './components/ModalHeader';
 
+const MED_DEFAULT_HEADER_TITLE = 'Новое лекарство';
 const MED_DEFAULT_NAME = '';
 const MED_DEFAULT_COUNT = 30;
 
-const ModalMedicineCardScreen = () => {
+const ModalMedicine = () => {
   const {isVisible, data: medicine} = useSelector(
     (state: AppStateType) => state.modal_medicine,
   );
@@ -29,55 +30,33 @@ const ModalMedicineCardScreen = () => {
   const {hideModalMedicine} = useModalMedicine();
   const [name, setName] = useState(MED_DEFAULT_NAME);
   const [count, setCount] = useState(MED_DEFAULT_COUNT);
-  const [mode, setMode] = useState<'new' | 'update'>('new');
+  const [isInEditMode, setIsInEditMode] = useState(false);
 
   const onModalWillShow = () => {
     setName(medicine?.name ?? MED_DEFAULT_NAME);
     setCount(medicine?.count ?? MED_DEFAULT_COUNT);
-    setMode(medicine ? 'update' : 'new');
+    setIsInEditMode(Boolean(medicine));
   };
 
   const handleSubmit = () => {
-    if (medicine !== null && mode === 'update') {
-      dispatch(
-        updateMedicine({
-          ...medicine,
-          name,
-          count,
-        }),
-      );
-    } else if (mode === 'new') {
-      dispatch(
-        addMedicine({
-          name,
-          count,
-        }),
-      );
-    }
+    const newMedicineData = {name, count};
+    isInEditMode && medicine
+      ? dispatch(updateMedicine({...medicine, ...newMedicineData}))
+      : dispatch(addMedicine(newMedicineData));
 
     hideModalMedicine();
   };
 
   const handleRemove = () => {
-    if (medicine) {
-      dispatch(removeMedicine({medicine}));
-      hideModalMedicine();
-    }
+    medicine && dispatch(removeMedicine({medicine}));
+    hideModalMedicine();
   };
-
-  const titleText = mode === 'new' ? 'Новое лекарство' : name;
-
-  const removeButton = mode === 'update' && (
-    <Pressable style={formStyles.button} onPress={handleRemove}>
-      <Text style={[formStyles.buttonText, {color: theme.colors.attention}]}>
-        Удалить
-      </Text>
-    </Pressable>
-  );
 
   return (
     <Modal
       swipeDirection="down"
+      animationIn={'zoomInUp'}
+      animationOut={'fadeOutDown'}
       isVisible={isVisible}
       coverScreen={true}
       hasBackdrop={true}
@@ -89,30 +68,23 @@ const ModalMedicineCardScreen = () => {
       onModalWillShow={onModalWillShow}
       onSwipeComplete={hideModalMedicine}
       onBackButtonPress={hideModalMedicine}>
-      <View style={styles.container}>
+      <View style={styles.content_wrapper}>
         <View style={styles.section}>
-          <Text style={styles.card_title} numberOfLines={1}>
-            {titleText}
-          </Text>
-          <Pressable
-            android_ripple={theme.configs.ripple_sm}
-            style={styles.close_btn}
-            onPress={hideModalMedicine}
-            hitSlop={25}>
-            <Icon name="clear" color={theme.colors.primary} size={20} />
-          </Pressable>
+          <ModalHeader
+            headerTitle={isInEditMode ? name : MED_DEFAULT_HEADER_TITLE}
+            onClose={hideModalMedicine}
+          />
         </View>
         <SizedBox height={60} />
         <View style={styles.section}>
           <View style={common.styles.flex}>
             <Text style={typography.styles.h2}>Наименование:</Text>
             <TextInput
-              style={formStyles.input}
+              style={styles.input_field}
               autoCapitalize="words"
+              blurOnSubmit
               value={name}
               onChangeText={setName}
-              // onSubmitEditing={handleSubmit}
-              blurOnSubmit
             />
           </View>
         </View>
@@ -120,19 +92,15 @@ const ModalMedicineCardScreen = () => {
         <View style={styles.section}>
           <Text style={typography.styles.h2}>Количество:</Text>
           <View style={styles.section}>
-            <AmountCounter count={count} setCount={setCount} />
+            <ModalAmountCounter count={count} setCount={setCount} />
           </View>
         </View>
-        <View style={formStyles.button_container}>
-          {removeButton}
-          <Pressable
-            style={formStyles.button}
-            disabled={name.trim().length < 1}
-            onPress={handleSubmit}
-            android_ripple={theme.configs.ripple_xl}>
-            <Text style={formStyles.buttonText}>Сохранить</Text>
-          </Pressable>
-        </View>
+        <ModalButtons
+          isInEditMode={isInEditMode}
+          disabled={name.trim().length < 2}
+          onRemove={handleRemove}
+          onSubmit={handleSubmit}
+        />
       </View>
     </Modal>
   );
@@ -143,7 +111,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginVertical: 0,
   },
-  container: {
+  content_wrapper: {
     flex: 1,
     padding: 30,
     borderTopLeftRadius: 30,
@@ -157,37 +125,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  close_btn: {
-    marginLeft: 20,
-  },
-  card_title: {...typography.styles.h1, flex: 1},
-});
-
-const formStyles = StyleSheet.create({
-  input: {
+  input_field: {
     marginTop: 10,
     borderColor: theme.colors.primary,
     color: theme.colors.primary,
     padding: 5,
     borderBottomWidth: 1,
   },
-  button_container: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'space-evenly',
-  },
-  button: {
-    // backgroundColor: theme.colors.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 10,
-    // borderRadius: 50,
-  },
-  buttonText: {
-    fontWeight: '700',
-    color: theme.colors.primary,
-  },
 });
 
-export default ModalMedicineCardScreen;
+export default ModalMedicine;
