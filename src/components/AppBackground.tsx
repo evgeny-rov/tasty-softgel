@@ -7,7 +7,7 @@ const AppBackground: React.FC = ({children}) => (
     style={common.styles.flex}
     source={require('../assets/images/bg_01.jpg')}>
     <View
-      style={[common.styles.flex, {backgroundColor: 'rgba(0, 0, 0, 0.01)'}]}>
+      style={[common.styles.flex, {backgroundColor: 'rgba(0, 0, 0, 0.001)'}]}>
       {children}
     </View>
   </ImageBackground>
