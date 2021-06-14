@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {assignmentsByHourSelector} from 'src/redux/entities/assignments/assignments.selectors';
 import {typography} from 'src/styles';
@@ -7,6 +7,7 @@ import SizedBox from '@components/SizedBox';
 import DailyAssignmentsListItem from './DailyAssignmentsListItem';
 import {updateHour} from 'src/redux/entities/consumptions/consumptions.actions';
 import {getCurrentHour} from 'src/redux/entities/consumptions/consumptions.selectors';
+import {StatusBar} from 'react-native';
 
 const DailyAssignments = () => {
   const dispatch = useDispatch();
@@ -16,17 +17,18 @@ const DailyAssignments = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       const currentSystemHour = new Date().getHours();
-
-      currentHour !== currentSystemHour && dispatch(updateHour());
+      const hourShouldUpdate = currentHour !== currentSystemHour;
+      hourShouldUpdate && dispatch(updateHour());
     }, 5000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [currentHour]);
 
   return (
     <View style={styles.container}>
-      <Text style={typography.styles.h1}>Ежедневный план</Text>
-      <SizedBox height={35} />
+      <View style={styles.header}>
+        <Text style={typography.styles.h1}>Ежедневный план</Text>
+      </View>
       <View>
         {assignments.map((assignmentData, idx) => (
           <DailyAssignmentsListItem key={idx} {...assignmentData} />
@@ -36,13 +38,17 @@ const DailyAssignments = () => {
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     backgroundColor: 'rgba(255, 255, 255, 0.16)',
-    paddingVertical: 50,
-    paddingHorizontal: 25,
-    borderBottomRightRadius: 70,
+    paddingTop: StatusBar.currentHeight,
+    paddingVertical: 20,
+    borderBottomRightRadius: 30,
   },
-};
+  header: {
+    marginHorizontal: 20,
+    marginVertical: 30,
+  },
+});
 
 export default DailyAssignments;

@@ -1,15 +1,17 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import {throttle} from 'lodash';
 import {ReceivedNotification} from 'react-native-push-notification';
-import {Store} from 'redux';
 import {PersistPartial} from 'redux-persist/es/persistReducer';
-// import {
-//   confirmConsumption,
-//   systemRevive,
-// } from 'src/redux/entities/system/system.actions';
+import {filter} from 'lodash';
+import {Store} from 'redux';
+
 import {AppStateType} from 'src/types';
 import getAvailableDateFromHour from 'src/utils/getAvailableDateFromHour';
+import {
+  confirmConsumption,
+  consumptionsRefresh,
+} from '../../redux/entities/consumptions/consumptions.actions';
 import * as Notifications from './notifications.api';
+import hourToTimeString from 'src/utils/hourToTimeString';
 
 const channelsData = {
   ids: ['daily_notifications', 'test_channel'],
@@ -29,7 +31,7 @@ const channelsData = {
   },
 };
 
-const dailyReminderData = {
+const dailyReminderBase = {
   channelId: channelsData.byId.daily_notifications.channelId,
   title: 'Напоминание о приеме лекарств',
   actions: ['Я не забыл'],
@@ -42,22 +44,21 @@ const handleNotificationAction = async (
   store: Store<AppStateType & PersistPartial, any>,
 ) => {
   await AsyncStorage.getAllKeys(() => {
+    const assignedNotificationsHour = Number(notification.id);
     const state = store.getState();
-    const hour = Number(notification.id);
-    const assignedMedicinesIds = state.reminders.byHour[hour].medicinesIds;
-
-    store.dispatch(
-      systemRevive({
-        lastConsumptionConfirmationAt:
-          state.system.lastConsumptionConfirmationAt,
-      }),
+    const {lastConfirmationAt} = state.consumptions;
+    const assignmentsByAssignedHour = filter(
+      state.assignments.byId,
+      ({hour: assignedHour}) => assignedHour === assignedNotificationsHour,
     );
 
-    if (store.getState().system.consumptionConfirmedHours.includes(hour)) {
-      return;
-    }
+    const medicinesIds = assignmentsByAssignedHour.map(
+      ({medicineId}) => medicineId,
+    );
 
-    store.dispatch(confirmConsumption(hour, assignedMedicinesIds));
+    store.dispatch(consumptionsRefresh({lastConfirmationAt}));
+
+    store.dispatch(confirmConsumption(assignedNotificationsHour, medicinesIds));
   });
 };
 
@@ -73,11 +74,10 @@ export const initNotificationsManager = (
 
 const scheduleDailyReminder = (scheduledDate: Date, message: string) => {
   Notifications.scheduleNotification({
-    ...dailyReminderData,
+    ...dailyReminderBase,
     date: scheduledDate,
     id: scheduledDate.getHours(),
-    when: scheduledDate.getTime(),
-    showWhen: true,
+    subText: hourToTimeString(scheduledDate.getHours()),
     message,
     invokeApp: false,
     autoCancel: false,
@@ -85,55 +85,41 @@ const scheduleDailyReminder = (scheduledDate: Date, message: string) => {
   });
 };
 
-export const handleAssignReminder = (hour: number, state: AppStateType) => {
-  const scheduledDate = getAvailableDateFromHour(hour);
-  const assignedMedicinesNames = state.reminders.byHour[hour].medicinesIds
-    .map((medId) => state.medicines.byId[medId].name)
-    .join(', ');
-
-  scheduleDailyReminder(scheduledDate, assignedMedicinesNames);
+export const handleAddReminder = (selectedHour: number) => {
+  const scheduledDate = getAvailableDateFromHour(selectedHour);
+  scheduleDailyReminder(scheduledDate, 'Не забудь выпить лекарства!');
 };
 
-export const handleUnassignReminder = (hour: number, state: AppStateType) => {
-  const shouldBeCancelled = !state.reminders.allHours.includes(hour);
-  if (shouldBeCancelled) {
-    Notifications.cancelNotification(dailyReminderData.tag, hour);
-  } else {
-    const scheduledDate = getAvailableDateFromHour(hour);
-    const assignedMedicinesNames = state.reminders.byHour[hour].medicinesIds
-      .map((medId) => state.medicines.byId[medId].name)
-      .join(', ');
-
-    scheduleDailyReminder(scheduledDate, assignedMedicinesNames);
-  }
-};
-
-export const handleNextScheduledReminder = (
-  hour: number,
+export const handleRemoveReminder = (
+  selectedHour: number,
   state: AppStateType,
 ) => {
-  Notifications.cancelNotification(dailyReminderData.tag, hour);
-
-  const medicinesData = state.reminders.byHour[hour].medicinesIds.reduce(
-    (acc, medId) => {
-      const medicinesItem = state.medicines.byId[medId];
-
-      return {
-        ...acc,
-        totalRemainingAmount:
-          acc.totalRemainingAmount + medicinesItem.currentAmount,
-        items: [
-          ...acc.items,
-          {[medicinesItem.name]: medicinesItem.currentAmount},
-        ],
-        names: [...acc.names, medicinesItem.name],
-      };
-    },
-    {totalRemainingAmount: 0, items: [] as Object[], names: [] as string[]},
+  const remainingReminders = filter(
+    state.assignments.byId,
+    ({hour: assignmentHour}) => assignmentHour === selectedHour,
   );
 
-  if (medicinesData.totalRemainingAmount > 0) {
-    const scheduledDate = getAvailableDateFromHour(hour);
-    scheduleDailyReminder(scheduledDate, medicinesData.names.join(', '));
+  const reminderShouldBeCancelled = remainingReminders.length < 1;
+
+  if (reminderShouldBeCancelled) {
+    Notifications.cancelNotification(dailyReminderBase.tag, selectedHour);
   }
+};
+
+export const handleRescheduleReminder = (
+  confirmationHour: number,
+  state: AppStateType,
+) => {
+  const assignedMedicines = filter(
+    state.assignments.byId,
+    ({hour: assignmentHour}) => assignmentHour === confirmationHour,
+  );
+
+  const totalMedicinesCount = assignedMedicines.reduce((acc, {medicineId}) => {
+    return acc + state.medicines.byId[medicineId].count;
+  }, 0);
+
+  Notifications.cancelNotification(dailyReminderBase.tag, confirmationHour);
+
+  totalMedicinesCount > 0 && handleAddReminder(confirmationHour);
 };

@@ -18,7 +18,6 @@ module.exports = {
         ],
         alias: {
           '@components': './src/components',
-          '@icons': './src/icons',
           '@styles': './src/styles',
         },
       },

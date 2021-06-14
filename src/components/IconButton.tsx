@@ -1,24 +1,17 @@
 import React, {ReactNode} from 'react';
-import {Pressable, StyleProp, ViewStyle} from 'react-native';
-import {theme} from '@styles/';
+import {Pressable} from 'react-native';
+import {theme} from 'src/styles';
 
-interface Props {
-  action: () => void;
-  children?: ReactNode;
-  style?: StyleProp<ViewStyle>;
-}
-
-const IconButton = ({action, children, style = {}}: Props) => {
-  return (
-    <Pressable
-      style={style}
-      delayLongPress={400}
-      android_ripple={theme.configs.ripple_sm}
-      hitSlop={20}
-      onPress={action}>
-      {children ?? children}
-    </Pressable>
-  );
+type Props = {
+  onPress: () => void;
+  children: ReactNode;
 };
 
-export default IconButton;
+export default ({onPress, children}: Props) => (
+  <Pressable
+    android_ripple={theme.configs.ripple_sm}
+    onPress={onPress}
+    hitSlop={25}>
+    {children}
+  </Pressable>
+);

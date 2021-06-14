@@ -19,9 +19,11 @@ export const addAssignment = ({
 
 export const removeAssignment = ({
   id,
+  hour,
 }: {
   id: string;
+  hour: number;
 }): TypedRemoveAssignmentAction => ({
   type: REMOVE_ASSIGNMENT,
-  payload: {id},
+  payload: {id, hour},
 });

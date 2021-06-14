@@ -1,3 +1,4 @@
+import { uniq } from 'lodash';
 import {ConsumptionsState} from 'src/types';
 import {
   UPDATE_HOUR,
@@ -37,7 +38,7 @@ export default (state = initialState, action: TypedAction): ConsumptionsState =>
       return {
         ...state,
         lastConfirmationAt: timestamp,
-        confirmedHours: [...state.confirmedHours, hour],
+        confirmedHours: uniq([...state.confirmedHours, hour]),
       };
     }
     case CONSUMPTIONS_REFRESH: {

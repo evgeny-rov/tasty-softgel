@@ -1,12 +1,11 @@
 import React from 'react';
 import {Pressable, View, Text, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {Medicine, AppStateType} from 'src/types';
-import {theme, typography, common} from 'src/styles';
-import SizedBox from '@components/SizedBox';
-import Icon from '@components/Icon';
+import {AppStateType} from 'src/types';
 import {confirmConsumption} from 'src/redux/entities/consumptions/consumptions.actions';
 import hourToTimeString from 'src/utils/hourToTimeString';
+import Icon from '@components/Icon';
+import {theme, typography} from 'src/styles';
 
 interface Props {
   hour: number;
@@ -16,67 +15,73 @@ interface Props {
 }
 
 export default ({hour, medicinesIds, isActive, canBeConfirmed}: Props) => {
-  const dispatch = useDispatch();
-  const medicinesNames = useSelector((state: AppStateType) =>
-    medicinesIds.map((id) => state.medicines.byId[id].name),
+  const medicines = useSelector((state: AppStateType) =>
+    medicinesIds.map((id) => state.medicines.byId[id]),
   );
+  const dispatch = useDispatch();
 
   const confirmAction = () => dispatch(confirmConsumption(hour, medicinesIds));
 
-  const textColor = {
-    color: isActive ? theme.colors.accent2 : theme.colors.primary,
+  const activeContainerStyles = {
+    ...styles.container_shadow,
+    backgroundColor: theme.colors.accent,
   };
 
-  const confirmationBtn = (
-    <Pressable
-      style={styles.button}
-      android_ripple={theme.configs.ripple_xs}
-      hitSlop={15}
-      onPress={confirmAction}>
-      <Icon name="pills" color={theme.colors.primary} size={18} />
-    </Pressable>
-  );
-
   return (
-    <View style={styles.container}>
-      <Text style={[typography.styles.body_bold, textColor]}>
-        {hourToTimeString(Number(hour))}
-      </Text>
-      <View style={styles.button_container}>
-        {canBeConfirmed && confirmationBtn}
+    <Pressable
+      style={[styles.container, isActive && canBeConfirmed && activeContainerStyles]}
+      disabled={!canBeConfirmed}
+      onPress={confirmAction}
+      android_ripple={{color: theme.colors.accent}}>
+      <View style={[styles.section, styles.header]}>
+        <Text style={[typography.styles.body_bold, styles.header_text]}>
+          {hourToTimeString(Number(hour))}
+        </Text>
+        <Icon
+          name="pills"
+          color={canBeConfirmed ? theme.colors.primary : 'transparent'}
+          size={20}
+        />
       </View>
-      <Text style={[styles.items, textColor]}>{medicinesNames.join(', ')}</Text>
-    </View>
+      <View style={[styles.section, styles.medicine_list_container]}>
+        {medicines.map(({name, id}) => (
+          <View key={id} style={styles.medicine_item_container}>
+            <Text style={[typography.styles.body_bold]}>{name}</Text>
+          </View>
+        ))}
+      </View>
+    </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    paddingHorizontal: 25,
+    paddingVertical: 10,
+  },
+  container_shadow: {
+    elevation: 10,
+    shadowColor: theme.colors.accent_dark,
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 1,
+    shadowRadius: 3.84,
+  },
+  section: {
+    marginVertical: 5,
     flexDirection: 'row',
-    marginVertical: 15,
-  },
-  items: {
-    flex: 2,
-    textAlign: 'right',
-    ...typography.styles.body_bold,
-  },
-  button_container: {
-    marginHorizontal: 10,
-    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
   },
-  button: {
-    position: 'absolute',
-    // flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 35,
-    height: 35,
-    backgroundColor: 'rgba(241, 184, 119, 0.384)',
-    borderRadius: 100,
+  header: {
+    justifyContent: 'space-between',
+  },
+  header_text: {
+    fontSize: 12,
+  },
+  medicine_list_container: {
+    flexWrap: 'wrap',
+  },
+  medicine_item_container: {
+    paddingRight: 25,
   },
 });

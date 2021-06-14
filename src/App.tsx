@@ -1,29 +1,25 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
-import {store, persistor, onStartUp} from './redux/store';
-import AppNavigation from './navigation';
+import {store, persistor} from './redux/store';
 import {initNotificationsManager} from './services/notifications/notifications.manager';
-import MainAppNavigator from './navigation/navigators/MainAppNavigator';
+import AppNavigation from './navigation/AppNavigation';
+import ModalMedicine from './screens/ModalMedicine';
+import AppBackground from '@components/AppBackground';
 
 initNotificationsManager(store);
 
 const App = () => {
-  useEffect(() => {
-    onStartUp(store);
-  }, []);
-
-  return <MainAppNavigator />;
-};
-
-const RootComponent = () => {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
-        <App />
+        <AppBackground>
+          <ModalMedicine />
+          <AppNavigation />
+        </AppBackground>
       </PersistGate>
     </Provider>
   );
 };
 
-export default RootComponent;
+export default App;
