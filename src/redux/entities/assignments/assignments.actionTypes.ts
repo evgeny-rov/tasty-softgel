@@ -14,5 +14,6 @@ export type TypedRemoveAssignmentAction = {
   type: typeof REMOVE_ASSIGNMENT;
   payload: {
     id: string;
+    hour: number;
   };
 };

@@ -29,11 +29,11 @@ const persistedReducer = persistReducer<AppStateType, any>(
 );
 
 // applying notifications middleware
-const store = createStore(persistedReducer, applyMiddleware());
+const store = createStore(persistedReducer, applyMiddleware(testMiddleware));
 
 export const onStartUp = () => {
   console.log('store startup', store.getState());
-  const lastConfirmationAt = store.getState().consumptions.lastConfirmationAt;
+  const {lastConfirmationAt} = store.getState().consumptions;
   store.dispatch(consumptionsRefresh({lastConfirmationAt}));
 };
 

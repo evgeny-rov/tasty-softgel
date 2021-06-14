@@ -17,12 +17,12 @@ const DailyAssignments = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       const currentSystemHour = new Date().getHours();
-
-      currentHour !== currentSystemHour && dispatch(updateHour());
+      const hourShouldUpdate = currentHour !== currentSystemHour;
+      hourShouldUpdate && dispatch(updateHour());
     }, 5000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [currentHour]);
 
   return (
     <View style={styles.container}>

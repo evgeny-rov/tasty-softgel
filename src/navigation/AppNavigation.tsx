@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {ImageBackground, StyleSheet, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {
   NavigationState,
   SceneMap,
