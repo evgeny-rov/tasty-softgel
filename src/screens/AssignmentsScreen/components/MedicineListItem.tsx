@@ -24,7 +24,7 @@ const RemindersMedicinesListItem = ({
 
   const toggleAssignmentStatus = () => {
     if (assignment) {
-      dispatch(removeAssignment({id: assignment.id}));
+      dispatch(removeAssignment({id: assignment.id, hour: pickerSelectedHour}));
     } else {
       dispatch(
         addAssignment({medicineId: medicine.id, hour: pickerSelectedHour}),
