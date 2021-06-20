@@ -7,7 +7,7 @@ import {
 } from 'src/redux/entities/assignments/assignments.actionTypes';
 
 import {
-  handleRescheduleReminder,
+  handleConfirmationAction,
   handleAddReminder,
   handleRemoveReminder,
 } from './notifications.manager';
@@ -35,7 +35,7 @@ const triggerResponses = {
   REMOVE_ASSIGNMENT: (params: params) =>
     handleRemoveReminder(params.hour, params.state),
   CONFIRM_CONSUMPTION: (params: params) =>
-    handleRescheduleReminder(params.hour, params.state),
+    handleConfirmationAction(params.hour, params.state),
 };
 
 const testMiddleware: Middleware = ({getState}) => (next) => (

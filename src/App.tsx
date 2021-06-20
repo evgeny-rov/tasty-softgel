@@ -7,8 +7,9 @@ import {initNotificationsManager} from './services/notifications/notifications.m
 import AppNavigation from './navigation/AppNavigation';
 import ModalMedicine from './screens/ModalMedicine';
 import AppBackground from '@components/AppBackground';
+import PushNotification from 'react-native-push-notification';
 
-initNotificationsManager(store);
+initNotificationsManager(store, persistor);
 
 const App = () => {
   useEffect(() => {

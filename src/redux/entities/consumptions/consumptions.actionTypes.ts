@@ -1,3 +1,5 @@
+import {Medicine} from 'src/types';
+
 export const UPDATE_HOUR = 'UPDATE_HOUR';
 export const CONFIRM_CONSUMPTION = 'CONFIRM_CONSUMPTION';
 export const CONSUMPTIONS_REFRESH = 'CONSUMPTIONS_REFRESH';
@@ -9,7 +11,7 @@ export type TypedUpdateHourAction = {
 
 export type TypedConfirmConsumptionAction = {
   type: typeof CONFIRM_CONSUMPTION;
-  payload: {timestamp: number; hour: number; medicinesIds: string[]};
+  payload: {timestamp: number; hour: number; medicines: Medicine[]};
 };
 
 export type TypedConsumptionsRefreshAction = {

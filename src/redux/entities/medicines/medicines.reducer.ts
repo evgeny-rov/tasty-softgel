@@ -64,10 +64,10 @@ export default (state = initialState, action: TypedAction): MedicinesState => {
       };
     }
     case CONFIRM_CONSUMPTION: {
-      const {medicinesIds} = action.payload;
+      const {medicines} = action.payload;
       const updatedMedicines = {...state.byId};
 
-      medicinesIds.forEach((id) => {
+      medicines.forEach(({id}) => {
         const {count} = updatedMedicines[id];
         if (count < 1) return;
 
