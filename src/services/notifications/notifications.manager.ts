@@ -93,7 +93,7 @@ const showSupplyDepletionNotification = (title: string, message: string) => {
   });
 };
 
-export const handleAddReminder = (selectedHour: number) => {
+export const handleCreateReminder = (selectedHour: number) => {
   const scheduledDate = getAvailableDateFromHour(selectedHour);
   scheduleDailyReminder(scheduledDate, 'Не забудь выпить лекарства!');
 };
@@ -136,6 +136,6 @@ export const handleConfirmationAction = (
 
     Notifications.cancelNotification(dailyReminderBase.tag, selectedHour);
 
-    totalSupply > 0 && handleAddReminder(selectedHour);
+    totalSupply > 0 && handleCreateReminder(selectedHour);
   }
 };

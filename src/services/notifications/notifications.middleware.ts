@@ -8,7 +8,7 @@ import {
 
 import {
   handleConfirmationAction,
-  handleAddReminder,
+  handleCreateReminder,
   handleRemoveReminder,
 } from './notifications.manager';
 
@@ -31,7 +31,7 @@ type params = {
 };
 
 const triggerResponses = {
-  ADD_ASSIGNMENT: (params: params) => handleAddReminder(params.hour),
+  ADD_ASSIGNMENT: (params: params) => handleCreateReminder(params.hour),
   REMOVE_ASSIGNMENT: (params: params) =>
     handleRemoveReminder(params.hour, params.state),
   CONFIRM_CONSUMPTION: (params: params) =>

@@ -22,6 +22,8 @@ const RemindersMedicinesListItem = ({
 }: Props) => {
   const dispatch = useDispatch();
 
+  const isDisabled = medicine.count < 1;
+
   const toggleAssignmentStatus = () => {
     if (assignment) {
       dispatch(removeAssignment({id: assignment.id, hour: pickerSelectedHour}));
@@ -33,7 +35,7 @@ const RemindersMedicinesListItem = ({
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {opacity: isDisabled ? 0.5 : 1}]}>
       <View style={common.styles.col}>
         <Text style={typography.styles.body_bold}>{medicine.name}</Text>
         <Text style={typography.styles.body_sub_gray}>
@@ -43,6 +45,7 @@ const RemindersMedicinesListItem = ({
       <Pressable
         android_ripple={theme.configs.ripple_sm}
         hitSlop={15}
+        disabled={isDisabled}
         onPress={toggleAssignmentStatus}>
         <Icon
           name={assignment ? 'notifications' : 'notifications_none'}
