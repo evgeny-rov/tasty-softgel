@@ -2,7 +2,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {ReceivedNotification} from 'react-native-push-notification';
 import {PersistPartial} from 'redux-persist/es/persistReducer';
 import {Persistor} from 'redux-persist';
-import {has} from 'lodash';
 import {Store} from 'redux';
 
 import {AppStateType} from 'src/types';

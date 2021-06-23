@@ -1,4 +1,4 @@
-import {Middleware} from 'redux';
+import {Dispatch, Middleware} from 'redux';
 import {
   ADD_ASSIGNMENT,
   REMOVE_ASSIGNMENT,
@@ -61,7 +61,7 @@ const useHandler = (action: ExpectedActions, state: AppStateType) => {
   }
 };
 
-const testMiddleware: Middleware<null, AppStateType> = ({getState}) => (
+const testMiddleware: Middleware<Dispatch, AppStateType> = ({getState}) => (
   next,
 ) => (action: ExpectedActions) => {
   const result = next(action);
