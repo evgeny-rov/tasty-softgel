@@ -6,6 +6,12 @@ import {has} from 'lodash';
 import {Store} from 'redux';
 
 import {AppStateType} from 'src/types';
+import {
+  TypedAddAssignmentAction,
+  TypedRemoveAssignmentAction,
+} from 'src/redux/entities/assignments/assignments.actionTypes';
+import {TypedConfirmConsumptionAction} from 'src/redux/entities/consumptions/consumptions.actionTypes';
+import {TypedUpdateMedicineAction} from 'src/redux/entities/medicines/medicines.actionTypes';
 import * as Notifications from './notifications.api';
 import getAvailableDateFromHour from 'src/utils/getAvailableDateFromHour';
 import {
@@ -14,6 +20,7 @@ import {
 } from '../../redux/entities/consumptions/consumptions.actions';
 import {
   getAssignmentsByHour,
+  getAssignmentsHoursByMedicineId,
   getAssignmentsWithMedicines,
   getMedicinesSuppliesByHour,
 } from 'src/redux/entities/assignments/assignments.selectors';
@@ -70,7 +77,7 @@ export const initNotificationsManager = (
   });
 };
 
-const scheduleDailyReminder = (scheduledDate: Date, message: string) => {
+const scheduleDailyNotification = (scheduledDate: Date, message: string) => {
   Notifications.scheduleNotification({
     ...dailyReminderBase,
     date: scheduledDate,
@@ -93,34 +100,63 @@ const showSupplyDepletionNotification = (title: string, message: string) => {
   });
 };
 
-export const handleCreateReminder = (selectedHour: number) => {
-  const scheduledDate = getAvailableDateFromHour(selectedHour);
-  scheduleDailyReminder(scheduledDate, 'Не забудь выпить лекарства!');
+const createReminder = (assignedHour: number) => {
+  const scheduledDate = getAvailableDateFromHour(assignedHour);
+  scheduleDailyNotification(scheduledDate, 'Не забудь выпить лекарства!');
 };
 
-export const handleRemoveReminder = (
-  selectedHour: number,
+export const handleNewAssignment = (
+  payload: TypedAddAssignmentAction['payload'],
   state: AppStateType,
 ) => {
-  const hasRemainingAssignments = selectedHour in getAssignmentsByHour(state);
+  const shouldCreateReminder =
+    state.medicines.byId[payload.medicineId].count > 0;
+  if (shouldCreateReminder) createReminder(payload.hour);
+};
 
-  if (!hasRemainingAssignments) {
-    Notifications.cancelNotification(dailyReminderBase.tag, selectedHour);
+export const handleRemoveAssignment = (
+  payload: TypedRemoveAssignmentAction['payload'],
+  state: AppStateType,
+) => {
+  const hasRemainingAssignments = payload.hour in getAssignmentsByHour(state);
+
+  if (hasRemainingAssignments) {
+    return;
+  } else {
+    Notifications.cancelNotification(dailyReminderBase.tag, payload.hour);
   }
 };
 
-export const handleConfirmationAction = (
-  selectedHour: number,
+export const handleUpdateMedicine = (
+  payload: TypedUpdateMedicineAction['payload'],
   state: AppStateType,
 ) => {
-  const supplies = getMedicinesSuppliesByHour(state);
+  const {id} = payload;
+  const assignedHours = getAssignmentsHoursByMedicineId(state)[id];
+  const medicinesSupplies = getMedicinesSuppliesByHour(state);
 
-  if (!has(supplies, selectedHour)) {
-    return;
-  } else {
-    const {total: totalSupply, depletes_soon, almost_depleted} = supplies[
-      selectedHour
-    ];
+  assignedHours.forEach((hour) => {
+    if (medicinesSupplies[hour].total > 0) {
+      createReminder(hour);
+    } else {
+      Notifications.cancelNotification(dailyReminderBase.tag, hour);
+    }
+  });
+};
+
+export const handleConfirmationAction = (
+  payload: TypedConfirmConsumptionAction['payload'],
+  state: AppStateType,
+) => {
+  const {hour: assignedHour} = payload;
+  const medicinesSupplies = getMedicinesSuppliesByHour(state);
+
+  if (assignedHour in medicinesSupplies) {
+    const {
+      total: totalSupply,
+      depletes_soon,
+      almost_depleted,
+    } = medicinesSupplies[assignedHour];
 
     depletes_soon.length > 0 &&
       showSupplyDepletionNotification(
@@ -134,8 +170,10 @@ export const handleConfirmationAction = (
         'Осталось по 1шт. ' + almost_depleted.map(({name}) => name).join(' '),
       );
 
-    Notifications.cancelNotification(dailyReminderBase.tag, selectedHour);
+    Notifications.cancelNotification(dailyReminderBase.tag, assignedHour);
 
-    totalSupply > 0 && handleCreateReminder(selectedHour);
+    totalSupply > 0 && createReminder(assignedHour);
+  } else {
+    return;
   }
 };

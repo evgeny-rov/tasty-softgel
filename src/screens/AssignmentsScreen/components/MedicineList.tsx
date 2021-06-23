@@ -2,7 +2,7 @@ import {includes} from 'lodash';
 import React from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
-import {medicinesWithAssignmentsSelector} from 'src/redux/entities/medicines/medicines.selectors';
+import {getMedicinesWithAssignmentsHours} from 'src/redux/entities/medicines/medicines.selectors';
 import MedicineListItem from './MedicineListItem';
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 };
 
 const RemindersMedicinesList = ({pickerSelectedHour}: Props) => {
-  const medicinesList = useSelector(medicinesWithAssignmentsSelector);
+  const medicinesList = useSelector(getMedicinesWithAssignmentsHours);
 
   return (
     <ScrollView

@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 25,
-    paddingVertical: 10,
+    paddingVertical: 5,
   },
   container_shadow: {
     elevation: 10,

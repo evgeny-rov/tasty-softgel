@@ -12,8 +12,23 @@ const getCurrentConsumptionHour = (state: AppStateType) =>
 const getCurrentlyConfirmedHours = (state: AppStateType) =>
   state.consumptions.confirmedHours;
 
-export const getAssignmentsByHour = createSelector([getAssignments], (assignments) =>
-  groupBy(assignments, 'hour'),
+export const getAssignmentsByHour = createSelector(
+  [getAssignments],
+  (assignments) => groupBy(assignments, 'hour'),
+);
+
+export const getAssignmentsByMedicineId = createSelector(
+  [getAssignments],
+  (assignments) => groupBy(assignments, 'medicineId'),
+);
+
+export const getAssignmentsHoursByMedicineId = createSelector(
+  [getAssignmentsByMedicineId],
+  (assignmentsByMedId) => {
+    return mapValues(assignmentsByMedId, (assignments) =>
+      assignments.map(({hour}) => hour),
+    );
+  },
 );
 
 export const getAssignmentsWithMedicines = createSelector(

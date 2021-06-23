@@ -16,12 +16,12 @@ type TypedActions =
   | TypedRemoveAssignmentAction
   | TypedRemoveMedicineAction;
 
-const initlaState: AssignmentsState = {
+const initialState: AssignmentsState = {
   byId: {},
 };
 
 export default (
-  state = initlaState,
+  state = initialState,
   action: TypedActions,
 ): AssignmentsState => {
   switch (action.type) {
