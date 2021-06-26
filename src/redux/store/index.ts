@@ -6,7 +6,7 @@ import medicinesReducer from '../entities/medicines/medicines.reducer';
 import assignmentsReducer from '../entities/assignments/assignments.reducer';
 import consumptionsReducer from '../entities/consumptions/consumptions.reducer';
 import modalMedicineReducer from '../entities/modal_medicine/modal_medicine.reducer';
-import testMiddleware from 'src/services/notifications/notifications.middleware';
+import NotificationsMiddleware from 'src/services/notifications/notifications.middleware';
 import {consumptionsRefresh} from '../entities/consumptions/consumptions.actions';
 import {PersistConfig} from 'redux-persist/es/types';
 
@@ -28,8 +28,10 @@ const persistedReducer = persistReducer<AppStateType, any>(
   rootReducer,
 );
 
-// applying notifications middleware
-const store = createStore(persistedReducer, applyMiddleware(testMiddleware));
+const store = createStore(
+  persistedReducer,
+  applyMiddleware(NotificationsMiddleware),
+);
 
 export const onStartUp = () => {
   console.log('store startup', store.getState());

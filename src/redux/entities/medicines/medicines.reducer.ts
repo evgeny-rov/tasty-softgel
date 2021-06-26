@@ -1,4 +1,5 @@
-import {MedicinesState} from 'src/types';
+import {pickBy, without} from 'lodash';
+import {Medicine, MedicinesState} from 'src/types';
 import {
   TypedAddMedicineAction,
   TypedRemoveMedicineAction,
@@ -11,8 +12,6 @@ import {
   CONFIRM_CONSUMPTION,
   TypedConfirmConsumptionAction,
 } from '../consumptions/consumptions.actionTypes';
-
-import {pickBy, without} from 'lodash';
 
 type TypedAction =
   | TypedAddMedicineAction
@@ -65,18 +64,28 @@ export default (state = initialState, action: TypedAction): MedicinesState => {
     }
     case CONFIRM_CONSUMPTION: {
       const {medicines} = action.payload;
-      const updatedMedicines = {...state.byId};
 
-      medicines.forEach(({id}) => {
-        const {count} = updatedMedicines[id];
-        if (count < 1) return;
+      const updatedMedicines = medicines.reduce<{[id: string]: Medicine}>(
+        (acc, {id}) => {
+          const medicine = state.byId[id];
 
-        updatedMedicines[id].count -= 1;
-      });
+          return {
+            ...acc,
+            [medicine.id]: {
+              ...medicine,
+              count: medicine.count === 0 ? 0 : medicine.count - 1,
+            },
+          };
+        },
+        {},
+      );
 
       return {
         ...state,
-        byId: updatedMedicines,
+        byId: {
+          ...state.byId,
+          ...updatedMedicines,
+        },
       };
     }
     default: {

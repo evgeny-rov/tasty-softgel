@@ -1,9 +1,7 @@
 import {createSelector} from 'reselect';
-import {AppStateType, Medicine} from 'src/types';
+import {AppStateType} from 'src/types';
 import {groupBy, mapValues} from 'lodash';
-
-const MEDICINE_SUPPLY_DEPLETES_SOON_THRESHOLD = 5;
-const MEDICINE_SUPPLY_ALMOST_DEPLETED_THRESHOLD = 1;
+import groupMedicinesBySupply from 'src/utils/groupMedicinesBySupply';
 
 const getMedicines = (state: AppStateType) => state.medicines.byId;
 const getAssignments = (state: AppStateType) => state.assignments.byId;
@@ -43,29 +41,7 @@ export const getAssignmentsWithMedicines = createSelector(
 export const getMedicinesSuppliesByHour = createSelector(
   [getAssignmentsWithMedicines],
   (assignmentsWithMedicines) => {
-    const groupBySupply = (medicines: Medicine[]) => {
-      const resultingSupply = {
-        total: 0,
-        depletes_soon: [] as Medicine[],
-        almost_depleted: [] as Medicine[],
-      };
-
-      for (const medicine of medicines) {
-        if (medicine.count === MEDICINE_SUPPLY_DEPLETES_SOON_THRESHOLD) {
-          resultingSupply.depletes_soon.push(medicine);
-        } else if (
-          medicine.count === MEDICINE_SUPPLY_ALMOST_DEPLETED_THRESHOLD
-        ) {
-          resultingSupply.almost_depleted.push(medicine);
-        }
-
-        resultingSupply.total += medicine.count;
-      }
-
-      return resultingSupply;
-    };
-
-    return mapValues(assignmentsWithMedicines, groupBySupply);
+    return mapValues(assignmentsWithMedicines, groupMedicinesBySupply);
   },
 );
 

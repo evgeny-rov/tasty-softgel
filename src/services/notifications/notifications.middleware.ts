@@ -66,9 +66,7 @@ const testMiddleware: Middleware<Dispatch, AppStateType> = ({getState}) => (
 ) => (action: ExpectedActions) => {
   const result = next(action);
 
-  if (triggerActionTypes.includes(action.type)) {
-    useHandler(action, getState());
-  }
+  if (triggerActionTypes.includes(action.type)) useHandler(action, getState());
 
   return result;
 };

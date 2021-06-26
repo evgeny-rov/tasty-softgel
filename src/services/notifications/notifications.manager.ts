@@ -4,7 +4,7 @@ import {PersistPartial} from 'redux-persist/es/persistReducer';
 import {Persistor} from 'redux-persist';
 import {Store} from 'redux';
 
-import {AppStateType} from 'src/types';
+import {AppStateType, Medicine} from 'src/types';
 import {
   TypedAddAssignmentAction,
   TypedRemoveAssignmentAction,
@@ -24,6 +24,7 @@ import {
   getMedicinesSuppliesByHour,
 } from 'src/redux/entities/assignments/assignments.selectors';
 import hourToTimeString from 'src/utils/hourToTimeString';
+import groupMedicinesBySupply from 'src/utils/groupMedicinesBySupply';
 
 const channelsData = {
   ids: ['daily_notifications'],
@@ -43,6 +44,45 @@ const dailyReminderBase = {
   actions: ['Я не забыл'],
   tag: 'reminder',
   group: 'daily-reminder',
+};
+
+const scheduleDailyNotification = (scheduledDate: Date, message: string) => {
+  Notifications.scheduleNotification({
+    ...dailyReminderBase,
+    date: scheduledDate,
+    id: scheduledDate.getHours(),
+    subText: hourToTimeString(scheduledDate.getHours()),
+    message,
+    invokeApp: false,
+    autoCancel: false,
+    repeatType: 'day',
+  });
+};
+
+const showSupplyDepletionNotification = (title: string, message: string) => {
+  Notifications.showNotification({
+    channelId: channelsData.byId.daily_notifications.channelId,
+    title,
+    tag: 'depletion',
+    group: 'depletion',
+    message,
+  });
+};
+
+const assignSupplyDepletionNotifications = (medicines: Medicine[]) => {
+  const {depleted, depletes_soon} = groupMedicinesBySupply(medicines);
+
+  depleted.length > 0 &&
+    showSupplyDepletionNotification(
+      'Закончились лекарства',
+      depleted.map(({name}) => name).join(', '),
+    );
+
+  depletes_soon.length > 0 &&
+    showSupplyDepletionNotification(
+      'Заканчиваются лекарства',
+      depletes_soon.map(({name}) => name).join(', '),
+    );
 };
 
 const handleNotificationAction = async (
@@ -73,29 +113,6 @@ export const initNotificationsManager = (
     channelsConfigs: Object.values(channelsData.byId),
     onNotificationActions: (notification: ReceivedNotification) =>
       handleNotificationAction(notification, store, persistor),
-  });
-};
-
-const scheduleDailyNotification = (scheduledDate: Date, message: string) => {
-  Notifications.scheduleNotification({
-    ...dailyReminderBase,
-    date: scheduledDate,
-    id: scheduledDate.getHours(),
-    subText: hourToTimeString(scheduledDate.getHours()),
-    message,
-    invokeApp: false,
-    autoCancel: false,
-    repeatType: 'day',
-  });
-};
-
-const showSupplyDepletionNotification = (title: string, message: string) => {
-  Notifications.showNotification({
-    channelId: channelsData.byId.daily_notifications.channelId,
-    title,
-    tag: 'depletion',
-    group: 'depletion',
-    message,
   });
 };
 
@@ -131,7 +148,7 @@ export const handleUpdateMedicine = (
   state: AppStateType,
 ) => {
   const {id} = payload;
-  const assignedHours = getAssignmentsHoursByMedicineId(state)[id];
+  const assignedHours = getAssignmentsHoursByMedicineId(state)[id] || [];
   const medicinesSupplies = getMedicinesSuppliesByHour(state);
 
   assignedHours.forEach((hour) => {
@@ -147,32 +164,9 @@ export const handleConfirmationAction = (
   payload: TypedConfirmConsumptionAction['payload'],
   state: AppStateType,
 ) => {
-  const {hour: assignedHour} = payload;
-  const medicinesSupplies = getMedicinesSuppliesByHour(state);
+  const {medicines, hour} = payload;
 
-  if (assignedHour in medicinesSupplies) {
-    const {
-      total: totalSupply,
-      depletes_soon,
-      almost_depleted,
-    } = medicinesSupplies[assignedHour];
-
-    depletes_soon.length > 0 &&
-      showSupplyDepletionNotification(
-        'Лекарства заканчиваются',
-        'Осталось по 5шт. ' + depletes_soon.map(({name}) => name).join(' '),
-      );
-
-    almost_depleted.length > 0 &&
-      showSupplyDepletionNotification(
-        'Лекарства заканчиваются',
-        'Осталось по 1шт. ' + almost_depleted.map(({name}) => name).join(' '),
-      );
-
-    Notifications.cancelNotification(dailyReminderBase.tag, assignedHour);
-
-    totalSupply > 0 && createReminder(assignedHour);
-  } else {
-    return;
-  }
+  Notifications.cancelNotification(dailyReminderBase.tag, hour);
+  assignSupplyDepletionNotifications(medicines);
+  medicines.forEach((medicine) => handleUpdateMedicine(medicine, state));
 };
