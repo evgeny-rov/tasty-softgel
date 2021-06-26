@@ -1,4 +1,5 @@
 import PushNotification, {
+  PushNotificationObject,
   PushNotificationScheduleObject,
   ReceivedNotification,
 } from 'react-native-push-notification';
@@ -21,6 +22,10 @@ type channelConfig = {
 type initApiArguments = {
   channelsConfigs: Array<channelConfig>;
   onNotificationActions: (notification: ReceivedNotification) => void;
+};
+
+export const showNotification = (params: PushNotificationObject) => {
+  PushNotification.localNotification(params);
 };
 
 export const scheduleNotification = (

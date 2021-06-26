@@ -15,7 +15,7 @@ const MedicineListItem = ({medicine, assignments}: Props) => {
   const {showModalUpdateMedicine} = useModalMedicine();
   const assignmentsList = assignments
     .map(({hour}) => hourToTimeString(hour))
-    .join(', ');
+    .join('  ');
 
   const showModal = () => showModalUpdateMedicine(medicine);
 

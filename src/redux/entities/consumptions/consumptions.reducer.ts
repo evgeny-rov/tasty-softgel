@@ -1,4 +1,4 @@
-import { uniq } from 'lodash';
+import {uniq} from 'lodash';
 import {ConsumptionsState} from 'src/types';
 import {
   UPDATE_HOUR,
@@ -20,7 +20,10 @@ const initialState: ConsumptionsState = {
   lastConfirmationAt: 0,
 };
 
-export default (state = initialState, action: TypedAction): ConsumptionsState => {
+export default (
+  state = initialState,
+  action: TypedAction,
+): ConsumptionsState => {
   switch (action.type) {
     case UPDATE_HOUR: {
       const {nextHour} = action.payload;
@@ -28,8 +31,7 @@ export default (state = initialState, action: TypedAction): ConsumptionsState =>
       return {
         ...state,
         currentHour: nextHour,
-        confirmedHours:
-          nextHour === 0 ? [] : state.confirmedHours,
+        confirmedHours: nextHour === 0 ? [] : [...state.confirmedHours],
       };
     }
     case CONFIRM_CONSUMPTION: {
@@ -47,9 +49,7 @@ export default (state = initialState, action: TypedAction): ConsumptionsState =>
       return {
         ...state,
         currentHour: hour,
-        confirmedHours: isDayPassed
-          ? []
-          : state.confirmedHours,
+        confirmedHours: isDayPassed ? [] : [...state.confirmedHours],
       };
     }
     default: {

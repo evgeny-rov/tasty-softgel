@@ -28,7 +28,7 @@ export default (
       };
     }
     case HIDE_MODAL_MEDICINE: {
-      return initialState
+      return initialState;
     }
     default: {
       return state;

@@ -1,3 +1,4 @@
+import {Medicine} from 'src/types';
 import isDayPassed from 'src/utils/isDayPassed';
 import {
   UPDATE_HOUR,
@@ -15,10 +16,10 @@ export const updateHour = (): TypedUpdateHourAction => ({
 
 export const confirmConsumption = (
   hour: number,
-  medicinesIds: string[],
+  medicines: Medicine[],
 ): TypedConfirmConsumptionAction => ({
   type: CONFIRM_CONSUMPTION,
-  payload: {timestamp: Date.now(), hour, medicinesIds},
+  payload: {timestamp: Date.now(), hour, medicines},
 });
 
 export const consumptionsRefresh = ({

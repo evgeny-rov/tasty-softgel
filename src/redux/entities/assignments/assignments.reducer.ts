@@ -1,3 +1,4 @@
+import {pickBy} from 'lodash';
 import {AssignmentsState} from 'src/types';
 import {
   ADD_ASSIGNMENT,
@@ -9,19 +10,18 @@ import {
   REMOVE_MEDICINE,
   TypedRemoveMedicineAction,
 } from '../medicines/medicines.actionTypes';
-import {pickBy} from 'lodash';
 
 type TypedActions =
   | TypedAddAssignmentAction
   | TypedRemoveAssignmentAction
   | TypedRemoveMedicineAction;
 
-const initlaState: AssignmentsState = {
+const initialState: AssignmentsState = {
   byId: {},
 };
 
 export default (
-  state = initlaState,
+  state = initialState,
   action: TypedActions,
 ): AssignmentsState => {
   switch (action.type) {

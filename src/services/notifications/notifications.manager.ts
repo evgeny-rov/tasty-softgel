@@ -1,30 +1,37 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import {ReceivedNotification} from 'react-native-push-notification';
 import {PersistPartial} from 'redux-persist/es/persistReducer';
-import {filter} from 'lodash';
+import {Persistor} from 'redux-persist';
 import {Store} from 'redux';
 
-import {AppStateType} from 'src/types';
+import {AppStateType, Medicine} from 'src/types';
+import {
+  TypedAddAssignmentAction,
+  TypedRemoveAssignmentAction,
+} from 'src/redux/entities/assignments/assignments.actionTypes';
+import {TypedConfirmConsumptionAction} from 'src/redux/entities/consumptions/consumptions.actionTypes';
+import {TypedUpdateMedicineAction} from 'src/redux/entities/medicines/medicines.actionTypes';
+import * as Notifications from './notifications.api';
 import getAvailableDateFromHour from 'src/utils/getAvailableDateFromHour';
 import {
   confirmConsumption,
   consumptionsRefresh,
 } from '../../redux/entities/consumptions/consumptions.actions';
-import * as Notifications from './notifications.api';
+import {
+  getAssignmentsByHour,
+  getAssignmentsHoursByMedicineId,
+  getAssignmentsWithMedicines,
+  getMedicinesSuppliesByHour,
+} from 'src/redux/entities/assignments/assignments.selectors';
 import hourToTimeString from 'src/utils/hourToTimeString';
+import groupMedicinesBySupply from 'src/utils/groupMedicinesBySupply';
 
 const channelsData = {
-  ids: ['daily_notifications', 'test_channel'],
+  ids: ['daily_notifications'],
   byId: {
     daily_notifications: {
       channelId: 'daily_notifications',
       channelName: 'Daily Notifications',
-      importance: 4,
-      vibrate: true,
-    },
-    test_channel: {
-      channelId: 'test_channel',
-      channelName: 'Test Channel',
       importance: 4,
       vibrate: true,
     },
@@ -33,46 +40,13 @@ const channelsData = {
 
 const dailyReminderBase = {
   channelId: channelsData.byId.daily_notifications.channelId,
-  title: 'Напоминание о приеме лекарств',
+  title: 'Напоминание о приеме',
   actions: ['Я не забыл'],
   tag: 'reminder',
   group: 'daily-reminder',
 };
 
-const handleNotificationAction = async (
-  notification: ReceivedNotification,
-  store: Store<AppStateType & PersistPartial, any>,
-) => {
-  await AsyncStorage.getAllKeys(() => {
-    const assignedNotificationsHour = Number(notification.id);
-    const state = store.getState();
-    const {lastConfirmationAt} = state.consumptions;
-    const assignmentsByAssignedHour = filter(
-      state.assignments.byId,
-      ({hour: assignedHour}) => assignedHour === assignedNotificationsHour,
-    );
-
-    const medicinesIds = assignmentsByAssignedHour.map(
-      ({medicineId}) => medicineId,
-    );
-
-    store.dispatch(consumptionsRefresh({lastConfirmationAt}));
-
-    store.dispatch(confirmConsumption(assignedNotificationsHour, medicinesIds));
-  });
-};
-
-export const initNotificationsManager = (
-  store: Store<AppStateType & PersistPartial, any>,
-) => {
-  Notifications.configure({
-    channelsConfigs: Object.values(channelsData.byId),
-    onNotificationActions: (notification: ReceivedNotification) =>
-      handleNotificationAction(notification, store),
-  });
-};
-
-const scheduleDailyReminder = (scheduledDate: Date, message: string) => {
+const scheduleDailyNotification = (scheduledDate: Date, message: string) => {
   Notifications.scheduleNotification({
     ...dailyReminderBase,
     date: scheduledDate,
@@ -85,41 +59,114 @@ const scheduleDailyReminder = (scheduledDate: Date, message: string) => {
   });
 };
 
-export const handleAddReminder = (selectedHour: number) => {
-  const scheduledDate = getAvailableDateFromHour(selectedHour);
-  scheduleDailyReminder(scheduledDate, 'Не забудь выпить лекарства!');
+const showSupplyDepletionNotification = (title: string, message: string) => {
+  Notifications.showNotification({
+    channelId: channelsData.byId.daily_notifications.channelId,
+    title,
+    tag: 'depletion',
+    group: 'depletion',
+    message,
+  });
 };
 
-export const handleRemoveReminder = (
-  selectedHour: number,
+const assignSupplyDepletionNotifications = (medicines: Medicine[]) => {
+  const {depleted, depletes_soon} = groupMedicinesBySupply(medicines);
+
+  depleted.length > 0 &&
+    showSupplyDepletionNotification(
+      'Закончились лекарства',
+      depleted.map(({name}) => name).join(', '),
+    );
+
+  depletes_soon.length > 0 &&
+    showSupplyDepletionNotification(
+      'Заканчиваются лекарства',
+      depletes_soon.map(({name}) => name).join(', '),
+    );
+};
+
+const handleNotificationAction = async (
+  notification: ReceivedNotification,
+  store: Store<AppStateType & PersistPartial, any>,
+  persistor: Persistor,
+) => {
+  await AsyncStorage.getAllKeys(() => {
+    const notificationHour = Number(notification.id);
+    const state = store.getState();
+    const {lastConfirmationAt} = state.consumptions;
+    const medicines =
+      getAssignmentsWithMedicines(state)[notificationHour] || [];
+
+    store.dispatch(consumptionsRefresh({lastConfirmationAt}));
+
+    store.dispatch(confirmConsumption(notificationHour, medicines));
+
+    persistor.flush();
+  });
+};
+
+export const initNotificationsManager = (
+  store: Store<AppStateType & PersistPartial, any>,
+  persistor: Persistor,
+) => {
+  Notifications.configure({
+    channelsConfigs: Object.values(channelsData.byId),
+    onNotificationActions: (notification: ReceivedNotification) =>
+      handleNotificationAction(notification, store, persistor),
+  });
+};
+
+const createReminder = (assignedHour: number) => {
+  const scheduledDate = getAvailableDateFromHour(assignedHour);
+  scheduleDailyNotification(scheduledDate, 'Не забудь выпить лекарства!');
+};
+
+export const handleNewAssignment = (
+  payload: TypedAddAssignmentAction['payload'],
   state: AppStateType,
 ) => {
-  const remainingReminders = filter(
-    state.assignments.byId,
-    ({hour: assignmentHour}) => assignmentHour === selectedHour,
-  );
+  const shouldCreateReminder =
+    state.medicines.byId[payload.medicineId].count > 0;
+  if (shouldCreateReminder) createReminder(payload.hour);
+};
 
-  const reminderShouldBeCancelled = remainingReminders.length < 1;
+export const handleRemoveAssignment = (
+  payload: TypedRemoveAssignmentAction['payload'],
+  state: AppStateType,
+) => {
+  const hasRemainingAssignments = payload.hour in getAssignmentsByHour(state);
 
-  if (reminderShouldBeCancelled) {
-    Notifications.cancelNotification(dailyReminderBase.tag, selectedHour);
+  if (hasRemainingAssignments) {
+    return;
+  } else {
+    Notifications.cancelNotification(dailyReminderBase.tag, payload.hour);
   }
 };
 
-export const handleRescheduleReminder = (
-  confirmationHour: number,
+export const handleUpdateMedicine = (
+  payload: TypedUpdateMedicineAction['payload'],
   state: AppStateType,
 ) => {
-  const assignedMedicines = filter(
-    state.assignments.byId,
-    ({hour: assignmentHour}) => assignmentHour === confirmationHour,
-  );
+  const {id} = payload;
+  const assignedHours = getAssignmentsHoursByMedicineId(state)[id] || [];
+  const medicinesSupplies = getMedicinesSuppliesByHour(state);
 
-  const totalMedicinesCount = assignedMedicines.reduce((acc, {medicineId}) => {
-    return acc + state.medicines.byId[medicineId].count;
-  }, 0);
+  assignedHours.forEach((hour) => {
+    if (medicinesSupplies[hour].total > 0) {
+      createReminder(hour);
+    } else {
+      Notifications.cancelNotification(dailyReminderBase.tag, hour);
+    }
+  });
+};
 
-  Notifications.cancelNotification(dailyReminderBase.tag, confirmationHour);
+export const handleConfirmationAction = (
+  payload: TypedConfirmConsumptionAction['payload'],
+  state: AppStateType,
+) => {
+  const {medicines, hour} = payload;
 
-  totalMedicinesCount > 0 && handleAddReminder(confirmationHour);
+  Notifications.cancelNotification(dailyReminderBase.tag, hour);
+  assignSupplyDepletionNotifications(medicines);
+  medicines.forEach((medicine) => handleUpdateMedicine(medicine, state));
 };
