@@ -12,7 +12,6 @@ const MedicineManagerScreen = () => {
 
   return (
     <>
-      <StatusBar translucent backgroundColor={'transparent'} />
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={typography.styles.h1}>Ваши лекарства</Text>

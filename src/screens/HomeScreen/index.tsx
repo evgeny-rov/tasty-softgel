@@ -1,5 +1,5 @@
 import React from 'react';
-import {StatusBar, ScrollView} from 'react-native';
+import {ScrollView} from 'react-native';
 import FloatingActionButton from '../../components/FloatingActionButton';
 import DailyAssignments from './components/DailyAssignments';
 import useModalMedicine from 'src/hooks/useModalMedicine';
@@ -9,7 +9,6 @@ const HomeScreen = () => {
 
   return (
     <>
-      <StatusBar translucent backgroundColor={'transparent'} />
       <ScrollView>
         <DailyAssignments />
       </ScrollView>

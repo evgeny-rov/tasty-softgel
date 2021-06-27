@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {StatusBar, StyleSheet, Text, View} from 'react-native';
 import Picker from '@gregfrench/react-native-wheel-picker';
 
-import BgImage from '../../components/BgImage';
 import MedicineList from './components/MedicineList';
 import hourToTimeString from '../../utils/hourToTimeString';
 import {typography} from '@styles/';
