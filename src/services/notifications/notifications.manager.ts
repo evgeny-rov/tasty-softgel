@@ -32,7 +32,6 @@ const channelsData = {
     daily_notifications: {
       channelId: 'daily_notifications',
       channelName: 'Daily Notifications',
-      importance: 4,
       vibrate: true,
     },
   },
@@ -53,6 +52,8 @@ const scheduleDailyNotification = (scheduledDate: Date, message: string) => {
     id: scheduledDate.getHours(),
     subText: hourToTimeString(scheduledDate.getHours()),
     message,
+    priority: 'max',
+    allowWhileIdle: true,
     invokeApp: false,
     autoCancel: false,
     repeatType: 'day',
