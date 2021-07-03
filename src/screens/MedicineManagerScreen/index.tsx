@@ -16,7 +16,7 @@ const MedicineManagerScreen = () => {
         <View style={styles.header}>
           <Text style={typography.styles.h1}>Ваши лекарства</Text>
           <IconButton onPress={showModalNewMedicine}>
-            <Icon name="pills" size={20} color={theme.colors.primary} />
+            <Icon name="pills" color={theme.colors.primary} />
           </IconButton>
         </View>
         <MedicineList />

@@ -32,6 +32,7 @@ const theme = {
     l: 22,
     xl: 40,
   },
+  icon_size: 14,
   configs: {
     ripple_xs: {
       ...android_ripple_base,

@@ -1,4 +1,3 @@
-import {includes} from 'lodash';
 import React from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';

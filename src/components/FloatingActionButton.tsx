@@ -14,7 +14,7 @@ const FloatingActionButton: React.FC<Props> = ({onPress}) => {
       style={styles.floatingActionBtn}
       android_ripple={theme.configs.ripple_contained}
       onPress={onPress}>
-      <Icon name="pills" color="#000" size={18} />
+      <Icon name="pills" color="#000" />
     </Pressable>
   );
 };

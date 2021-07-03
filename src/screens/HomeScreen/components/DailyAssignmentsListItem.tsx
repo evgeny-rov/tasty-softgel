@@ -1,7 +1,7 @@
 import React from 'react';
 import {Pressable, View, Text, StyleSheet} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppStateType, Medicine} from 'src/types';
+import {useDispatch} from 'react-redux';
+import {Medicine} from 'src/types';
 import {confirmConsumption} from 'src/redux/entities/consumptions/consumptions.actions';
 import hourToTimeString from 'src/utils/hourToTimeString';
 import Icon from '@components/Icon';
@@ -50,7 +50,6 @@ export default ({
         <Icon
           name="pills"
           color={canBeConfirmed ? theme.colors.primary : 'transparent'}
-          size={20}
         />
       </View>
       <View style={[styles.section, styles.medicine_list_container]}>

@@ -19,7 +19,7 @@ const ModalHeader = ({headerTitle, onClose}: Props) => {
         style={styles.close_btn}
         onPress={onClose}
         hitSlop={25}>
-        <Icon name="clear" color={theme.colors.primary} size={20} />
+        <Icon name="clear" color={theme.colors.primary} />
       </Pressable>
     </>
   );

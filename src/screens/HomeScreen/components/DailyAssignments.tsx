@@ -1,13 +1,12 @@
 import React, {useEffect} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, StatusBar} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {getDailyAssignments} from 'src/redux/entities/assignments/assignments.selectors';
-import {typography} from 'src/styles';
-import SizedBox from '@components/SizedBox';
-import DailyAssignmentsListItem from './DailyAssignmentsListItem';
+
 import {updateHour} from 'src/redux/entities/consumptions/consumptions.actions';
 import {getCurrentHour} from 'src/redux/entities/consumptions/consumptions.selectors';
-import {StatusBar} from 'react-native';
+import {getDailyAssignments} from 'src/redux/entities/assignments/assignments.selectors';
+import DailyAssignmentsListItem from './DailyAssignmentsListItem';
+import {typography} from 'src/styles';
 
 const DailyAssignments = () => {
   const dispatch = useDispatch();

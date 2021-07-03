@@ -22,6 +22,8 @@ const RemindersMedicinesListItem = ({
 }: Props) => {
   const dispatch = useDispatch();
 
+  const assignmentExists = assignment !== undefined;
+
   const toggleAssignmentStatus = () => {
     if (assignment) {
       dispatch(removeAssignment({id: assignment.id, hour: pickerSelectedHour}));
@@ -45,9 +47,9 @@ const RemindersMedicinesListItem = ({
         hitSlop={15}
         onPress={toggleAssignmentStatus}>
         <Icon
-          name={assignment ? 'notifications' : 'notifications_none'}
+          name={assignmentExists ? 'bell_active' : 'bell_inactive'}
           color={theme.colors.primary}
-          size={24}
+          size={20}
         />
       </Pressable>
     </View>
