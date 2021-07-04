@@ -62,9 +62,10 @@ export const getDailyAssignments = createSelector(
       const assignmentHour = Number(hourId);
       const medicines = assignmentsWithMedicines[hourId];
       const isSuppliesDepleted = medicinesSupplies[hourId].total < 1;
+      const isConfirmed = currentlyConfirmedHours.includes(assignmentHour);
       const canBeConfirmed =
         !isSuppliesDepleted &&
-        !currentlyConfirmedHours.includes(assignmentHour) &&
+        !isConfirmed &&
         assignmentHour <= currentConsumptionHour;
       const isUIActive =
         !isSuppliesDepleted && assignmentHour === currentConsumptionHour;
@@ -73,6 +74,7 @@ export const getDailyAssignments = createSelector(
         assignmentHour,
         medicines,
         isSuppliesDepleted,
+        isConfirmed,
         canBeConfirmed,
         isUIActive,
       };
