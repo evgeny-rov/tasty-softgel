@@ -33,14 +33,16 @@ const channelsData = {
       channelId: 'daily_notifications',
       channelName: 'Daily Notifications',
       vibrate: true,
+      importance: 4,
     },
   },
-};
+} as const;
 
 const dailyReminderBase = {
   channelId: channelsData.byId.daily_notifications.channelId,
   title: 'Напоминание о приеме',
   actions: ['Я не забыл'],
+  smallIcon: 'ic_notification',
   tag: 'reminder',
   group: 'daily-reminder',
 };
@@ -64,8 +66,9 @@ const showSupplyDepletionNotification = (title: string, message: string) => {
   Notifications.showNotification({
     channelId: channelsData.byId.daily_notifications.channelId,
     title,
-    tag: 'depletion',
-    group: 'depletion',
+    smallIcon: 'ic_notification',
+    tag: 'supply',
+    group: 'supply',
     message,
   });
 };
