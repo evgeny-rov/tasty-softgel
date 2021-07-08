@@ -11,7 +11,7 @@ import {
 import {
   CONFIRM_CONSUMPTION,
   TypedConfirmConsumptionAction,
-} from '../consumptions/consumptions.actionTypes';
+} from '../daily_assignments/daily_assignments.actionTypes';
 
 type TypedAction =
   | TypedAddMedicineAction

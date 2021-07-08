@@ -23,7 +23,7 @@ export type AssignmentsState = {
   };
 };
 
-export type ConsumptionsState = {
+export type DailyAssignmentsState = {
   currentHour: number;
   confirmedHours: number[];
   lastConfirmationAt: number;
@@ -37,6 +37,6 @@ export type ModalMedicineState = {
 export type AppStateType = {
   medicines: MedicinesState;
   assignments: AssignmentsState;
-  consumptions: ConsumptionsState;
+  daily_assignments: DailyAssignmentsState;
   modal_medicine: ModalMedicineState;
 };

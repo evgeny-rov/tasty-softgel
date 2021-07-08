@@ -97,13 +97,14 @@ const handleNotificationAction = async (
   await AsyncStorage.getAllKeys(() => {
     const notificationHour = Number(notification.id);
     const state = store.getState();
-    const {lastConfirmationAt} = state.consumptions;
+    const {lastConfirmationAt, confirmedHours} = state.consumptions;
     const medicines =
       getAssignmentsWithMedicines(state)[notificationHour] || [];
 
     store.dispatch(consumptionsRefresh({lastConfirmationAt}));
 
-    store.dispatch(confirmConsumption(notificationHour, medicines));
+    !confirmedHours.includes(notificationHour) &&
+      store.dispatch(confirmConsumption(notificationHour, medicines));
 
     persistor.flush();
   });
@@ -174,3 +175,15 @@ export const handleConfirmationAction = (
   assignSupplyDepletionNotifications(medicines);
   medicines.forEach((medicine) => handleUpdateMedicine(medicine, state));
 };
+
+Notifications.scheduleNotification({
+  ...dailyReminderBase,
+  date: new Date(Date.now() + 5000),
+  subText: getAvailableDateFromHour(15).toLocaleString(),
+  id: 15,
+  message: 'hey',
+  priority: 'max',
+  allowWhileIdle: true,
+  invokeApp: false,
+  autoCancel: false,
+});

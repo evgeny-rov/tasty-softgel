@@ -1,13 +1,13 @@
-import {applyMiddleware, combineReducers, createStore, Store} from 'redux';
+import {applyMiddleware, combineReducers, createStore} from 'redux';
 import {persistStore, persistReducer} from 'redux-persist';
 import AsyncStorage from '@react-native-community/async-storage';
 import {AppStateType} from 'src/types';
 import medicinesReducer from '../entities/medicines/medicines.reducer';
 import assignmentsReducer from '../entities/assignments/assignments.reducer';
-import consumptionsReducer from '../entities/consumptions/consumptions.reducer';
+import consumptionsReducer from '../entities/daily_assignments/daily_assignments.reducer';
 import modalMedicineReducer from '../entities/modal_medicine/modal_medicine.reducer';
 import NotificationsMiddleware from 'src/services/notifications/notifications.middleware';
-import {consumptionsRefresh} from '../entities/consumptions/consumptions.actions';
+import {dailyAssignmentsRefresh} from '../entities/daily_assignments/daily_assignments.actions';
 import {PersistConfig} from 'redux-persist/es/types';
 
 const persistConfig: PersistConfig<AppStateType> = {
@@ -19,7 +19,7 @@ const persistConfig: PersistConfig<AppStateType> = {
 const rootReducer = combineReducers<AppStateType>({
   medicines: medicinesReducer,
   assignments: assignmentsReducer,
-  consumptions: consumptionsReducer,
+  daily_assignments: consumptionsReducer,
   modal_medicine: modalMedicineReducer,
 });
 
@@ -27,18 +27,17 @@ const persistedReducer = persistReducer<AppStateType, any>(
   persistConfig,
   rootReducer,
 );
-
+// NotificationsMiddleware
 const store = createStore(
   persistedReducer,
-  applyMiddleware(NotificationsMiddleware),
+  applyMiddleware(),
 );
 
-export const onStartUp = () => {
-  console.log('store startup', store.getState());
-  const {lastConfirmationAt} = store.getState().consumptions;
-  store.dispatch(consumptionsRefresh({lastConfirmationAt}));
+const onStoreInit = () => {
+  const {lastConfirmationAt} = store.getState().daily_assignments;
+  store.dispatch(dailyAssignmentsRefresh({lastConfirmationAt}));
 };
 
-const persistor = persistStore(store, null, onStartUp);
+const persistor = persistStore(store, null);
 
-export {store, persistor};
+export {store, persistor, onStoreInit};

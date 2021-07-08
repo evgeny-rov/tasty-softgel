@@ -1,20 +1,19 @@
-import {uniq} from 'lodash';
-import {ConsumptionsState} from 'src/types';
+import {DailyAssignmentsState} from 'src/types';
 import {
   UPDATE_HOUR,
   CONFIRM_CONSUMPTION,
-  CONSUMPTIONS_REFRESH,
-  TypedConsumptionsRefreshAction,
+  DAILY_ASSIGNMENTS_REFRESH,
+  TypedDailyAssignmentsRefresh,
   TypedConfirmConsumptionAction,
   TypedUpdateHourAction,
-} from './consumptions.actionTypes';
+} from './daily_assignments.actionTypes';
 
 type TypedAction =
   | TypedUpdateHourAction
   | TypedConfirmConsumptionAction
-  | TypedConsumptionsRefreshAction;
+  | TypedDailyAssignmentsRefresh;
 
-const initialState: ConsumptionsState = {
+const initialState: DailyAssignmentsState = {
   currentHour: new Date().getHours(),
   confirmedHours: [],
   lastConfirmationAt: 0,
@@ -23,7 +22,7 @@ const initialState: ConsumptionsState = {
 export default (
   state = initialState,
   action: TypedAction,
-): ConsumptionsState => {
+): DailyAssignmentsState => {
   switch (action.type) {
     case UPDATE_HOUR: {
       const {nextHour} = action.payload;
@@ -37,13 +36,17 @@ export default (
     case CONFIRM_CONSUMPTION: {
       const {timestamp, hour} = action.payload;
 
+      const isConfirmationFromPreviousDay = hour > state.currentHour;
+
       return {
         ...state,
         lastConfirmationAt: timestamp,
-        confirmedHours: uniq([...state.confirmedHours, hour]),
+        confirmedHours: isConfirmationFromPreviousDay
+          ? [...state.confirmedHours]
+          : [...state.confirmedHours, hour],
       };
     }
-    case CONSUMPTIONS_REFRESH: {
+    case DAILY_ASSIGNMENTS_REFRESH: {
       const {isDayPassed, hour} = action.payload;
 
       return {

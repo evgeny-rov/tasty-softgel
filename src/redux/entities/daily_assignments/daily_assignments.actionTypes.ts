@@ -2,7 +2,7 @@ import {Medicine} from 'src/types';
 
 export const UPDATE_HOUR = 'UPDATE_HOUR';
 export const CONFIRM_CONSUMPTION = 'CONFIRM_CONSUMPTION';
-export const CONSUMPTIONS_REFRESH = 'CONSUMPTIONS_REFRESH';
+export const DAILY_ASSIGNMENTS_REFRESH = 'DAILY_ASSIGNMENTS_REFRESH';
 
 export type TypedUpdateHourAction = {
   type: typeof UPDATE_HOUR;
@@ -14,7 +14,7 @@ export type TypedConfirmConsumptionAction = {
   payload: {timestamp: number; hour: number; medicines: Medicine[]};
 };
 
-export type TypedConsumptionsRefreshAction = {
-  type: typeof CONSUMPTIONS_REFRESH;
+export type TypedDailyAssignmentsRefresh = {
+  type: typeof DAILY_ASSIGNMENTS_REFRESH;
   payload: {isDayPassed: boolean; hour: number};
 };

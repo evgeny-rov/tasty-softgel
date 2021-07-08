@@ -2,13 +2,11 @@ import React, {useState} from 'react';
 import {StatusBar, StyleSheet, Text, View} from 'react-native';
 import Picker from '@gregfrench/react-native-wheel-picker';
 
+import {HOURS_AS_TIME_STRING} from '@constants/';
 import MedicineList from './components/MedicineList';
-import hourToTimeString from '../../utils/hourToTimeString';
 import {typography} from '@styles/';
 
-const HOURS_AS_TIME_STRING = Array.from(Array(24).keys()).map(hourToTimeString);
-
-const RemindersScreen = () => {
+const AssignmentsScreen = () => {
   const [pickerSelectedHour, setPickerSelectedHour] = useState(12);
 
   return (
@@ -20,7 +18,7 @@ const RemindersScreen = () => {
         <View style={styles.picker_container}>
           <Picker
             style={styles.picker}
-            lineGradientColorFrom="#6d6767"
+            lineGradientColorFrom="#6d676728"
             lineGradientColorTo="#FFF"
             selectedValue={pickerSelectedHour}
             onValueChange={setPickerSelectedHour}>
@@ -62,4 +60,4 @@ export const styles = StyleSheet.create({
   },
 });
 
-export default RemindersScreen;
+export default AssignmentsScreen;

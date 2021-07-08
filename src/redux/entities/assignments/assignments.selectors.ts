@@ -5,10 +5,10 @@ import groupMedicinesBySupply from 'src/utils/groupMedicinesBySupply';
 
 const getMedicines = (state: AppStateType) => state.medicines.byId;
 const getAssignments = (state: AppStateType) => state.assignments.byId;
-const getCurrentConsumptionHour = (state: AppStateType) =>
-  state.consumptions.currentHour;
-const getCurrentlyConfirmedHours = (state: AppStateType) =>
-  state.consumptions.confirmedHours;
+const getCurrentDailyAssignmentsHour = (state: AppStateType) =>
+  state.daily_assignments.currentHour;
+const getConfirmedDailyAssignmentsHours = (state: AppStateType) =>
+  state.daily_assignments.confirmedHours;
 
 export const getAssignmentsByHour = createSelector(
   [getAssignments],
@@ -49,26 +49,26 @@ export const getDailyAssignments = createSelector(
   [
     getAssignmentsWithMedicines,
     getMedicinesSuppliesByHour,
-    getCurrentConsumptionHour,
-    getCurrentlyConfirmedHours,
+    getCurrentDailyAssignmentsHour,
+    getConfirmedDailyAssignmentsHours,
   ],
   (
     assignmentsWithMedicines,
     medicinesSupplies,
-    currentConsumptionHour,
-    currentlyConfirmedHours,
+    currentDailyAssignmentsHour,
+    getConfirmedDailyAssignmentsHours,
   ) =>
     Object.keys(assignmentsWithMedicines).map((hourId) => {
       const assignmentHour = Number(hourId);
       const medicines = assignmentsWithMedicines[hourId];
       const isSuppliesDepleted = medicinesSupplies[hourId].total < 1;
-      const isConfirmed = currentlyConfirmedHours.includes(assignmentHour);
+      const isConfirmed = getConfirmedDailyAssignmentsHours.includes(assignmentHour);
       const canBeConfirmed =
         !isSuppliesDepleted &&
         !isConfirmed &&
-        assignmentHour <= currentConsumptionHour;
+        assignmentHour <= currentDailyAssignmentsHour;
       const isUIActive =
-        !isSuppliesDepleted && assignmentHour === currentConsumptionHour;
+        !isSuppliesDepleted && assignmentHour === currentDailyAssignmentsHour;
 
       return {
         assignmentHour,
