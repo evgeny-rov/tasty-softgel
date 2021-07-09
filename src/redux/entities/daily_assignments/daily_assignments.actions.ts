@@ -1,38 +1,56 @@
 import {Medicine} from 'src/types';
+import getMedicinesWithSubtractedCounts from 'src/utils/getMedicinesWithSubtractedCounts';
 import isDayPassed from 'src/utils/isDayPassed';
 import {
-  UPDATE_HOUR,
   CONFIRM_CONSUMPTION,
+  UNPLANNED_CONFIRM_CONSUMPTION,
   DAILY_ASSIGNMENTS_REFRESH,
+  DAILY_ASSIGNMENTS_REFRESH_DAY,
   TypedDailyAssignmentsRefresh,
-  TypedUpdateHourAction,
-  TypedConfirmConsumptionAction,
+  TypedDailyAssignmentsRefreshDay,
+  TypedConfirmConsumption,
 } from './daily_assignments.actionTypes';
-
-export const updateHour = (): TypedUpdateHourAction => ({
-  type: UPDATE_HOUR,
-  payload: {nextHour: new Date().getHours()},
-});
 
 export const confirmConsumption = (
   hour: number,
   medicines: Medicine[],
-): TypedConfirmConsumptionAction => ({
-  type: CONFIRM_CONSUMPTION,
-  payload: {timestamp: Date.now(), hour, medicines},
-});
+  isUnplanned: boolean = false,
+): TypedConfirmConsumption => {
+  const timestamp = Date.now();
+  const updatedMedicines = getMedicinesWithSubtractedCounts(medicines);
+  const payload = {hour, updatedMedicines, timestamp};
 
-export const dailyAssignmentsRefresh = ({
-  lastConfirmationAt,
-}: {
-  lastConfirmationAt: number;
-}): TypedDailyAssignmentsRefresh => {
+  if (isUnplanned) {
+    return {
+      type: UNPLANNED_CONFIRM_CONSUMPTION,
+      payload,
+    };
+  } else {
+    return {
+      type: CONFIRM_CONSUMPTION,
+      payload,
+    };
+  }
+};
+
+export const dailyAssignmentsRefresh = (
+  lastConfirmationAt?: number,
+): TypedDailyAssignmentsRefresh | TypedDailyAssignmentsRefreshDay => {
   const currentTime = new Date();
-  return {
-    type: DAILY_ASSIGNMENTS_REFRESH,
-    payload: {
-      isDayPassed: isDayPassed(lastConfirmationAt, currentTime.getTime()),
-      hour: currentTime.getHours(),
-    },
-  };
+  if (
+    lastConfirmationAt &&
+    isDayPassed(lastConfirmationAt, currentTime.getTime())
+  ) {
+    return {
+      type: DAILY_ASSIGNMENTS_REFRESH_DAY,
+      payload: {},
+    };
+  } else {
+    return {
+      type: DAILY_ASSIGNMENTS_REFRESH,
+      payload: {
+        hour: currentTime.getHours(),
+      },
+    };
+  }
 };

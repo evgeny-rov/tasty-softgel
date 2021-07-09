@@ -1,17 +1,18 @@
 import {DailyAssignmentsState} from 'src/types';
 import {
-  UPDATE_HOUR,
   CONFIRM_CONSUMPTION,
+  UNPLANNED_CONFIRM_CONSUMPTION,
   DAILY_ASSIGNMENTS_REFRESH,
+  DAILY_ASSIGNMENTS_REFRESH_DAY,
   TypedDailyAssignmentsRefresh,
-  TypedConfirmConsumptionAction,
-  TypedUpdateHourAction,
+  TypedDailyAssignmentsRefreshDay,
+  TypedConfirmConsumption,
 } from './daily_assignments.actionTypes';
 
 type TypedAction =
-  | TypedUpdateHourAction
-  | TypedConfirmConsumptionAction
-  | TypedDailyAssignmentsRefresh;
+  | TypedConfirmConsumption
+  | TypedDailyAssignmentsRefresh
+  | TypedDailyAssignmentsRefreshDay;
 
 const initialState: DailyAssignmentsState = {
   currentHour: new Date().getHours(),
@@ -24,35 +25,36 @@ export default (
   action: TypedAction,
 ): DailyAssignmentsState => {
   switch (action.type) {
-    case UPDATE_HOUR: {
-      const {nextHour} = action.payload;
+    case UNPLANNED_CONFIRM_CONSUMPTION: {
+      const {timestamp} = action.payload;
 
       return {
         ...state,
-        currentHour: nextHour,
-        confirmedHours: nextHour === 0 ? [] : [...state.confirmedHours],
+        lastConfirmationAt: timestamp,
       };
     }
     case CONFIRM_CONSUMPTION: {
       const {timestamp, hour} = action.payload;
 
-      const isConfirmationFromPreviousDay = hour > state.currentHour;
-
       return {
         ...state,
         lastConfirmationAt: timestamp,
-        confirmedHours: isConfirmationFromPreviousDay
-          ? [...state.confirmedHours]
-          : [...state.confirmedHours, hour],
+        confirmedHours: [...state.confirmedHours, hour],
       };
     }
     case DAILY_ASSIGNMENTS_REFRESH: {
-      const {isDayPassed, hour} = action.payload;
+      const {hour} = action.payload;
 
       return {
         ...state,
         currentHour: hour,
-        confirmedHours: isDayPassed ? [] : [...state.confirmedHours],
+      };
+    }
+    case DAILY_ASSIGNMENTS_REFRESH_DAY: {
+      return {
+        ...state,
+        currentHour: 0,
+        confirmedHours: [],
       };
     }
     default: {

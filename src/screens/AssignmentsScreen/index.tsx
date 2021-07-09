@@ -39,10 +39,11 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: StatusBar.currentHeight,
-    padding: 20,
   },
   header: {
     flex: 0,
+    marginVertical: 30,
+    marginHorizontal: 20,
   },
   picker_container: {
     flex: 1,
@@ -55,6 +56,7 @@ export const styles = StyleSheet.create({
     height: '80%',
   },
   list_container: {
+    paddingHorizontal: 20,
     flex: 2,
     overflow: 'hidden',
   },

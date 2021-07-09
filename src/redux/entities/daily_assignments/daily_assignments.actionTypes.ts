@@ -1,20 +1,25 @@
 import {Medicine} from 'src/types';
 
-export const UPDATE_HOUR = 'UPDATE_HOUR';
 export const CONFIRM_CONSUMPTION = 'CONFIRM_CONSUMPTION';
+export const UNPLANNED_CONFIRM_CONSUMPTION = 'UNPLANNED_CONFIRM_CONSUMPTION';
 export const DAILY_ASSIGNMENTS_REFRESH = 'DAILY_ASSIGNMENTS_REFRESH';
+export const DAILY_ASSIGNMENTS_REFRESH_DAY = 'DAILY_ASSIGNMENTS_REFRESH_DAY';
 
-export type TypedUpdateHourAction = {
-  type: typeof UPDATE_HOUR;
-  payload: {nextHour: number};
-};
-
-export type TypedConfirmConsumptionAction = {
-  type: typeof CONFIRM_CONSUMPTION;
-  payload: {timestamp: number; hour: number; medicines: Medicine[]};
+export type TypedConfirmConsumption = {
+  type: typeof CONFIRM_CONSUMPTION | typeof UNPLANNED_CONFIRM_CONSUMPTION;
+  payload: {
+    timestamp: number;
+    hour: number;
+    updatedMedicines: {[id: string]: Medicine};
+  };
 };
 
 export type TypedDailyAssignmentsRefresh = {
   type: typeof DAILY_ASSIGNMENTS_REFRESH;
-  payload: {isDayPassed: boolean; hour: number};
+  payload: {hour: number};
+};
+
+export type TypedDailyAssignmentsRefreshDay = {
+  type: typeof DAILY_ASSIGNMENTS_REFRESH_DAY;
+  payload: {};
 };

@@ -72,7 +72,7 @@ export default ({
           />
         </View>
         <Icon
-          name={isConfirmed ? 'done' : 'alarm'}
+          name={isConfirmed ? 'done' : 'pills'}
           color={shouldShowIcon ? theme.colors.primary : 'transparent'}
         />
       </View>
