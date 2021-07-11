@@ -61,7 +61,7 @@ const useHandler = (action: ExpectedActions, state: AppStateType) => {
   }
 };
 
-const testMiddleware: Middleware<Dispatch, AppStateType> = ({getState}) => (
+const medicinesNotifications: Middleware<Dispatch, AppStateType> = ({getState}) => (
   next,
 ) => (action: ExpectedActions) => {
   const result = next(action);
@@ -71,4 +71,4 @@ const testMiddleware: Middleware<Dispatch, AppStateType> = ({getState}) => (
   return result;
 };
 
-export default testMiddleware;
+export default medicinesNotifications;
