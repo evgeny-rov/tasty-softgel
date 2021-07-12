@@ -43,7 +43,9 @@ export const dailyAssignmentsRefresh = (
   ) {
     return {
       type: DAILY_ASSIGNMENTS_REFRESH_DAY,
-      payload: {},
+      payload: {
+        hour: currentTime.getHours(),
+      },
     };
   } else {
     return {

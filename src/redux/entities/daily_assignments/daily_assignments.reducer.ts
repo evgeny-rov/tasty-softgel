@@ -51,6 +51,7 @@ export default (
       };
     }
     case DAILY_ASSIGNMENTS_REFRESH_DAY: {
+      const {hour} = action.payload;
       return {
         ...state,
         currentHour: 0,

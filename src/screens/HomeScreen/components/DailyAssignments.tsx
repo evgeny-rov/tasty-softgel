@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {dailyAssignmentsRefresh} from 'src/redux/entities/daily_assignments/daily_assignments.actions';
 import {getCurrentHour} from 'src/redux/entities/daily_assignments/daily_assignments.selectors';
-import {getDailyAssignments} from 'src/redux/entities/assignments/assignments.selectors';
+import {getDailyAssignments} from 'src/redux/entities/daily_assignments/daily_assignments.selectors';
 import DailyAssignmentsListItem from './DailyAssignmentsListItem';
 import {typography} from 'src/styles';
 

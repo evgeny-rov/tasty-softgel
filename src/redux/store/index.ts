@@ -1,7 +1,10 @@
 import {applyMiddleware, combineReducers, createStore} from 'redux';
 import {persistStore, persistReducer} from 'redux-persist';
 import AsyncStorage from '@react-native-community/async-storage';
-import {PersistConfig} from 'redux-persist/es/types';
+import {
+  PersistConfig,
+  PersistorSubscribeCallback,
+} from 'redux-persist/es/types';
 import {AppStateType} from 'src/types';
 import medicinesReducer from '../entities/medicines/medicines.reducer';
 import assignmentsReducer from '../entities/assignments/assignments.reducer';
@@ -31,4 +34,27 @@ const store = createStore(persistedReducer, applyMiddleware(appRefresh));
 
 const persistor = persistStore(store, null);
 
-export {store, persistor};
+const initPersistor = () => {
+  return new Promise((resolve, reject) => {
+    let unsubscribe: PersistorSubscribeCallback | null = null;
+
+    const handlePersistorUpdate = () => {
+      const {bootstrapped} = persistor.getState();
+
+      if (unsubscribe !== null && bootstrapped) {
+        unsubscribe();
+        resolve(null);
+      }
+    };
+
+    unsubscribe = persistor.subscribe(handlePersistorUpdate);
+    handlePersistorUpdate();
+
+    setTimeout(() => {
+      unsubscribe !== null && unsubscribe();
+      reject("Persistor didn't get bootstrapped in 15 seconds");
+    }, 15000);
+  });
+};
+
+export {store, persistor, initPersistor};

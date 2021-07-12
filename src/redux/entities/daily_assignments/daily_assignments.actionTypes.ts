@@ -21,5 +21,5 @@ export type TypedDailyAssignmentsRefresh = {
 
 export type TypedDailyAssignmentsRefreshDay = {
   type: typeof DAILY_ASSIGNMENTS_REFRESH_DAY;
-  payload: {};
+  payload: {hour: number};
 };
