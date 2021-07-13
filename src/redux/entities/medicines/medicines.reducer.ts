@@ -11,13 +11,13 @@ import {
 import {
   CONFIRM_CONSUMPTION,
   UNPLANNED_CONFIRM_CONSUMPTION,
-  TypedConfirmConsumption,
+  TypedConfirmConsumptionAction,
 } from '../daily_assignments/daily_assignments.actionTypes';
 
 type TypedAction =
   | TypedAddMedicineAction
   | TypedUpdateMedicineAction
-  | TypedConfirmConsumption
+  | TypedConfirmConsumptionAction
   | TypedRemoveMedicineAction;
 
 const initialState: MedicinesState = {

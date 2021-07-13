@@ -5,21 +5,17 @@ export const UNPLANNED_CONFIRM_CONSUMPTION = 'UNPLANNED_CONFIRM_CONSUMPTION';
 export const DAILY_ASSIGNMENTS_REFRESH = 'DAILY_ASSIGNMENTS_REFRESH';
 export const DAILY_ASSIGNMENTS_REFRESH_DAY = 'DAILY_ASSIGNMENTS_REFRESH_DAY';
 
-export type TypedConfirmConsumption = {
+export type TypedConfirmConsumptionAction = {
   type: typeof CONFIRM_CONSUMPTION | typeof UNPLANNED_CONFIRM_CONSUMPTION;
   payload: {
     timestamp: number;
     hour: number;
+    assignedMedicines: Medicine[],
     updatedMedicines: {[id: string]: Medicine};
   };
 };
 
-export type TypedDailyAssignmentsRefresh = {
-  type: typeof DAILY_ASSIGNMENTS_REFRESH;
-  payload: {hour: number};
-};
-
-export type TypedDailyAssignmentsRefreshDay = {
-  type: typeof DAILY_ASSIGNMENTS_REFRESH_DAY;
+export type TypedDailyAssignmentsRefreshAction = {
+  type: typeof DAILY_ASSIGNMENTS_REFRESH | typeof DAILY_ASSIGNMENTS_REFRESH_DAY;
   payload: {hour: number};
 };

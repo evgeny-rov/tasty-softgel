@@ -6,53 +6,45 @@ import {
   UNPLANNED_CONFIRM_CONSUMPTION,
   DAILY_ASSIGNMENTS_REFRESH,
   DAILY_ASSIGNMENTS_REFRESH_DAY,
-  TypedDailyAssignmentsRefresh,
-  TypedDailyAssignmentsRefreshDay,
-  TypedConfirmConsumption,
+  TypedDailyAssignmentsRefreshAction,
+  TypedConfirmConsumptionAction,
 } from './daily_assignments.actionTypes';
 
 export const confirmConsumption = (
   hour: number,
   medicines: Medicine[],
   isUnplanned: boolean = false,
-): TypedConfirmConsumption => {
+): TypedConfirmConsumptionAction => {
   const timestamp = Date.now();
   const updatedMedicines = getMedicinesWithSubtractedCounts(medicines);
-  const payload = {hour, updatedMedicines, timestamp};
+  const payload = {
+    hour,
+    assignedMedicines: medicines,
+    updatedMedicines,
+    timestamp,
+  };
 
-  if (isUnplanned) {
-    return {
-      type: UNPLANNED_CONFIRM_CONSUMPTION,
-      payload,
-    };
-  } else {
-    return {
-      type: CONFIRM_CONSUMPTION,
-      payload,
-    };
-  }
+  return {
+    type: isUnplanned ? UNPLANNED_CONFIRM_CONSUMPTION : CONFIRM_CONSUMPTION,
+    payload,
+  };
 };
 
 export const dailyAssignmentsRefresh = (
   lastConfirmationAt?: number,
-): TypedDailyAssignmentsRefresh | TypedDailyAssignmentsRefreshDay => {
+): TypedDailyAssignmentsRefreshAction => {
   const currentTime = new Date();
-  if (
+
+  const shouldUseRefreshDayAction =
     lastConfirmationAt &&
-    isDayPassed(lastConfirmationAt, currentTime.getTime())
-  ) {
-    return {
-      type: DAILY_ASSIGNMENTS_REFRESH_DAY,
-      payload: {
-        hour: currentTime.getHours(),
-      },
-    };
-  } else {
-    return {
-      type: DAILY_ASSIGNMENTS_REFRESH,
-      payload: {
-        hour: currentTime.getHours(),
-      },
-    };
-  }
+    isDayPassed(lastConfirmationAt, currentTime.getTime());
+
+  return {
+    type: shouldUseRefreshDayAction
+      ? DAILY_ASSIGNMENTS_REFRESH_DAY
+      : DAILY_ASSIGNMENTS_REFRESH,
+    payload: {
+      hour: currentTime.getHours(),
+    },
+  };
 };

@@ -4,15 +4,11 @@ import {
   UNPLANNED_CONFIRM_CONSUMPTION,
   DAILY_ASSIGNMENTS_REFRESH,
   DAILY_ASSIGNMENTS_REFRESH_DAY,
-  TypedDailyAssignmentsRefresh,
-  TypedDailyAssignmentsRefreshDay,
-  TypedConfirmConsumption,
+  TypedDailyAssignmentsRefreshAction,
+  TypedConfirmConsumptionAction,
 } from './daily_assignments.actionTypes';
 
-type TypedAction =
-  | TypedConfirmConsumption
-  | TypedDailyAssignmentsRefresh
-  | TypedDailyAssignmentsRefreshDay;
+type TypedAction = TypedConfirmConsumptionAction | TypedDailyAssignmentsRefreshAction;
 
 const initialState: DailyAssignmentsState = {
   currentHour: new Date().getHours(),
@@ -54,7 +50,7 @@ export default (
       const {hour} = action.payload;
       return {
         ...state,
-        currentHour: 0,
+        currentHour: hour,
         confirmedHours: [],
       };
     }

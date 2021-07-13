@@ -3,7 +3,7 @@ import {REHYDRATE} from 'redux-persist';
 import {AppStateType} from 'src/types';
 import {dailyAssignmentsRefresh} from '../entities/daily_assignments/daily_assignments.actions';
 
-const appRefresh: Middleware<Dispatch, AppStateType> = (store) => (next) => (
+const persistorRehydrationMiddleware: Middleware<Dispatch, AppStateType> = (store) => (next) => (
   action,
 ) => {
   const result = next(action);
@@ -16,4 +16,4 @@ const appRefresh: Middleware<Dispatch, AppStateType> = (store) => (next) => (
   return result;
 };
 
-export default appRefresh;
+export default persistorRehydrationMiddleware;
