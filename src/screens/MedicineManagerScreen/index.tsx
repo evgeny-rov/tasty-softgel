@@ -1,19 +1,19 @@
 import React from 'react';
-import {StatusBar, View, Text, StyleSheet} from 'react-native';
+import {View, Text} from 'react-native';
 
 import useModalMedicine from 'src/hooks/useModalMedicine';
 import Icon from '@components/Icon';
 import IconButton from '@components/IconButton';
 import MedicineList from './MedicineList';
-import {theme, typography} from '@styles/';
+import {common, theme, typography} from '@styles/';
 
 const MedicineManagerScreen = () => {
   const {showModalNewMedicine} = useModalMedicine();
 
   return (
     <>
-      <View style={styles.container}>
-        <View style={styles.header}>
+      <View style={common.styles.screen_container}>
+        <View style={common.styles.header}>
           <Text style={typography.styles.h1}>Ваши лекарства</Text>
           <IconButton onPress={showModalNewMedicine}>
             <Icon name="pills" color={theme.colors.primary} />
@@ -24,19 +24,5 @@ const MedicineManagerScreen = () => {
     </>
   );
 };
-
-export const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginHorizontal: 20,
-    marginVertical: 30,
-  },
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight,
-  },
-});
 
 export default MedicineManagerScreen;

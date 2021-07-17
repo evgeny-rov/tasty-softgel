@@ -9,6 +9,11 @@ const styles = StyleSheet.create({
   },
   h2: {
     color: theme.colors.primary,
+    fontSize: theme.size.ml,
+    fontWeight: 'bold',
+  },
+  h3: {
+    color: theme.colors.primary,
     fontSize: theme.size.m,
     fontWeight: 'bold',
   },

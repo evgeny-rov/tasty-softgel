@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {StatusBar, StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   flex: {
@@ -23,6 +23,18 @@ const styles = StyleSheet.create({
   },
   centered_vertically: {
     alignItems: 'center',
+  },
+  screen_container: {
+    marginTop: StatusBar.currentHeight,
+    flex: 1,
+    justifyContent: 'center',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: 20,
+    marginVertical: 30,
   },
   absolutely_full: {
     position: 'absolute',

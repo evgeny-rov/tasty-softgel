@@ -5,13 +5,21 @@ import {useDispatch, useSelector} from 'react-redux';
 import {dailyAssignmentsRefresh} from 'src/redux/entities/daily_assignments/daily_assignments.actions';
 import {getCurrentHour} from 'src/redux/entities/daily_assignments/daily_assignments.selectors';
 import {getDailyAssignments} from 'src/redux/entities/daily_assignments/daily_assignments.selectors';
+import useModalMedicine from 'src/hooks/useModalMedicine';
 import DailyAssignmentsListItem from './DailyAssignmentsListItem';
-import {typography} from 'src/styles';
+import EmptyState from '@components/EmptyState';
+import {common, typography} from 'src/styles';
 
-const DailyAssignments = () => {
+type Props = {
+  jumpToScreen: (key: string) => void;
+};
+
+const DailyAssignments = ({jumpToScreen}: Props) => {
+  const {showModalNewMedicine} = useModalMedicine();
   const dispatch = useDispatch();
   const assignments = useSelector(getDailyAssignments);
   const currentHour = useSelector(getCurrentHour);
+  const isInEmptyState = assignments.length === 0;
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -23,31 +31,34 @@ const DailyAssignments = () => {
     return () => clearInterval(intervalId);
   }, [currentHour]);
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={typography.styles.h1}>Ежедневный план</Text>
-      </View>
-      <View>
-        {assignments.map((assignmentData, idx) => (
-          <DailyAssignmentsListItem key={idx} {...assignmentData} />
-        ))}
-      </View>
-    </View>
-  );
+  if (!isInEmptyState) {
+    return (
+      <>
+        <View style={common.styles.header}>
+          <Text style={typography.styles.h1}>Ежедневный план</Text>
+        </View>
+        <View>
+          {assignments.map((assignmentData, idx) => (
+            <DailyAssignmentsListItem key={idx} {...assignmentData} />
+          ))}
+        </View>
+      </>
+    );
+  } else {
+    return (
+      <EmptyState
+        heading={'Ежедневный план пуст.'}
+        message={'Добавьте лекарства и назначьте время для приема'}
+        actions={[
+          {content: 'Добавить лекарство', onPress: showModalNewMedicine},
+          {
+            content: 'Назначить прием',
+            onPress: () => jumpToScreen('medicine_assignments'),
+          },
+        ]}
+      />
+    );
+  }
 };
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'rgba(255, 255, 255, 0.16)',
-    paddingTop: StatusBar.currentHeight,
-    paddingVertical: 20,
-    borderBottomRightRadius: 30,
-  },
-  header: {
-    marginHorizontal: 20,
-    marginVertical: 30,
-  },
-});
 
 export default DailyAssignments;

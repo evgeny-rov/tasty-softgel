@@ -4,16 +4,16 @@ import Picker from '@gregfrench/react-native-wheel-picker';
 
 import {HOURS_AS_TIME_STRING} from '@constants/';
 import MedicineList from './components/MedicineList';
-import {typography} from '@styles/';
+import {common, typography} from '@styles/';
 
 const AssignmentsScreen = () => {
   const [pickerSelectedHour, setPickerSelectedHour] = useState(12);
 
   return (
     <>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={typography.styles.h1}>Напоминания по часам</Text>
+      <View style={common.styles.screen_container}>
+        <View style={common.styles.header}>
+          <Text style={typography.styles.h1}>Назначить прием</Text>
         </View>
         <View style={styles.picker_container}>
           <Picker
@@ -36,28 +36,18 @@ const AssignmentsScreen = () => {
 };
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight,
-  },
-  header: {
-    flex: 0,
-    marginVertical: 30,
-    marginHorizontal: 20,
-  },
   picker_container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   picker: {
-    flex: 0,
-    width: '80%',
+    width: '100%',
     height: '80%',
   },
   list_container: {
     paddingHorizontal: 20,
-    flex: 2,
+    flex: 3,
     overflow: 'hidden',
   },
 });
