@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
   screen_container: {
     marginTop: StatusBar.currentHeight,
     flex: 1,
-    justifyContent: 'center',
   },
   header: {
     flexDirection: 'row',

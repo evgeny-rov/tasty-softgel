@@ -1,7 +1,7 @@
 import React from 'react';
-import {View, Image, Text, StyleSheet} from 'react-native';
+import {View, Image, Text, StyleSheet, Pressable} from 'react-native';
 import SizedBox from './SizedBox';
-import {common, theme, typography} from 'src/styles';
+import {theme, typography} from 'src/styles';
 
 type Action = {
   content: string;
@@ -11,67 +11,54 @@ type Action = {
 type Props = {
   heading: string;
   message: string;
-  actions?: Action[];
+  action?: Action;
+  secondaryAction?: Action;
 };
 
-const EmptyState = ({heading, message, actions}: Props) => {
-  const renderActions = () => {
-    return (
-      actions &&
-      actions.map(({content, onPress}, idx) => (
-        <View key={idx} style={{flex: idx, alignItems: 'flex-end'}}>
-          <Text style={styles.action_text} onPress={onPress}>
-            {content}
-          </Text>
-        </View>
-      ))
-    );
-  };
-
+const EmptyState = ({heading, message, action, secondaryAction}: Props) => {
+  const renderAction = ({content, onPress}: Action) => (
+    <Pressable style={styles.action_container}>
+      <Text style={styles.action_text} onPress={onPress}>
+        {content}
+      </Text>
+    </Pressable>
+  );
   return (
     <View style={styles.container}>
-      <View style={styles.section}>
-        <View style={common.styles.flex}>
-          <Text style={typography.styles.h2}>{heading}</Text>
-          <SizedBox height={5} />
-          <Text style={typography.styles.h3}>{message}</Text>
-        </View>
-        <Image
-          style={styles.image}
-          source={require('../assets/images/helper.png')}
-        />
-      </View>
+      <Image
+        style={styles.image}
+        source={require('../assets/images/helper.png')}
+      />
+      <Text style={[typography.styles.h2, styles.text_content]}>{heading}</Text>
+      <SizedBox height={5} />
+      <Text style={[typography.styles.h3, styles.text_content]}>{message}</Text>
       <SizedBox height={15} />
-      <View style={styles.actions_container}>{renderActions()}</View>
+      {action && renderAction(action)}
+      {secondaryAction && renderAction(secondaryAction)}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    maxHeight: 200,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingHorizontal: 40,
     paddingVertical: 30,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  section: {
-    ...common.styles.row,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   image: {
     resizeMode: 'contain',
     width: 60,
     height: 60,
-    marginLeft: 20,
+    margin: 20,
     opacity: 0.8,
   },
-  actions_container: {
-    flex: 1,
-    flexDirection: 'row',
+  action_container: {
+    paddingVertical: 10,
+  },
+  text_content: {
+    textAlign: 'center',
   },
   action_text: {
     ...typography.styles.body_bold,

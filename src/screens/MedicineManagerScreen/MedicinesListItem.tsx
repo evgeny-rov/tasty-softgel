@@ -11,7 +11,7 @@ interface Props {
   assignments: Assignment[];
 }
 
-const MedicineListItem = ({medicine, assignments}: Props) => {
+const MedicinesListItem = ({medicine, assignments}: Props) => {
   const {showModalUpdateMedicine} = useModalMedicine();
   const assignmentsList = assignments
     .map(({hour}) => HOURS_AS_TIME_STRING[hour])
@@ -50,4 +50,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MedicineListItem;
+export default MedicinesListItem;
