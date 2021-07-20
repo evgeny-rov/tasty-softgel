@@ -14,7 +14,7 @@ import {
 } from 'src/redux/entities/assignments/assignments.selectors';
 
 import groupMedicinesBySupply from 'src/utils/groupMedicinesBySupply';
-import {HOURS_AS_TIME_STRING} from 'src/constants';
+import {HOURS_AS_TIME_STRING, HOURS_IN_A_DAY} from 'src/constants';
 import {channelsData} from './notifications.channels';
 
 const dailyReminderBaseParams = {
@@ -102,11 +102,10 @@ export const handleRemoveAssignment = (
 export const handleMedicinesUpdates = (state: AppStateType) => {
   const medicinesSupplies = getMedicinesSuppliesByHour(state);
 
-  for (const hourKey in medicinesSupplies) {
-    const hour = Number(hourKey);
-    medicinesSupplies[hour].total > 0
-      ? createReminder(hour)
-      : cancelReminder(hour);
+  for (const hour of HOURS_IN_A_DAY) {
+    const isAssignmentsValidForReminder = medicinesSupplies[hour]?.total > 0;
+
+    isAssignmentsValidForReminder ? createReminder(hour) : cancelReminder(hour);
   }
 };
 

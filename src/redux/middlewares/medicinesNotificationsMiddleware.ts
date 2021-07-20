@@ -11,11 +11,13 @@ import {
   handleMedicinesUpdates,
   handleNewAssignment,
   handleRemoveAssignment,
-} from '../../services/notifications/notifications.medicines.manager';
+} from '../../services/notifications/notifications.medicines';
 
 import {
-  TypedUpdateMedicineAction,
+  REMOVE_MEDICINE,
   UPDATE_MEDICINE,
+  TypedUpdateMedicineAction,
+  TypedRemoveMedicineAction,
 } from 'src/redux/entities/medicines/medicines.actionTypes';
 
 import {
@@ -29,6 +31,7 @@ type ExpectedActions =
   | TypedAddAssignmentAction
   | TypedRemoveAssignmentAction
   | TypedConfirmConsumptionAction
+  | TypedRemoveMedicineAction
   | TypedUpdateMedicineAction;
 
 const triggerActionTypes = [
@@ -37,6 +40,7 @@ const triggerActionTypes = [
   UNPLANNED_CONFIRM_CONSUMPTION,
   CONFIRM_CONSUMPTION,
   UPDATE_MEDICINE,
+  REMOVE_MEDICINE,
 ] as const;
 
 const useHandler = (action: ExpectedActions, state: AppStateType) => {
@@ -54,6 +58,7 @@ const useHandler = (action: ExpectedActions, state: AppStateType) => {
       handleConfirmationAction(action.payload, state);
       break;
     }
+    case REMOVE_MEDICINE:
     case UPDATE_MEDICINE: {
       handleMedicinesUpdates(state);
       break;

@@ -10,6 +10,10 @@ import {common, typography} from '@styles/';
 import {AppStateType} from 'src/types';
 import EmptyState from '@components/EmptyState';
 
+const PICKER_DATA = HOURS_AS_TIME_STRING.map((label, hourId) => (
+  <Picker.Item key={hourId} label={label} value={hourId} />
+));
+
 const AssignmentsScreen = () => {
   const [pickerSelectedHour, setPickerSelectedHour] = useState(12);
   const {showModalNewMedicine} = useModalMedicine();
@@ -30,9 +34,7 @@ const AssignmentsScreen = () => {
               lineGradientColorTo="#FFF"
               selectedValue={pickerSelectedHour}
               onValueChange={setPickerSelectedHour}>
-              {HOURS_AS_TIME_STRING.map((value, idx) => (
-                <Picker.Item key={value} label={value} value={idx} />
-              ))}
+              {PICKER_DATA}
             </Picker>
           </View>
           <View style={styles.list_container}>
