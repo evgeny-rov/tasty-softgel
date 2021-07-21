@@ -1,66 +1,74 @@
 import React, {useState} from 'react';
-import {StatusBar, StyleSheet, Text, View} from 'react-native';
+import {useSelector} from 'react-redux';
+import {StyleSheet, Text, View} from 'react-native';
 import Picker from '@gregfrench/react-native-wheel-picker';
 
-import BgImage from '../../components/BgImage';
+import {HOURS_AS_TIME_STRING} from '@constants/';
+import useModalMedicine from 'src/hooks/useModalMedicine';
 import MedicineList from './components/MedicineList';
-import hourToTimeString from '../../utils/hourToTimeString';
-import {typography} from '@styles/';
+import {common, typography} from '@styles/';
+import {AppStateType} from 'src/types';
+import EmptyState from '@components/EmptyState';
 
-const HOURS_AS_TIME_STRING = Array.from(Array(24).keys()).map(hourToTimeString);
+const PICKER_DATA = HOURS_AS_TIME_STRING.map((label, hourId) => (
+  <Picker.Item key={hourId} label={label} value={hourId} />
+));
 
-const RemindersScreen = () => {
+const AssignmentsScreen = () => {
   const [pickerSelectedHour, setPickerSelectedHour] = useState(12);
+  const {showModalNewMedicine} = useModalMedicine();
+  const isInEmptyState =
+    useSelector((state: AppStateType) => state.medicines.allIds).length === 0;
 
-  return (
-    <>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={typography.styles.h1}>Напоминания по часам</Text>
+  if (!isInEmptyState) {
+    return (
+      <>
+        <View style={common.styles.screen_container}>
+          <View style={common.styles.header}>
+            <Text style={typography.styles.h1}>Назначить прием</Text>
+          </View>
+          <View style={styles.picker_container}>
+            <Picker
+              style={styles.picker}
+              lineGradientColorFrom="#6d676728"
+              lineGradientColorTo="#FFF"
+              selectedValue={pickerSelectedHour}
+              onValueChange={setPickerSelectedHour}>
+              {PICKER_DATA}
+            </Picker>
+          </View>
+          <View style={styles.list_container}>
+            <MedicineList pickerSelectedHour={pickerSelectedHour} />
+          </View>
         </View>
-        <View style={styles.picker_container}>
-          <Picker
-            style={styles.picker}
-            lineGradientColorFrom="#6d6767"
-            lineGradientColorTo="#FFF"
-            selectedValue={pickerSelectedHour}
-            onValueChange={setPickerSelectedHour}>
-            {HOURS_AS_TIME_STRING.map((value, idx) => (
-              <Picker.Item key={value} label={value} value={idx} />
-            ))}
-          </Picker>
-        </View>
-        <View style={styles.list_container}>
-          <MedicineList pickerSelectedHour={pickerSelectedHour} />
-        </View>
-      </View>
-    </>
-  );
+      </>
+    );
+  } else {
+    return (
+      <EmptyState
+        heading={'Сперва добавьте лекарства.'}
+        message={'Чтобы назначить время приема необходимо добавить лекарства.'}
+        action={{content: 'Добавить лекарство', onPress: showModalNewMedicine}}
+      />
+    );
+  }
 };
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight,
-    padding: 20,
-  },
-  header: {
-    flex: 0,
-  },
   picker_container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   picker: {
-    flex: 0,
-    width: '80%',
+    width: '100%',
     height: '80%',
   },
   list_container: {
-    flex: 2,
+    paddingHorizontal: 20,
+    flex: 3,
     overflow: 'hidden',
   },
 });
 
-export default RemindersScreen;
+export default AssignmentsScreen;

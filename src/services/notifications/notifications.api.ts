@@ -24,14 +24,20 @@ type initApiArguments = {
   onNotificationActions: (notification: ReceivedNotification) => void;
 };
 
+const baseParams = {
+  allowWhileIdle: true,
+  smallIcon: 'ic_notification',
+  priority: 'max',
+} as const;
+
 export const showNotification = (params: PushNotificationObject) => {
-  PushNotification.localNotification(params);
+  PushNotification.localNotification({...baseParams, ...params});
 };
 
 export const scheduleNotification = (
   params: PushNotificationScheduleObject,
 ) => {
-  PushNotification.localNotificationSchedule(params);
+  PushNotification.localNotificationSchedule({...baseParams, ...params});
 };
 
 export const cancelNotification = (tag: string, id: number, details = {}) => {

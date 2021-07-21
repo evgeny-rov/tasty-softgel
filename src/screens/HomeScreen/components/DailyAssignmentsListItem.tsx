@@ -1,24 +1,38 @@
 import React from 'react';
 import {Pressable, View, Text, StyleSheet} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppStateType, Medicine} from 'src/types';
-import {confirmConsumption} from 'src/redux/entities/consumptions/consumptions.actions';
-import hourToTimeString from 'src/utils/hourToTimeString';
+import {useDispatch} from 'react-redux';
+
+import {Medicine} from 'src/types';
+import {HOURS_AS_TIME_STRING} from '@constants/';
+import {confirmConsumption} from 'src/redux/entities/daily_assignments/daily_assignments.actions';
 import Icon from '@components/Icon';
-import {theme, typography} from 'src/styles';
+import SizedBox from '@components/SizedBox';
+import {common, theme, typography} from 'src/styles';
 
 interface Props {
   assignmentHour: number;
   medicines: Medicine[];
   isSuppliesDepleted: boolean;
+  isConfirmed: boolean;
   canBeConfirmed: boolean;
   isUIActive: boolean;
 }
+
+const MedicinesSublistItem = ({medicine}: {medicine: Medicine}) => {
+  // todo: add some kind of indicator that medicine supply is depleted, probably animation
+
+  return (
+    <View style={styles.medicine_item_container}>
+      <Text style={[typography.styles.body_bold]}>{medicine.name}</Text>
+    </View>
+  );
+};
 
 export default ({
   assignmentHour,
   medicines,
   isSuppliesDepleted,
+  isConfirmed,
   canBeConfirmed,
   isUIActive,
 }: Props) => {
@@ -34,8 +48,10 @@ export default ({
       isUIActive && canBeConfirmed ? theme.colors.accent : 'transparent',
     shadowColor:
       isUIActive && canBeConfirmed ? theme.colors.accent_dark : 'transparent',
-    opacity: isSuppliesDepleted ? 0.5 : 1,
+    opacity: isSuppliesDepleted ? 0.4 : 1,
   };
+
+  const shouldShowIcon = isConfirmed || canBeConfirmed;
 
   return (
     <Pressable
@@ -44,20 +60,25 @@ export default ({
       onPress={confirmAction}
       android_ripple={{color: theme.colors.accent}}>
       <View style={[styles.section, styles.header]}>
-        <Text style={[typography.styles.body_bold, styles.header_text]}>
-          {hourToTimeString(assignmentHour)}
-        </Text>
+        <View style={[common.styles.row, common.styles.centered_vertically]}>
+          <Text style={[typography.styles.body_bold, styles.header_text]}>
+            {HOURS_AS_TIME_STRING[assignmentHour]}
+          </Text>
+          <SizedBox width={20} />
+          <Icon
+            name="pills"
+            size={12}
+            color={isSuppliesDepleted ? theme.colors.primary : 'transparent'}
+          />
+        </View>
         <Icon
-          name="pills"
-          color={canBeConfirmed ? theme.colors.primary : 'transparent'}
-          size={20}
+          name={isConfirmed ? 'done' : 'pills'}
+          color={shouldShowIcon ? theme.colors.primary : 'transparent'}
         />
       </View>
       <View style={[styles.section, styles.medicine_list_container]}>
-        {medicines.map(({name, id}) => (
-          <View key={id} style={styles.medicine_item_container}>
-            <Text style={[typography.styles.body_bold]}>{name}</Text>
-          </View>
+        {medicines.map((medicine) => (
+          <MedicinesSublistItem key={medicine.id} medicine={medicine} />
         ))}
       </View>
     </Pressable>

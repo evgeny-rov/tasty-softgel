@@ -1,12 +1,10 @@
-export default (previousDateInMs: number) => {
+export default (prevDateInMs: number, newDateInMs: number) => {
   const oneDayInMs = 1000 * 60 * 60 * 24;
-  const timeNow = Date.now();
-
-  const previousDateHours = new Date(previousDateInMs).getHours();
-  const hoursNow = new Date(timeNow).getHours();
+  const prevDateHours = new Date(prevDateInMs).getHours();
+  const nextDateHours = new Date(newDateInMs).getHours();
 
   return (
-    previousDateHours > hoursNow ||
-    Math.abs(previousDateInMs - timeNow) >= oneDayInMs
+    prevDateHours > nextDateHours ||
+    Math.abs(prevDateInMs - newDateInMs) >= oneDayInMs
   );
 };

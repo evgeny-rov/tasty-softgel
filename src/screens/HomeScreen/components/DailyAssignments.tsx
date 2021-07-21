@@ -1,13 +1,12 @@
 import React, {useEffect} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, StatusBar} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {getDailyAssignments} from 'src/redux/entities/assignments/assignments.selectors';
-import {typography} from 'src/styles';
-import SizedBox from '@components/SizedBox';
+
+import {dailyAssignmentsRefresh} from 'src/redux/entities/daily_assignments/daily_assignments.actions';
+import {getCurrentHour} from 'src/redux/entities/daily_assignments/daily_assignments.selectors';
+import {getDailyAssignments} from 'src/redux/entities/daily_assignments/daily_assignments.selectors';
 import DailyAssignmentsListItem from './DailyAssignmentsListItem';
-import {updateHour} from 'src/redux/entities/consumptions/consumptions.actions';
-import {getCurrentHour} from 'src/redux/entities/consumptions/consumptions.selectors';
-import {StatusBar} from 'react-native';
+import {common, typography} from 'src/styles';
 
 const DailyAssignments = () => {
   const dispatch = useDispatch();
@@ -18,15 +17,15 @@ const DailyAssignments = () => {
     const intervalId = setInterval(() => {
       const currentSystemHour = new Date().getHours();
       const hourShouldUpdate = currentHour !== currentSystemHour;
-      hourShouldUpdate && dispatch(updateHour());
+      hourShouldUpdate && dispatch(dailyAssignmentsRefresh());
     }, 5000);
 
     return () => clearInterval(intervalId);
   }, [currentHour]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <View style={styles.wrapper}>
+      <View style={common.styles.header}>
         <Text style={typography.styles.h1}>Ежедневный план</Text>
       </View>
       <View>
@@ -39,15 +38,12 @@ const DailyAssignments = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'rgba(255, 255, 255, 0.16)',
+  wrapper: {
     paddingTop: StatusBar.currentHeight,
-    paddingVertical: 20,
-    borderBottomRightRadius: 30,
-  },
-  header: {
-    marginHorizontal: 20,
-    marginVertical: 30,
+    backgroundColor: '#DDF3',
+    borderBottomEndRadius: 30,
+    borderBottomStartRadius: 30,
+    paddingBottom: 30,
   },
 });
 

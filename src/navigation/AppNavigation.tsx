@@ -49,7 +49,6 @@ export default () => {
   const renderIcon = ({route, focused}: {route: Route; focused: boolean}) => (
     <Icon
       name={route.icon}
-      size={20}
       color={focused ? theme.colors.accent : theme.colors.secondary}
     />
   );

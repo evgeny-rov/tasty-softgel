@@ -3,6 +3,8 @@ package com.tastysoftgel;
 import com.facebook.react.ReactActivity;
 import org.devio.rn.splashscreen.SplashScreen;
 import android.os.Bundle;
+import android.view.View;
+import android.graphics.Color;
 
 public class MainActivity extends ReactActivity {
 
@@ -13,8 +15,15 @@ public class MainActivity extends ReactActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-      SplashScreen.show(this);
-      super.onCreate(savedInstanceState);
+    SplashScreen.show(this, true);
+
+    getWindow().getDecorView().setSystemUiVisibility(
+      View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+      | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
+    getWindow().setStatusBarColor(Color.TRANSPARENT);
+    
+    super.onCreate(savedInstanceState);
   }
 
   @Override

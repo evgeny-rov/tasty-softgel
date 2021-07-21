@@ -2,8 +2,8 @@ import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {Assignment, Medicine} from 'src/types';
 
+import {HOURS_AS_TIME_STRING} from '@constants/';
 import useModalMedicine from 'src/hooks/useModalMedicine';
-import hourToTimeString from 'src/utils/hourToTimeString';
 import {theme, typography} from '@styles/';
 
 interface Props {
@@ -11,10 +11,10 @@ interface Props {
   assignments: Assignment[];
 }
 
-const MedicineListItem = ({medicine, assignments}: Props) => {
+const MedicinesListItem = ({medicine, assignments}: Props) => {
   const {showModalUpdateMedicine} = useModalMedicine();
   const assignmentsList = assignments
-    .map(({hour}) => hourToTimeString(hour))
+    .map(({hour}) => HOURS_AS_TIME_STRING[hour])
     .join('  ');
 
   const showModal = () => showModalUpdateMedicine(medicine);
@@ -50,4 +50,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MedicineListItem;
+export default MedicinesListItem;

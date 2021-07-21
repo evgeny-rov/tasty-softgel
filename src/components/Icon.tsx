@@ -1,23 +1,25 @@
 import React from 'react';
 import {createIconSetFromIcoMoon} from 'react-native-vector-icons';
-import icoMoonConfig from '../configs/icomoonConfig.json';
+import {theme} from 'src/styles';
+import icomoonIconFontConfig from '../configs/icomoonIconFontConfig.json';
 
-const Icon = createIconSetFromIcoMoon(icoMoonConfig);
+const Icon = createIconSetFromIcoMoon(icomoonIconFontConfig);
 
 type iconNames =
   | 'pills'
   | 'error'
   | 'add'
   | 'clear'
-  | 'keyboard_arrow_down'
-  | 'keyboard_arrow_left'
-  | 'keyboard_arrow_right'
-  | 'keyboard_arrow_up'
-  | 'notifications'
-  | 'notifications_none'
+  | 'alarm'
+  | 'arrow_down'
+  | 'arrow_left'
+  | 'arrow_right'
+  | 'arrow_up'
+  | 'bell_active'
+  | 'bell_inactive'
   | 'assignment'
-  | 'home'
-  | 'quill';
+  | 'done'
+  | 'home';
 
 type Props = {
   name: iconNames;
@@ -25,6 +27,6 @@ type Props = {
   size?: number;
 };
 
-export default (props: Props) => {
-  return <Icon {...props} />;
+export default ({size, ...props}: Props) => {
+  return <Icon {...props} size={size ? size : theme.icon_size} />;
 };

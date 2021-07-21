@@ -10,8 +10,9 @@ import {
 } from './medicines.actionTypes';
 import {
   CONFIRM_CONSUMPTION,
+  UNPLANNED_CONFIRM_CONSUMPTION,
   TypedConfirmConsumptionAction,
-} from '../consumptions/consumptions.actionTypes';
+} from '../daily_assignments/daily_assignments.actionTypes';
 
 type TypedAction =
   | TypedAddMedicineAction
@@ -62,23 +63,9 @@ export default (state = initialState, action: TypedAction): MedicinesState => {
         },
       };
     }
-    case CONFIRM_CONSUMPTION: {
-      const {medicines} = action.payload;
-
-      const updatedMedicines = medicines.reduce<{[id: string]: Medicine}>(
-        (acc, {id}) => {
-          const medicine = state.byId[id];
-
-          return {
-            ...acc,
-            [medicine.id]: {
-              ...medicine,
-              count: medicine.count === 0 ? 0 : medicine.count - 1,
-            },
-          };
-        },
-        {},
-      );
+    case CONFIRM_CONSUMPTION:
+    case UNPLANNED_CONFIRM_CONSUMPTION: {
+      const {updatedMedicines} = action.payload;
 
       return {
         ...state,

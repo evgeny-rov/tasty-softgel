@@ -26,21 +26,13 @@ const AmountCounter = ({
   return (
     <>
       <RepeatedActionButton action={decrementCount}>
-        <Icon
-          name="keyboard_arrow_left"
-          color={theme.colors.primary}
-          size={20}
-        />
+        <Icon name="arrow_left" color={theme.colors.primary} />
       </RepeatedActionButton>
       <Text style={[typography.styles.h2, {paddingHorizontal: 50}]}>
         {count}
       </Text>
       <RepeatedActionButton action={incrementCount}>
-        <Icon
-          name="keyboard_arrow_right"
-          color={theme.colors.primary}
-          size={20}
-        />
+        <Icon name="arrow_right" color={theme.colors.primary} />
       </RepeatedActionButton>
     </>
   );

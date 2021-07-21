@@ -1,7 +1,7 @@
 const palette = {
   lavender: '#C7BEFF',
   dark_lavender: '#574574',
-  orange: '#FF4D8D',
+  peach: '#FFC7DB',
   red: '#FE5C5C',
   black: '#040404',
   white: '#F5F5F5',
@@ -21,17 +21,19 @@ const theme = {
     secondary: palette.gray,
     secondary_dark: palette.dark_gray,
     accent: palette.lavender,
+    accent2: palette.peach,
     accent_dark: palette.dark_lavender,
-    accent2: palette.orange,
     attention: palette.red,
   },
   size: {
     s: 8,
     sm: 11,
     m: 14,
+    ml: 18,
     l: 22,
     xl: 40,
   },
+  icon_size: 14,
   configs: {
     ripple_xs: {
       ...android_ripple_base,

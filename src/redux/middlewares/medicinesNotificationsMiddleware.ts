@@ -8,33 +8,39 @@ import {
 
 import {
   handleConfirmationAction,
-  handleUpdateMedicine,
+  handleMedicinesUpdates,
   handleNewAssignment,
   handleRemoveAssignment,
-} from './notifications.manager';
+} from '../../services/notifications/notifications.medicines';
 
 import {
-  TypedUpdateMedicineAction,
+  REMOVE_MEDICINE,
   UPDATE_MEDICINE,
+  TypedUpdateMedicineAction,
+  TypedRemoveMedicineAction,
 } from 'src/redux/entities/medicines/medicines.actionTypes';
 
 import {
   CONFIRM_CONSUMPTION,
   TypedConfirmConsumptionAction,
-} from 'src/redux/entities/consumptions/consumptions.actionTypes';
+  UNPLANNED_CONFIRM_CONSUMPTION,
+} from 'src/redux/entities/daily_assignments/daily_assignments.actionTypes';
 import {AppStateType} from 'src/types';
 
 type ExpectedActions =
   | TypedAddAssignmentAction
   | TypedRemoveAssignmentAction
   | TypedConfirmConsumptionAction
+  | TypedRemoveMedicineAction
   | TypedUpdateMedicineAction;
 
 const triggerActionTypes = [
   ADD_ASSIGNMENT,
   REMOVE_ASSIGNMENT,
+  UNPLANNED_CONFIRM_CONSUMPTION,
   CONFIRM_CONSUMPTION,
   UPDATE_MEDICINE,
+  REMOVE_MEDICINE,
 ] as const;
 
 const useHandler = (action: ExpectedActions, state: AppStateType) => {
@@ -47,12 +53,14 @@ const useHandler = (action: ExpectedActions, state: AppStateType) => {
       handleRemoveAssignment(action.payload, state);
       break;
     }
+    case UNPLANNED_CONFIRM_CONSUMPTION:
     case CONFIRM_CONSUMPTION: {
       handleConfirmationAction(action.payload, state);
       break;
     }
+    case REMOVE_MEDICINE:
     case UPDATE_MEDICINE: {
-      handleUpdateMedicine(action.payload, state);
+      handleMedicinesUpdates(state);
       break;
     }
     default: {
@@ -61,9 +69,9 @@ const useHandler = (action: ExpectedActions, state: AppStateType) => {
   }
 };
 
-const testMiddleware: Middleware<Dispatch, AppStateType> = ({getState}) => (
-  next,
-) => (action: ExpectedActions) => {
+const medicinesNotificationsMiddleware: Middleware<Dispatch, AppStateType> = ({
+  getState,
+}) => (next) => (action: ExpectedActions) => {
   const result = next(action);
 
   if (triggerActionTypes.includes(action.type)) useHandler(action, getState());
@@ -71,4 +79,4 @@ const testMiddleware: Middleware<Dispatch, AppStateType> = ({getState}) => (
   return result;
 };
 
-export default testMiddleware;
+export default medicinesNotificationsMiddleware;
