@@ -20,8 +20,8 @@ const AmountCounter = ({
   minAmount = DEFAULT_MIN_VALUE,
   maxAmount = DEFAULT_MAX_VALUE,
 }: Props) => {
-  const incrementCount = () => count < maxAmount && setCount(count + 1);
-  const decrementCount = () => count > minAmount && setCount(count - 1);
+  const incrementCount = () => setCount(Math.min(maxAmount, count + 1));
+  const decrementCount = () => setCount(Math.max(minAmount, count - 1));
 
   return (
     <>

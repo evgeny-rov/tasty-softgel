@@ -3,7 +3,6 @@ import {StyleSheet, Text, TextInput, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import Modal from 'react-native-modal';
 
-import {AppStateType} from 'src/types';
 import {
   addMedicine,
   removeMedicine,
@@ -11,11 +10,13 @@ import {
 } from 'src/redux/entities/medicines/medicines.actions';
 import useModalMedicine from 'src/hooks/useModalMedicine';
 
-import SizedBox from '@components/SizedBox';
-import {common, theme, typography} from '@styles/';
+import ModalHeader from './components/ModalHeader';
 import ModalAmountCounter from './components/ModalAmountCounter';
 import ModalButtons from './components/ModalButtons';
-import ModalHeader from './components/ModalHeader';
+import SizedBox from '@components/SizedBox';
+import {common, theme, typography} from '@styles/';
+
+import {AppStateType} from 'src/types';
 
 const MED_DEFAULT_HEADER_TITLE = 'Новое лекарство';
 const MED_DEFAULT_NAME = '';

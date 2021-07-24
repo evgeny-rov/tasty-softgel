@@ -1,11 +1,12 @@
 import React from 'react';
-import {ScrollView, View} from 'react-native';
-import FloatingActionButton from '../../components/FloatingActionButton';
-import DailyAssignments from './components/DailyAssignments';
-import useModalMedicine from 'src/hooks/useModalMedicine';
-import {SceneRendererProps} from 'react-native-tab-view';
-import EmptyState from '@components/EmptyState';
 import {useSelector} from 'react-redux';
+import {ScrollView} from 'react-native';
+import {SceneRendererProps} from 'react-native-tab-view';
+
+import useModalMedicine from 'src/hooks/useModalMedicine';
+import DailyAssignments from './components/DailyAssignments';
+import FloatingActionButton from '@components/FloatingActionButton';
+import EmptyState from '@components/EmptyState';
 import {AppStateType} from 'src/types';
 
 const HomeScreen = ({jumpTo}: SceneRendererProps) => {

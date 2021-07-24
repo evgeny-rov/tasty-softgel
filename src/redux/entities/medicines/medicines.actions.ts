@@ -1,5 +1,4 @@
 import {nanoid} from '@reduxjs/toolkit';
-import {Medicine} from 'src/types';
 import {
   ADD_MEDICINE,
   REMOVE_MEDICINE,
@@ -8,6 +7,7 @@ import {
   TypedRemoveMedicineAction,
   TypedUpdateMedicineAction,
 } from './medicines.actionTypes';
+import {Medicine} from 'src/types';
 
 export const addMedicine = ({
   name,

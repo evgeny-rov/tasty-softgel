@@ -1,4 +1,3 @@
-import {Medicine} from 'src/types';
 import getMedicinesWithSubtractedCounts from 'src/utils/getMedicinesWithSubtractedCounts';
 import isDayPassed from 'src/utils/isDayPassed';
 import {
@@ -9,6 +8,7 @@ import {
   TypedDailyAssignmentsRefreshAction,
   TypedConfirmConsumptionAction,
 } from './daily_assignments.actionTypes';
+import {Medicine} from 'src/types';
 
 export const confirmConsumption = (
   hour: number,

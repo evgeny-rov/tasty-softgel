@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect';
-import {AppStateType} from 'src/types';
 import {getAssignmentsByMedicineId} from '../assignments/assignments.selectors';
+import {AppStateType} from 'src/types';
 
 const getIds = (state: AppStateType) => state.medicines.allIds;
 const getMedicines = (state: AppStateType) => state.medicines.byId;

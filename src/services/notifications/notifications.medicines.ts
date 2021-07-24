@@ -1,21 +1,20 @@
-import {AppStateType, Medicine} from 'src/types';
-import {
-  TypedAddAssignmentAction,
-  TypedRemoveAssignmentAction,
-} from 'src/redux/entities/assignments/assignments.actionTypes';
-import {TypedConfirmConsumptionAction} from 'src/redux/entities/daily_assignments/daily_assignments.actionTypes';
-
 import * as Notifications from './notifications.api';
-import getAvailableDateFromHour from 'src/utils/getAvailableDateFromHour';
+import {HOURS_AS_TIME_STRING, HOURS_IN_A_DAY} from 'src/constants';
+import {channelsData} from './notifications.channels';
 
+import getAvailableDateFromHour from 'src/utils/getAvailableDateFromHour';
 import {
   getAssignmentsByHour,
   getMedicinesSuppliesByHour,
 } from 'src/redux/entities/assignments/assignments.selectors';
-
 import groupMedicinesBySupply from 'src/utils/groupMedicinesBySupply';
-import {HOURS_AS_TIME_STRING, HOURS_IN_A_DAY} from 'src/constants';
-import {channelsData} from './notifications.channels';
+
+import {TypedConfirmConsumptionAction} from 'src/redux/entities/daily_assignments/daily_assignments.actionTypes';
+import {
+  TypedAddAssignmentAction,
+  TypedRemoveAssignmentAction,
+} from 'src/redux/entities/assignments/assignments.actionTypes';
+import {AppStateType, Medicine} from 'src/types';
 
 const dailyReminderBaseParams = {
   channelId: channelsData.byId.daily_notifications.channelId,

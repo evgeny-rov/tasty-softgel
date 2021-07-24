@@ -1,7 +1,7 @@
 import {createSelector} from 'reselect';
-import {AppStateType} from 'src/types';
 import {groupBy, mapValues} from 'lodash';
 import groupMedicinesBySupply from 'src/utils/groupMedicinesBySupply';
+import {AppStateType} from 'src/types';
 
 const getMedicines = (state: AppStateType) => state.medicines.byId;
 const getAssignments = (state: AppStateType) => state.assignments.byId;

@@ -1,5 +1,4 @@
 import {pickBy} from 'lodash';
-import {AssignmentsState} from 'src/types';
 import {
   ADD_ASSIGNMENT,
   REMOVE_ASSIGNMENT,
@@ -10,6 +9,7 @@ import {
   REMOVE_MEDICINE,
   TypedRemoveMedicineAction,
 } from '../medicines/medicines.actionTypes';
+import {AssignmentsState} from 'src/types';
 
 type TypedActions =
   | TypedAddAssignmentAction

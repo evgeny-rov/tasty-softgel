@@ -4,9 +4,9 @@ import {useSelector} from 'react-redux';
 
 import useModalMedicine from 'src/hooks/useModalMedicine';
 import {getMedicinesWithAssignmentsHours} from 'src/redux/entities/medicines/medicines.selectors';
+import MedicinesListItem from './MedicinesListItem';
 import Icon from '@components/Icon';
 import IconButton from '@components/IconButton';
-import MedicinesListItem from './MedicinesListItem';
 import {common, theme, typography} from 'src/styles';
 
 const MedicinesList = () => {

@@ -1,10 +1,10 @@
-import {ModalMedicineState} from 'src/types';
 import {
   HIDE_MODAL_MEDICINE,
   SHOW_MODAL_MEDICINE,
   TypedHideModalMedicineAction,
   TypedShowModalMedicineAction,
 } from './modal_medicine.actionTypes';
+import {ModalMedicineState} from 'src/types';
 
 type TypedAction = TypedShowModalMedicineAction | TypedHideModalMedicineAction;
 

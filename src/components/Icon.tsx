@@ -1,7 +1,7 @@
 import React from 'react';
 import {createIconSetFromIcoMoon} from 'react-native-vector-icons';
-import {theme} from 'src/styles';
 import icomoonIconFontConfig from '../configs/icomoonIconFontConfig.json';
+import {theme} from 'src/styles';
 
 const Icon = createIconSetFromIcoMoon(icomoonIconFontConfig);
 

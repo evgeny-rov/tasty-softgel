@@ -1,5 +1,4 @@
 import {pickBy, without} from 'lodash';
-import {Medicine, MedicinesState} from 'src/types';
 import {
   TypedAddMedicineAction,
   TypedRemoveMedicineAction,
@@ -13,6 +12,7 @@ import {
   UNPLANNED_CONFIRM_CONSUMPTION,
   TypedConfirmConsumptionAction,
 } from '../daily_assignments/daily_assignments.actionTypes';
+import {MedicinesState} from 'src/types';
 
 type TypedAction =
   | TypedAddMedicineAction

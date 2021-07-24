@@ -2,12 +2,12 @@ import React from 'react';
 import {Pressable, View, Text, StyleSheet} from 'react-native';
 import {useDispatch} from 'react-redux';
 
-import {Medicine} from 'src/types';
 import {HOURS_AS_TIME_STRING} from '@constants/';
 import {confirmConsumption} from 'src/redux/entities/daily_assignments/daily_assignments.actions';
 import Icon from '@components/Icon';
 import SizedBox from '@components/SizedBox';
 import {common, theme, typography} from 'src/styles';
+import {Medicine} from 'src/types';
 
 interface Props {
   assignmentHour: number;

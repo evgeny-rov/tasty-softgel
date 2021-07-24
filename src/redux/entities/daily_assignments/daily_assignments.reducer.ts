@@ -1,4 +1,3 @@
-import {DailyAssignmentsState} from 'src/types';
 import {
   CONFIRM_CONSUMPTION,
   UNPLANNED_CONFIRM_CONSUMPTION,
@@ -7,8 +6,11 @@ import {
   TypedDailyAssignmentsRefreshAction,
   TypedConfirmConsumptionAction,
 } from './daily_assignments.actionTypes';
+import {DailyAssignmentsState} from 'src/types';
 
-type TypedAction = TypedConfirmConsumptionAction | TypedDailyAssignmentsRefreshAction;
+type TypedAction =
+  | TypedConfirmConsumptionAction
+  | TypedDailyAssignmentsRefreshAction;
 
 const initialState: DailyAssignmentsState = {
   currentHour: new Date().getHours(),

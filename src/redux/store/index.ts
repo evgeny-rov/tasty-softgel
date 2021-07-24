@@ -1,12 +1,12 @@
 import {applyMiddleware, combineReducers, createStore} from 'redux';
 import {persistStore, persistReducer} from 'redux-persist';
-import {AppStateType} from 'src/types';
 import medicinesReducer from '../entities/medicines/medicines.reducer';
 import assignmentsReducer from '../entities/assignments/assignments.reducer';
 import consumptionsReducer from '../entities/daily_assignments/daily_assignments.reducer';
 import modalMedicineReducer from '../entities/modal_medicine/modal_medicine.reducer';
 import {persistConfig} from './persistor';
 import {middlewares} from '../middlewares';
+import {AppStateType} from 'src/types';
 
 const rootReducer = combineReducers<AppStateType>({
   medicines: medicinesReducer,

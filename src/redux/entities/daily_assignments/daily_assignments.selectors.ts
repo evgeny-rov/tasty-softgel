@@ -1,9 +1,9 @@
 import {createSelector} from 'reselect';
-import {AppStateType} from 'src/types';
 import {
   getAssignmentsWithMedicines,
   getMedicinesSuppliesByHour,
 } from '../assignments/assignments.selectors';
+import {AppStateType} from 'src/types';
 
 export const getCurrentHour = (state: AppStateType) =>
   state.daily_assignments.currentHour;

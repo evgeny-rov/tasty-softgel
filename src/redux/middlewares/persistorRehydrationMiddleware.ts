@@ -1,11 +1,11 @@
 import {Middleware, Dispatch} from 'redux';
 import {REHYDRATE} from 'redux-persist';
-import {AppStateType} from 'src/types';
 import {dailyAssignmentsRefresh} from '../entities/daily_assignments/daily_assignments.actions';
+import {AppStateType} from 'src/types';
 
-const persistorRehydrationMiddleware: Middleware<Dispatch, AppStateType> = (store) => (next) => (
-  action,
-) => {
+const persistorRehydrationMiddleware: Middleware<Dispatch, AppStateType> = (
+  store,
+) => (next) => (action) => {
   const result = next(action);
 
   if (action.type === REHYDRATE) {

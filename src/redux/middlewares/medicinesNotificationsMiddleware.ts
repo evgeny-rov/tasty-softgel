@@ -1,10 +1,4 @@
 import {Dispatch, Middleware} from 'redux';
-import {
-  ADD_ASSIGNMENT,
-  REMOVE_ASSIGNMENT,
-  TypedAddAssignmentAction,
-  TypedRemoveAssignmentAction,
-} from 'src/redux/entities/assignments/assignments.actionTypes';
 
 import {
   handleConfirmationAction,
@@ -12,6 +6,13 @@ import {
   handleNewAssignment,
   handleRemoveAssignment,
 } from '../../services/notifications/notifications.medicines';
+
+import {
+  ADD_ASSIGNMENT,
+  REMOVE_ASSIGNMENT,
+  TypedAddAssignmentAction,
+  TypedRemoveAssignmentAction,
+} from 'src/redux/entities/assignments/assignments.actionTypes';
 
 import {
   REMOVE_MEDICINE,

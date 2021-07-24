@@ -1,10 +1,10 @@
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
-import {Assignment, Medicine} from 'src/types';
 
 import {HOURS_AS_TIME_STRING} from '@constants/';
 import useModalMedicine from 'src/hooks/useModalMedicine';
 import {theme, typography} from '@styles/';
+import {Assignment, Medicine} from 'src/types';
 
 interface Props {
   medicine: Medicine;

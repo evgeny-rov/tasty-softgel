@@ -5,10 +5,11 @@ import Picker from '@gregfrench/react-native-wheel-picker';
 
 import {HOURS_AS_TIME_STRING} from '@constants/';
 import useModalMedicine from 'src/hooks/useModalMedicine';
+
 import MedicineList from './components/MedicineList';
+import EmptyState from '@components/EmptyState';
 import {common, typography} from '@styles/';
 import {AppStateType} from 'src/types';
-import EmptyState from '@components/EmptyState';
 
 const PICKER_DATA = HOURS_AS_TIME_STRING.map((label, hourId) => (
   <Picker.Item key={hourId} label={label} value={hourId} />

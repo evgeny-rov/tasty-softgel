@@ -2,11 +2,11 @@ import React from 'react';
 import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
-import {AppStateType} from 'src/types';
-import EmptyState from '@components/EmptyState';
 import useModalMedicine from 'src/hooks/useModalMedicine';
 import MedicinesList from './MedicinesList';
+import EmptyState from '@components/EmptyState';
 import {common} from '@styles/';
+import {AppStateType} from 'src/types';
 
 const MedicineManagerScreen = () => {
   const {showModalNewMedicine} = useModalMedicine();

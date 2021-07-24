@@ -1,13 +1,13 @@
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {useDispatch} from 'react-redux';
-import {Medicine, Assignment} from 'src/types';
-import {common, theme, typography} from '@styles/';
 import {
   addAssignment,
   removeAssignment,
 } from 'src/redux/entities/assignments/assignments.actions';
 import Icon from '@components/Icon';
+import {common, theme, typography} from '@styles/';
+import {Medicine, Assignment} from 'src/types';
 
 type Props = {
   medicine: Medicine;
