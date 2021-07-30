@@ -27,23 +27,18 @@ export const getDailyAssignments = createSelector(
       const assignmentHour = Number(hourId);
       const medicines = assignmentsWithMedicines[hourId];
       const isSuppliesDepleted = medicinesSupplies[hourId].total < 1;
-      const isConfirmed = getConfirmedDailyAssignmentsHours.includes(
+      const canBeConfirmed = !isSuppliesDepleted;
+      const isAlreadyConfirmed = getConfirmedDailyAssignmentsHours.includes(
         assignmentHour,
       );
-      const canBeConfirmed =
-        !isSuppliesDepleted &&
-        !isConfirmed &&
-        assignmentHour <= currentDailyAssignmentsHour;
-      const isUIActive =
-        !isSuppliesDepleted && assignmentHour === currentDailyAssignmentsHour;
 
       return {
         assignmentHour,
         medicines,
         isSuppliesDepleted,
-        isConfirmed,
+        isAlreadyConfirmed,
         canBeConfirmed,
-        isUIActive,
+        currentDailyAssignmentsHour,
       };
     }),
 );

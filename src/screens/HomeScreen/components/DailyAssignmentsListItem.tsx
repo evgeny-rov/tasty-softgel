@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Pressable, View, Text, StyleSheet} from 'react-native';
 import {useDispatch} from 'react-redux';
+import FlipCard from 'react-native-flip-card';
 
 import {HOURS_AS_TIME_STRING} from '@constants/';
 import {confirmConsumption} from 'src/redux/entities/daily_assignments/daily_assignments.actions';
@@ -13,9 +14,9 @@ interface Props {
   assignmentHour: number;
   medicines: Medicine[];
   isSuppliesDepleted: boolean;
-  isConfirmed: boolean;
   canBeConfirmed: boolean;
-  isUIActive: boolean;
+  isAlreadyConfirmed: boolean;
+  currentDailyAssignmentsHour: number;
 }
 
 const MedicinesSublistItem = ({medicine}: {medicine: Medicine}) => {
@@ -29,51 +30,50 @@ const MedicinesSublistItem = ({medicine}: {medicine: Medicine}) => {
 };
 
 export default ({
-  assignmentHour,
   medicines,
   isSuppliesDepleted,
-  isConfirmed,
+  assignmentHour,
   canBeConfirmed,
-  isUIActive,
+  isAlreadyConfirmed,
+  currentDailyAssignmentsHour,
 }: Props) => {
   const dispatch = useDispatch();
+  const [isCardFlipped, setIsCardFlipped] = useState(false);
 
-  const confirmAction = () =>
-    dispatch(confirmConsumption(assignmentHour, medicines));
-
-  const aggregatedContainerStyles = {
-    ...styles.container,
-    ...styles.container_shadow,
-    backgroundColor:
-      isUIActive && canBeConfirmed ? theme.colors.accent : 'transparent',
-    shadowColor:
-      isUIActive && canBeConfirmed ? theme.colors.accent_dark : 'transparent',
-    opacity: isSuppliesDepleted ? 0.4 : 1,
+  const confirmAction = () => {
+    dispatch(
+      confirmConsumption(
+        assignmentHour,
+        medicines,
+        assignmentHour > currentDailyAssignmentsHour,
+      ),
+    );
+    setIsCardFlipped(false);
   };
 
-  const shouldShowIcon = isConfirmed || canBeConfirmed;
+  const shouldShowStatusIcon = canBeConfirmed || isAlreadyConfirmed;
 
-  return (
+  const CardFrontSide = () => (
     <Pressable
-      style={aggregatedContainerStyles}
       disabled={!canBeConfirmed}
-      onPress={confirmAction}
-      android_ripple={{color: theme.colors.accent}}>
-      <View style={[styles.section, styles.header]}>
+      onPress={() => setIsCardFlipped(true)}>
+      <View style={[styles.section, styles.status]}>
         <View style={[common.styles.row, common.styles.centered_vertically]}>
-          <Text style={[typography.styles.body_bold, styles.header_text]}>
+          <Text style={styles.header_text}>
             {HOURS_AS_TIME_STRING[assignmentHour]}
           </Text>
-          <SizedBox width={20} />
-          <Icon
-            name="pills"
-            size={12}
-            color={isSuppliesDepleted ? theme.colors.primary : 'transparent'}
-          />
+          {isSuppliesDepleted && (
+            <Text
+              style={[styles.header_text, {marginLeft: 20}]}
+              adjustsFontSizeToFit>
+              Лекарства закончились
+            </Text>
+          )}
         </View>
+        <SizedBox height={0.5} style={styles.header_line} />
         <Icon
-          name={isConfirmed ? 'done' : 'pills'}
-          color={shouldShowIcon ? theme.colors.primary : 'transparent'}
+          name={isAlreadyConfirmed ? 'done' : 'pills'}
+          color={shouldShowStatusIcon ? theme.colors.primary : 'transparent'}
         />
       </View>
       <View style={[styles.section, styles.medicine_list_container]}>
@@ -83,30 +83,70 @@ export default ({
       </View>
     </Pressable>
   );
+
+  // to-do > add flip icon on the backside
+  const CardBackSide = () => (
+    <Pressable onPress={() => setIsCardFlipped(false)}>
+      <View style={[styles.section, styles.status]}>
+        <View style={[common.styles.row, common.styles.centered_vertically]}>
+          <Text style={styles.header_text}>
+            {HOURS_AS_TIME_STRING[assignmentHour]}
+          </Text>
+        </View>
+        <Icon name={'arrow_up'} color={theme.colors.primary} />
+      </View>
+      <View style={styles.section}>
+        <Pressable onPress={confirmAction}>
+          <Text
+            adjustsFontSizeToFit
+            numberOfLines={1}
+            style={[
+              typography.styles.body_bold,
+              {color: theme.colors.accent2},
+            ]}>
+            Подтвердить прием
+          </Text>
+        </Pressable>
+      </View>
+    </Pressable>
+  );
+
+  return (
+    <FlipCard
+      flip={isCardFlipped}
+      clickable={false}
+      alignHeight
+      flipVertical
+      friction={15}
+      style={[styles.container, {opacity: isSuppliesDepleted ? 0.5 : 1}]}>
+      <CardFrontSide />
+      <CardBackSide />
+    </FlipCard>
+  );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 25,
-    paddingVertical: 5,
-  },
-  container_shadow: {
-    elevation: 10,
-    shadowOffset: {width: 0, height: 2},
-    shadowRadius: 3.84,
-    shadowOpacity: 1,
+    paddingVertical: 10,
   },
   section: {
     marginVertical: 5,
     flexDirection: 'row',
     alignItems: 'center',
   },
-  header: {
+  status: {
     justifyContent: 'space-between',
   },
   header_text: {
+    ...typography.styles.body_bold,
     fontSize: 12,
+  },
+  header_line: {
+    flex: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    marginHorizontal: 20,
   },
   medicine_list_container: {
     flexWrap: 'wrap',
