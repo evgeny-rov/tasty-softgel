@@ -47,6 +47,9 @@ const theme = {
       ...android_ripple_base,
       radius: 45,
     },
+    full: {
+      color: palette.peach,
+    },
     ripple_contained: {
       ...android_ripple_base,
       radius: 30,

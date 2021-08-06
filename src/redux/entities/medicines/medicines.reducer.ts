@@ -13,6 +13,7 @@ import {
   TypedConfirmConsumptionAction,
 } from '../daily_assignments/daily_assignments.actionTypes';
 import {MedicinesState} from 'src/types';
+import getMedicinesWithSubtractedCounts from 'src/utils/getMedicinesWithSubtractedCounts';
 
 type TypedAction =
   | TypedAddMedicineAction
@@ -65,7 +66,8 @@ export default (state = initialState, action: TypedAction): MedicinesState => {
     }
     case CONFIRM_CONSUMPTION:
     case UNPLANNED_CONFIRM_CONSUMPTION: {
-      const {updatedMedicines} = action.payload;
+      const {medicines} = action.payload;
+      const updatedMedicines = getMedicinesWithSubtractedCounts(medicines);
 
       return {
         ...state,

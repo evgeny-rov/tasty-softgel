@@ -8,7 +8,7 @@ import EmptyState from '@components/EmptyState';
 import {common} from '@styles/';
 import {AppStateType} from 'src/types';
 
-const MedicineManagerScreen = () => {
+const MedicinesScreen = () => {
   const {showModalNewMedicine} = useModalMedicine();
   const isInEmptyState =
     useSelector((state: AppStateType) => state.medicines.allIds).length === 0;
@@ -30,4 +30,4 @@ const MedicineManagerScreen = () => {
   }
 };
 
-export default MedicineManagerScreen;
+export default React.memo(MedicinesScreen);

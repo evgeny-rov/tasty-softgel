@@ -15,6 +15,7 @@ import {
   TypedRemoveAssignmentAction,
 } from 'src/redux/entities/assignments/assignments.actionTypes';
 import {AppStateType, Medicine} from 'src/types';
+import {getConfirmableMedicinesByHour} from 'src/redux/entities/medicines/medicines.selectors';
 
 const dailyReminderBaseParams = {
   channelId: channelsData.byId.daily_notifications.channelId,
@@ -99,10 +100,12 @@ export const handleRemoveAssignment = (
 };
 
 export const handleMedicinesUpdates = (state: AppStateType) => {
-  const medicinesSupplies = getMedicinesSuppliesByHour(state);
+  const confirmableMedicinesByHour = getConfirmableMedicinesByHour(state);
 
   for (const hour of HOURS_IN_A_DAY) {
-    const isAssignmentsValidForReminder = medicinesSupplies[hour]?.total > 0;
+    const isAssignmentsValidForReminder =
+      confirmableMedicinesByHour[hour] &&
+      confirmableMedicinesByHour[hour].length > 0;
 
     isAssignmentsValidForReminder ? createReminder(hour) : cancelReminder(hour);
   }
@@ -112,9 +115,11 @@ export const handleConfirmationAction = (
   payload: TypedConfirmConsumptionAction['payload'],
   state: AppStateType,
 ) => {
-  const {assignedMedicines, hour} = payload;
+  const {medicines, hour} = payload;
+
+  console.log(medicines);
 
   cancelReminder(hour);
-  issueLowSupplyNotifications(assignedMedicines);
+  issueLowSupplyNotifications(medicines);
   handleMedicinesUpdates(state);
 };

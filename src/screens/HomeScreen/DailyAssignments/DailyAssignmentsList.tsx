@@ -1,14 +1,13 @@
 import React, {useEffect} from 'react';
-import {View, Text, StyleSheet, StatusBar} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {dailyAssignmentsRefresh} from 'src/redux/entities/daily_assignments/daily_assignments.actions';
 import {getCurrentHour} from 'src/redux/entities/daily_assignments/daily_assignments.selectors';
 import {getDailyAssignments} from 'src/redux/entities/daily_assignments/daily_assignments.selectors';
 import DailyAssignmentsListItem from './DailyAssignmentsListItem';
-import {common, typography} from 'src/styles';
 
-const DailyAssignments = () => {
+const DailyAssignmentsList = () => {
   const dispatch = useDispatch();
   const assignments = useSelector(getDailyAssignments);
   const currentHour = useSelector(getCurrentHour);
@@ -24,27 +23,21 @@ const DailyAssignments = () => {
   }, [currentHour]);
 
   return (
-    <View style={styles.wrapper}>
-      <View style={common.styles.header}>
-        <Text style={typography.styles.h1}>Ежедневный план</Text>
-      </View>
-      <View>
-        {assignments.map((assignmentData, idx) => (
-          <DailyAssignmentsListItem key={idx} {...assignmentData} />
-        ))}
-      </View>
+    <View style={styles.container}>
+      {assignments.map((assignmentData) => (
+        <DailyAssignmentsListItem
+          key={assignmentData.assignmentHour}
+          {...assignmentData}
+        />
+      ))}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  wrapper: {
-    paddingTop: StatusBar.currentHeight,
-    backgroundColor: '#DDF3',
-    borderBottomEndRadius: 30,
-    borderBottomStartRadius: 30,
-    paddingBottom: 30,
+  container: {
+    marginHorizontal: 20,
   },
 });
 
-export default DailyAssignments;
+export default DailyAssignmentsList;

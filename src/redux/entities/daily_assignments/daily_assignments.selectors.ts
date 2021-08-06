@@ -1,9 +1,6 @@
 import {createSelector} from 'reselect';
-import {
-  getAssignmentsWithMedicines,
-  getMedicinesSuppliesByHour,
-} from '../assignments/assignments.selectors';
 import {AppStateType} from 'src/types';
+import {getConfirmableMedicinesByHour} from '../medicines/medicines.selectors';
 
 export const getCurrentHour = (state: AppStateType) =>
   state.daily_assignments.currentHour;
@@ -12,33 +9,24 @@ export const getConfirmedDailyAssignmentsHours = (state: AppStateType) =>
 
 export const getDailyAssignments = createSelector(
   [
-    getAssignmentsWithMedicines,
-    getMedicinesSuppliesByHour,
+    getConfirmableMedicinesByHour,
     getCurrentHour,
     getConfirmedDailyAssignmentsHours,
   ],
-  (
-    assignmentsWithMedicines,
-    medicinesSupplies,
-    currentDailyAssignmentsHour,
-    getConfirmedDailyAssignmentsHours,
-  ) =>
-    Object.keys(assignmentsWithMedicines).map((hourId) => {
+  (confirmableMedicinesByHour, currentHour, confirmedAssignments) =>
+    Object.keys(confirmableMedicinesByHour).map((hourId) => {
       const assignmentHour = Number(hourId);
-      const medicines = assignmentsWithMedicines[hourId];
-      const isSuppliesDepleted = medicinesSupplies[hourId].total < 1;
-      const canBeConfirmed = !isSuppliesDepleted;
-      const isAlreadyConfirmed = getConfirmedDailyAssignmentsHours.includes(
-        assignmentHour,
-      );
+      const medicines = confirmableMedicinesByHour[hourId];
+      const isSuppliesDepleted = medicines.length === 0;
+      const isInactive = isSuppliesDepleted || assignmentHour > currentHour;
+      const isAlreadyConfirmed = confirmedAssignments.includes(assignmentHour);
 
       return {
         assignmentHour,
-        medicines,
-        isSuppliesDepleted,
         isAlreadyConfirmed,
-        canBeConfirmed,
-        currentDailyAssignmentsHour,
+        isSuppliesDepleted,
+        isInactive,
+        medicines,
       };
     }),
 );

@@ -1,83 +1,83 @@
 import React, {useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import {
   NavigationState,
-  SceneMap,
   SceneRendererProps,
   TabBar,
   TabView,
 } from 'react-native-tab-view';
 
 import HomeScreen from '../screens/HomeScreen';
-import MedicineManagerScreen from '../screens/MedicineManagerScreen';
+import MedicinesScreen from '../screens/MedicinesScreen';
 import AssignmentsScreen from '../screens/AssignmentsScreen';
 import Icon from '@components/Icon';
 import {theme} from 'src/styles';
 
 type Route = {
-  key: string;
+  key: 'home' | 'medicine_manager' | 'medicine_assignments';
   icon: React.ComponentProps<typeof Icon>['name'];
 };
 
-type State = NavigationState<Route>;
+export type jumpTo = (key: Route['key']) => void;
 
-const initialNavigationState: State = {
-  index: 0,
-  routes: [
-    {key: 'home', icon: 'home'},
-    {key: 'medicine_manager', icon: 'pills'},
-    {
-      key: 'medicine_assignments',
-      icon: 'assignment',
-    },
-  ],
+export type ScreenProps = {jumpTo: jumpTo};
+
+const routes: Route[] = [
+  {key: 'home', icon: 'home'},
+  {key: 'medicine_manager', icon: 'pills'},
+  {
+    key: 'medicine_assignments',
+    icon: 'assignment',
+  },
+];
+
+const renderScene = ({route, jumpTo}: {route: Route; jumpTo: jumpTo}) => {
+  switch (route.key) {
+    case 'home':
+      return <HomeScreen jumpTo={jumpTo} />;
+    case 'medicine_manager':
+      return <MedicinesScreen jumpTo={jumpTo} />;
+    case 'medicine_assignments':
+      return <AssignmentsScreen jumpTo={jumpTo} />;
+    default:
+      return null;
+  }
 };
 
-const renderScene = SceneMap({
-  home: HomeScreen,
-  medicine_manager: MedicineManagerScreen,
-  medicine_assignments: AssignmentsScreen,
-});
+const renderIcon = ({route, color}: {route: Route; color: string}) => {
+  return <Icon name={route.icon} color={color} />;
+};
 
-export default () => {
-  const [state, setState] = useState<State>(initialNavigationState);
-
-  const handleIndexChange = (index: number) => {
-    setState({...state, index});
-  };
-
-  const renderIcon = ({route, focused}: {route: Route; focused: boolean}) => (
-    <Icon
-      name={route.icon}
-      color={focused ? theme.colors.accent : theme.colors.secondary}
-    />
-  );
-
-  const renderTabBar = (
-    props: SceneRendererProps & {navigationState: State},
-  ) => (
+const renderTabBar = (
+  props: SceneRendererProps & {navigationState: NavigationState<Route>},
+) => {
+  return (
     <TabBar
       {...props}
       pressColor={theme.colors.accent}
       renderLabel={() => null}
       renderIndicator={() => null}
+      activeColor={theme.colors.accent}
+      inactiveColor={theme.colors.primary}
+      renderIcon={renderIcon}
       contentContainerStyle={styles.tabbar_content_container}
       style={styles.tabbar}
-      renderIcon={renderIcon}
     />
   );
+};
+
+const AppNavigation = () => {
+  const [index, setIndex] = useState(0);
 
   return (
-    <>
-      <TabView
-        lazyPreloadDistance={3}
-        navigationState={state}
-        onIndexChange={handleIndexChange}
-        // lazy={false}
-        renderScene={renderScene}
-        renderTabBar={renderTabBar}
-        tabBarPosition="bottom"></TabView>
-    </>
+    <TabView
+      navigationState={{index, routes}}
+      onIndexChange={setIndex}
+      initialLayout={{width: Dimensions.get('window').width}}
+      renderScene={renderScene}
+      renderTabBar={renderTabBar}
+      tabBarPosition="bottom"
+    />
   );
 };
 
@@ -90,3 +90,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+export default AppNavigation;

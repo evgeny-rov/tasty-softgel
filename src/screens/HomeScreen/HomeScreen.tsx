@@ -1,15 +1,16 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
-import {ScrollView} from 'react-native';
-import {SceneRendererProps} from 'react-native-tab-view';
+import {ScrollView, Text, View} from 'react-native';
 
 import useModalMedicine from 'src/hooks/useModalMedicine';
-import DailyAssignments from './components/DailyAssignments';
+import DailyAssignmentsList from './DailyAssignments/';
 import FloatingActionButton from '@components/FloatingActionButton';
 import EmptyState from '@components/EmptyState';
 import {AppStateType} from 'src/types';
+import {ScreenProps} from 'src/navigation/AppNavigation';
+import {common, typography} from 'src/styles';
 
-const HomeScreen = ({jumpTo}: SceneRendererProps) => {
+const HomeScreen = ({jumpTo}: ScreenProps) => {
   const {showModalNewMedicine} = useModalMedicine();
   const isInEmptyState =
     useSelector((state: AppStateType) => Object.keys(state.assignments.byId))
@@ -17,12 +18,15 @@ const HomeScreen = ({jumpTo}: SceneRendererProps) => {
 
   if (!isInEmptyState) {
     return (
-      <>
+      <View style={common.styles.screen_container}>
         <ScrollView>
-          <DailyAssignments />
+          <View style={common.styles.header}>
+            <Text style={typography.styles.h1}>Ежедневный план</Text>
+          </View>
+          <DailyAssignmentsList />
         </ScrollView>
         <FloatingActionButton onPress={showModalNewMedicine} />
-      </>
+      </View>
     );
   } else {
     return (
@@ -42,4 +46,4 @@ const HomeScreen = ({jumpTo}: SceneRendererProps) => {
   }
 };
 
-export default HomeScreen;
+export default React.memo(HomeScreen);

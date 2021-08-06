@@ -66,4 +66,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EmptyState;
+export default React.memo(EmptyState);

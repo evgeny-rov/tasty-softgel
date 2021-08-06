@@ -1,4 +1,4 @@
-import getMedicinesWithSubtractedCounts from 'src/utils/getMedicinesWithSubtractedCounts';
+import { Medicine } from 'src/types';
 import isDayPassed from 'src/utils/isDayPassed';
 import {
   CONFIRM_CONSUMPTION,
@@ -8,7 +8,6 @@ import {
   TypedDailyAssignmentsRefreshAction,
   TypedConfirmConsumptionAction,
 } from './daily_assignments.actionTypes';
-import {Medicine} from 'src/types';
 
 export const confirmConsumption = (
   hour: number,
@@ -16,11 +15,9 @@ export const confirmConsumption = (
   isUnplanned: boolean = false,
 ): TypedConfirmConsumptionAction => {
   const timestamp = Date.now();
-  const updatedMedicines = getMedicinesWithSubtractedCounts(medicines);
   const payload = {
     hour,
-    assignedMedicines: medicines,
-    updatedMedicines,
+    medicines,
     timestamp,
   };
 

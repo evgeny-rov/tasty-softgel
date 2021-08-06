@@ -1,6 +1,5 @@
 import {createSelector} from 'reselect';
 import {groupBy, mapValues} from 'lodash';
-import groupMedicinesBySupply from 'src/utils/groupMedicinesBySupply';
 import {AppStateType} from 'src/types';
 
 const getMedicines = (state: AppStateType) => state.medicines.byId;
@@ -22,21 +21,5 @@ export const getAssignmentsHoursByMedicineId = createSelector(
     return mapValues(assignmentsByMedId, (assignments) =>
       assignments.map(({hour}) => hour),
     );
-  },
-);
-
-export const getAssignmentsWithMedicines = createSelector(
-  [getAssignmentsByHour, getMedicines],
-  (assignmentsByHour, medicines) => {
-    return mapValues(assignmentsByHour, (assignments) =>
-      assignments.map(({medicineId}) => medicines[medicineId]),
-    );
-  },
-);
-
-export const getMedicinesSuppliesByHour = createSelector(
-  [getAssignmentsWithMedicines],
-  (assignmentsWithMedicines) => {
-    return mapValues(assignmentsWithMedicines, groupMedicinesBySupply);
   },
 );

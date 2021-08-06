@@ -8,6 +8,9 @@ import {persistConfig} from './persistor';
 import {middlewares} from '../middlewares';
 import {AppStateType} from 'src/types';
 
+import {dailyAssignmentsRefresh} from '../entities/daily_assignments/daily_assignments.actions';
+import { AppState } from 'react-native';
+
 const rootReducer = combineReducers<AppStateType>({
   medicines: medicinesReducer,
   assignments: assignmentsReducer,
@@ -19,6 +22,15 @@ const persistedReducer = persistReducer<AppStateType, any>(
   persistConfig,
   rootReducer,
 );
+
+// const DailyAssignmentsHourUpdater = () => {
+//   const intervalId = setInterval(() => {
+//     const currentTime = new Date();
+//     const hourShouldUpdate = currentTime.getMinutes() === 59 && ;
+//     console.log('interval checker', hourShouldUpdate, currentTime)
+//     hourShouldUpdate && store.dispatch(dailyAssignmentsRefresh());
+//   }, 5000);
+// };
 
 const store = createStore(persistedReducer, applyMiddleware(...middlewares));
 

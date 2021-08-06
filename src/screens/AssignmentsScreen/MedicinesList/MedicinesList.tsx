@@ -2,7 +2,7 @@ import React from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 import {getMedicinesWithAssignmentsHours} from 'src/redux/entities/medicines/medicines.selectors';
-import MedicineListItem from './MedicineListItem';
+import MedicineListItem from './MedicinesListItem';
 
 type Props = {
   pickerSelectedHour: number;

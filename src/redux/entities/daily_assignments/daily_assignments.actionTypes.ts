@@ -10,8 +10,7 @@ export type TypedConfirmConsumptionAction = {
   payload: {
     timestamp: number;
     hour: number;
-    assignedMedicines: Medicine[],
-    updatedMedicines: {[id: string]: Medicine};
+    medicines: Medicine[];
   };
 };
 
