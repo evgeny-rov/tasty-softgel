@@ -8,10 +8,13 @@ import MedicinesListItem from './MedicinesListItem';
 import Icon from '@components/Icon';
 import IconButton from '@components/IconButton';
 import {common, theme, typography} from 'src/styles';
+import {RootState} from 'src/redux/store';
 
 const MedicinesList = () => {
   const {showModalNewMedicine} = useModalMedicine();
-  const medicines = useSelector(getMedicinesWithAssignmentsHours);
+  const medicinesIds = useSelector(
+    (state: RootState) => state.medicines.allIds,
+  );
 
   return (
     <>
@@ -25,16 +28,12 @@ const MedicinesList = () => {
         bounces
         showsVerticalScrollIndicator={false}
         overScrollMode={'never'}>
-        {medicines.map(({medicine, assignments}) => (
-          <MedicinesListItem
-            key={medicine.id}
-            medicine={medicine}
-            assignments={assignments}
-          />
+        {medicinesIds.map((id) => (
+          <MedicinesListItem key={id} medicineId={id} />
         ))}
       </ScrollView>
     </>
   );
 };
 
-export default MedicinesList;
+export default React.memo(MedicinesList);

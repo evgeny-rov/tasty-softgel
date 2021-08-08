@@ -26,7 +26,6 @@ export const getDailyAssignments = createSelector(
         isAlreadyConfirmed,
         isSuppliesDepleted,
         isInactive,
-        medicines,
       };
     }),
 );

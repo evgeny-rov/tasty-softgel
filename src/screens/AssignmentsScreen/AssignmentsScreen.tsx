@@ -18,8 +18,7 @@ const PICKER_DATA = HOURS_AS_TIME_STRING.map((label, hourId) => (
 const AssignmentsScreen = () => {
   const [pickerSelectedHour, setPickerSelectedHour] = useState(12);
   const {showModalNewMedicine} = useModalMedicine();
-  const isInEmptyState =
-    useSelector((state: AppStateType) => state.medicines.allIds).length === 0;
+  const isInEmptyState = true;
 
   if (!isInEmptyState) {
     return (

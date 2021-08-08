@@ -12,9 +12,7 @@ import {common, typography} from 'src/styles';
 
 const HomeScreen = ({jumpTo}: ScreenProps) => {
   const {showModalNewMedicine} = useModalMedicine();
-  const isInEmptyState =
-    useSelector((state: AppStateType) => Object.keys(state.assignments.byId))
-      .length === 0;
+  const isInEmptyState = false;
 
   if (!isInEmptyState) {
     return (

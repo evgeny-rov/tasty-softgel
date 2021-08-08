@@ -5,17 +5,23 @@ import {HOURS_AS_TIME_STRING} from '@constants/';
 import useModalMedicine from 'src/hooks/useModalMedicine';
 import {theme, typography} from '@styles/';
 import {Assignment, Medicine} from 'src/types';
+import {useSelector} from 'react-redux';
+import {RootState} from 'src/redux/store';
+import {getMedicinesWithAssignmentsHours} from 'src/redux/entities/medicines/medicines.selectors';
 
 interface Props {
-  medicine: Medicine;
-  assignments: Assignment[];
+  medicineId: string;
 }
 
-const MedicinesListItem = ({medicine, assignments}: Props) => {
+const MedicinesListItem = ({medicineId}: Props) => {
   const {showModalUpdateMedicine} = useModalMedicine();
-  const assignmentsList = assignments
-    .map(({hour}) => HOURS_AS_TIME_STRING[hour])
-    .join('  ');
+  const medicine = useSelector(
+    (state: RootState) => state.medicines.byId[medicineId],
+  );
+
+  const assignmentsList = useSelector(getMedicinesWithAssignmentsHours)[
+    medicineId
+  ].map((hour) => HOURS_AS_TIME_STRING[hour] + '  ');
 
   const showModal = () => showModalUpdateMedicine(medicine);
 
@@ -50,4 +56,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MedicinesListItem;
+export default React.memo(MedicinesListItem);

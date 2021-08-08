@@ -9,8 +9,11 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {HOURS_AS_TIME_STRING} from '@constants/';
-import {confirmConsumption} from 'src/redux/entities/daily_assignments/daily_assignments.actions';
+import {HOURS_AS_TIME_STRING} from 'src/constants/constants';
+import {
+  confirmConsumption,
+  confirmConsumptionUntested,
+} from 'src/redux/entities/daily_assignments/daily_assignments.actions';
 import Icon from '@components/Icon';
 import SizedBox from '@components/SizedBox';
 import {theme, typography} from 'src/styles';
@@ -22,12 +25,9 @@ interface Props {
   isAlreadyConfirmed: boolean;
   isSuppliesDepleted: boolean;
   isInactive: boolean;
-  medicines: Medicine[];
 }
 
 const MedicinesSublistItem = React.memo((medicine: Medicine) => {
-  console.log('sub rerender', medicine.name);
-
   const textStyle: StyleProp<TextStyle> = {
     ...typography.styles.body_bold,
     fontStyle: medicine.count === 0 ? 'italic' : 'normal',
@@ -91,16 +91,18 @@ const StatusIndicator = React.memo(
   },
 );
 
-const MedicinesList = React.memo(({assignmentHour}: {assignmentHour: any}) => {
-  const medicines = useSelector(getMedicinesByAssignmentHour)[assignmentHour];
-  return (
-    <>
-      {medicines.map((medicine) => (
-        <MedicinesSublistItem key={medicine.id} {...medicine} />
-      ))}
-    </>
-  );
-});
+const MedicinesList = React.memo(
+  ({assignmentHour}: {assignmentHour: number}) => {
+    const medicines = useSelector(getMedicinesByAssignmentHour)[assignmentHour];
+    return (
+      <>
+        {medicines.map((medicine) => (
+          <MedicinesSublistItem key={medicine.id} {...medicine} />
+        ))}
+      </>
+    );
+  },
+);
 
 const DailyAssignmentsListItem = React.memo(
   ({
@@ -108,14 +110,11 @@ const DailyAssignmentsListItem = React.memo(
     isAlreadyConfirmed,
     isSuppliesDepleted,
     isInactive,
-    medicines,
   }: Props) => {
     const dispatch = useDispatch();
     const confirmAction = () => {
-      dispatch(confirmConsumption(assignmentHour, medicines, isInactive));
+      dispatch(confirmConsumptionUntested(assignmentHour));
     };
-
-    console.log('daily item rerender', assignmentHour);
 
     return (
       <View style={[styles.container, {opacity: isInactive ? 0.5 : 1}]}>

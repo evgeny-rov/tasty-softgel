@@ -1,5 +1,7 @@
-import { Medicine } from 'src/types';
+import {AppDispatch, RootState} from 'src/redux/store';
+import {Medicine} from 'src/types';
 import isDayPassed from 'src/utils/isDayPassed';
+import {getConfirmableMedicinesByHour} from '../medicines/medicines.selectors';
 import {
   CONFIRM_CONSUMPTION,
   UNPLANNED_CONFIRM_CONSUMPTION,
@@ -8,6 +10,7 @@ import {
   TypedDailyAssignmentsRefreshAction,
   TypedConfirmConsumptionAction,
 } from './daily_assignments.actionTypes';
+import {getCurrentHour} from './daily_assignments.selectors';
 
 export const confirmConsumption = (
   hour: number,
@@ -25,6 +28,18 @@ export const confirmConsumption = (
     type: isUnplanned ? UNPLANNED_CONFIRM_CONSUMPTION : CONFIRM_CONSUMPTION,
     payload,
   };
+};
+
+export const confirmConsumptionUntested = (hour: number) => (
+  dispatch: AppDispatch,
+  getState: () => RootState,
+) => {
+  console.log('thunk func')
+  const state = getState();
+  const medicines = getConfirmableMedicinesByHour(state)[hour];
+  const isUnplanned = hour > getCurrentHour(state);
+
+  dispatch(confirmConsumption(hour, medicines, isUnplanned));
 };
 
 export const dailyAssignmentsRefresh = (
