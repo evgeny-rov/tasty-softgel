@@ -6,25 +6,22 @@ export type Medication = {
 
 export type MedicationsState = {
   allIds: string[];
-  byId: {
-    [id: string]: Medication;
-  };
+  byId: Record<string, Medication>
 };
 
 export type DailyMedication = {
-  id: string;
-  medicineId: string;
+  medicationId: string;
   hourId: number;
 };
 
-export type ScheduledMedications = {
+export type ScheduledMedicationsState = {
   hourIdNow: number;
-  confirmedDailyMedications: number[];
+  confirmedHourIds: number[];
   lastConfirmationAt: number;
   daily_medications: DailyMedication[];
 };
 
-export type ModalMedicineState = {
+export type MedicationModalState = {
   isVisible: boolean;
   data: Medication | null;
 };

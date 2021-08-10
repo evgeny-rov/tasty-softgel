@@ -1,17 +1,18 @@
 import React from 'react';
-import {useSelector} from 'react-redux';
 import {ScrollView, Text, View} from 'react-native';
 
-import useModalMedicine from 'src/hooks/useModalMedicine';
-import DailyAssignmentsList from './DailyAssignments/';
+import useMedicationModal from 'src/hooks/useMedicationModal';
+import DailyMedications from './DailyMedications';
 import FloatingActionButton from '@components/FloatingActionButton';
 import EmptyState from '@components/EmptyState';
-import {AppStateType} from 'src/types';
-import {ScreenProps} from 'src/navigation/AppNavigation';
 import {common, typography} from 'src/styles';
 
-const HomeScreen = ({jumpTo}: ScreenProps) => {
-  const {showModalNewMedicine} = useModalMedicine();
+type Props = {
+  jumpTo: (key: 'home' | 'medications' | 'medications_scheduler') => void;
+};
+
+const HomeScreen = ({jumpTo}: Props) => {
+  const {showNewMedicationModal} = useMedicationModal();
   const isInEmptyState = false;
 
   if (!isInEmptyState) {
@@ -21,23 +22,23 @@ const HomeScreen = ({jumpTo}: ScreenProps) => {
           <View style={common.styles.header}>
             <Text style={typography.styles.h1}>Ежедневный план</Text>
           </View>
-          <DailyAssignmentsList />
+          <DailyMedications />
         </ScrollView>
-        <FloatingActionButton onPress={showModalNewMedicine} />
+        <FloatingActionButton onPress={showNewMedicationModal} />
       </View>
     );
   } else {
     return (
       <EmptyState
         heading={'Здесь совсем пусто...'}
-        message={'Добавьте новые лекарства и назначьте время приема.'}
+        message={'Добавьте новые лекарства и запланируйте время приема.'}
         action={{
           content: 'Добавить лекарство',
-          onPress: showModalNewMedicine,
+          onPress: showNewMedicationModal,
         }}
         secondaryAction={{
-          content: 'Назначить прием',
-          onPress: () => jumpTo('medicine_assignments'),
+          content: 'Запланировать прием',
+          onPress: () => jumpTo('medications_scheduler'),
         }}
       />
     );

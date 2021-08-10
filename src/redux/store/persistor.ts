@@ -1,15 +1,12 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import {
-  PersistConfig,
-  Persistor,
-  PersistorSubscribeCallback,
-} from 'redux-persist';
-import {AppStateType} from 'src/types';
+import {Persistor, PersistorSubscribeCallback} from 'redux-persist';
 
-const persistConfig: PersistConfig<AppStateType> = {
-  key: 'root-state',
+const PERSISTOR_ROOT_STATE_KEY = 'root-state';
+
+const persistConfig = {
+  key: PERSISTOR_ROOT_STATE_KEY,
   storage: AsyncStorage,
-  blacklist: ['modal_medicine'],
+  blacklist: ['medication_modal'],
 };
 
 const bootstrapPersistor = (persistor: Persistor) => {

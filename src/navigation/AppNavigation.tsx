@@ -8,13 +8,13 @@ import {
 } from 'react-native-tab-view';
 
 import HomeScreen from '../screens/HomeScreen';
-import MedicinesScreen from '../screens/MedicinesScreen';
-import AssignmentsScreen from '../screens/AssignmentsScreen';
+import MedicationsScreen from '../screens/MedicationsScreen';
+import MedicationsSchedulerScreen from '../screens/MedicationsSchedulerScreen';
 import Icon from '@components/Icon';
 import {theme} from 'src/styles';
 
 type Route = {
-  key: 'home' | 'medicine_manager' | 'medicine_assignments';
+  key: 'home' | 'medications' | 'medications_scheduler';
   icon: React.ComponentProps<typeof Icon>['name'];
 };
 
@@ -24,9 +24,9 @@ export type ScreenProps = {jumpTo: jumpTo};
 
 const routes: Route[] = [
   {key: 'home', icon: 'home'},
-  {key: 'medicine_manager', icon: 'pills'},
+  {key: 'medications', icon: 'pills'},
   {
-    key: 'medicine_assignments',
+    key: 'medications_scheduler',
     icon: 'assignment',
   },
 ];
@@ -35,10 +35,10 @@ const renderScene = ({route, jumpTo}: {route: Route; jumpTo: jumpTo}) => {
   switch (route.key) {
     case 'home':
       return <HomeScreen jumpTo={jumpTo} />;
-    case 'medicine_manager':
-      return <MedicinesScreen jumpTo={jumpTo} />;
-    case 'medicine_assignments':
-      return <AssignmentsScreen jumpTo={jumpTo} />;
+    case 'medications':
+      return <MedicationsScreen jumpTo={jumpTo} />;
+    case 'medications_scheduler':
+      return <MedicationsSchedulerScreen jumpTo={jumpTo} />;
     default:
       return null;
   }
