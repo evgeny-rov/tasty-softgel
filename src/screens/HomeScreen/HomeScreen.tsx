@@ -2,28 +2,24 @@ import React from 'react';
 import {ScrollView, Text, View} from 'react-native';
 
 import useMedicationModal from 'src/hooks/useMedicationModal';
-import DailyMedications from './DailyMedications';
+import DailySchedule from './DailySchedule';
 import FloatingActionButton from '@components/FloatingActionButton';
 import EmptyState from '@components/EmptyState';
 import {common, typography} from 'src/styles';
 
-type Props = {
-  jumpTo: (key: 'home' | 'medications' | 'medications_scheduler') => void;
-};
+// to-do: reimplement empty state
 
-const HomeScreen = ({jumpTo}: Props) => {
+const HomeScreen = () => {
   const {showNewMedicationModal} = useMedicationModal();
   const isInEmptyState = false;
 
   if (!isInEmptyState) {
     return (
       <View style={common.styles.screen_container}>
-        <ScrollView>
-          <View style={common.styles.header}>
-            <Text style={typography.styles.h1}>Ежедневный план</Text>
-          </View>
-          <DailyMedications />
-        </ScrollView>
+        <View style={common.styles.header}>
+          <Text style={typography.styles.h1}>Ежедневный план</Text>
+        </View>
+        <DailySchedule />
         <FloatingActionButton onPress={showNewMedicationModal} />
       </View>
     );
@@ -38,11 +34,11 @@ const HomeScreen = ({jumpTo}: Props) => {
         }}
         secondaryAction={{
           content: 'Запланировать прием',
-          onPress: () => jumpTo('medications_scheduler'),
+          onPress: () => null,
         }}
       />
     );
   }
 };
 
-export default React.memo(HomeScreen);
+export default HomeScreen;

@@ -3,13 +3,25 @@ import {createSelector} from 'reselect';
 import {RootState} from 'src/redux/store';
 import {getMedications} from '../medications/selectors';
 
-import type {Medication} from 'src/types';
+import type {DailyMedication} from 'src/types';
 
-type scheduleData = {
+type DerivedScheduleByHoursInner = Record<string, DailyMedication>;
+type DerivedScheduleByHours = Record<
+  number,
+  DerivedScheduleByHoursInner | undefined
+>;
+
+type DerivedScheduleByMedicationIdInner = Record<number, DailyMedication>;
+type DerivedScheduleByMedicationId = Record<
+  string,
+  DerivedScheduleByMedicationIdInner | undefined
+>;
+
+interface derivedDailyScheduleData {
   allHoursIds: string[];
-  byHourId: {[hourId: number]: string[]};
-  byMedicationId: {[medicationId: string]: number[]};
-};
+  byHourId: DerivedScheduleByHours;
+  byMedicationId: DerivedScheduleByMedicationId;
+}
 
 export const getHourIdNow = (state: RootState) =>
   state.scheduled_medications.hourIdNow;
@@ -23,47 +35,56 @@ export const getDailyMedications = (state: RootState) =>
 export const getMedicationsSchedule = createSelector(
   [getDailyMedications],
   (daily_medications) => {
-    const scheduleData: scheduleData = {
+    const derivedDailyScheduleData: derivedDailyScheduleData = {
       allHoursIds: [],
       byHourId: {},
       byMedicationId: {},
     };
 
-    for (const daily_medication of daily_medications) {
-      const {medicationId, hourId} = daily_medication;
+    for (const id in daily_medications) {
+      const {medicationId, hourId} = daily_medications[id];
 
-      scheduleData.byHourId[hourId] = [
-        ...(scheduleData.byHourId[hourId] ?? []),
-        medicationId,
-      ];
+      derivedDailyScheduleData.byHourId[hourId] = {
+        ...(derivedDailyScheduleData.byHourId[hourId] ?? {}),
+        [medicationId]: {id, medicationId, hourId},
+      };
 
-      scheduleData.byMedicationId[medicationId] = [
-        ...(scheduleData.byMedicationId[medicationId] ?? []),
-        hourId,
-      ].sort((a, b) => a - b);
+      derivedDailyScheduleData.byMedicationId[medicationId] = {
+        ...(derivedDailyScheduleData.byMedicationId[medicationId] ?? {}),
+        [hourId]: {id, medicationId, hourId},
+      };
     }
 
-    scheduleData.allHoursIds = Object.keys(scheduleData.byHourId);
+    derivedDailyScheduleData.allHoursIds = Object.keys(
+      derivedDailyScheduleData.byHourId,
+    );
 
-    return scheduleData;
+    return derivedDailyScheduleData;
   },
 );
 
 export const getConfirmableMedicationsByHourId = createSelector(
   [getMedicationsSchedule, getMedications],
   (medicationsSchedule, medications) => {
-    return mapValues(medicationsSchedule.byHourId, (medicationsIds) =>
-      medicationsIds.reduce<Medication[]>((accMedications, id) => {
-        const medication = medications[id];
+    return mapValues(medicationsSchedule.byHourId, (scheduledData) => {
+      const nonEmptyMappedMedications = [];
 
-        medication.quantity > 0 && accMedications.push(medication);
-        return accMedications;
-      }, []),
-    );
+      for (const medicationId in scheduledData) {
+        const medication = medications[medicationId];
+
+        if (medication.quantity === 0) {
+          continue;
+        } else {
+          nonEmptyMappedMedications.push(medication);
+        }
+      }
+
+      return nonEmptyMappedMedications;
+    });
   },
 );
 
-export const getDailyScheduledMedications = createSelector(
+export const getTodaySchedule = createSelector(
   [
     getMedicationsSchedule,
     getHourIdNow,
@@ -75,8 +96,8 @@ export const getDailyScheduledMedications = createSelector(
     hourIdNow,
     confirmedHourIds,
     confirmableMedicationsByHourId,
-  ) =>
-    medicationsSchedule.allHoursIds.map((hourKey) => {
+  ) => {
+    return mapValues(medicationsSchedule.byHourId, (_, hourKey) => {
       const hourId = Number(hourKey);
       const isSuppliesDepleted =
         confirmableMedicationsByHourId[hourId].length === 0;
@@ -85,11 +106,11 @@ export const getDailyScheduledMedications = createSelector(
       const isAlreadyConfirmed = confirmedHourIds.includes(hourId);
 
       return {
-        hourId,
         isSuppliesDepleted,
         isMatchingCurrentHour,
         isInactive,
         isAlreadyConfirmed,
       };
-    }),
+    });
+  },
 );

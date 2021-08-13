@@ -1,30 +1,29 @@
 import React from 'react';
-import {ScrollView, StyleSheet} from 'react-native';
+import {FlatList, ScrollView, StyleSheet} from 'react-native';
 import {useAppSelector} from 'src/hooks/reduxHooks';
-import {getAllMedications} from 'src/redux/slices/medications/selectors';
+import {getAllMedicationsIds} from 'src/redux/slices/medications/selectors';
+import SizedBox from '@components/SizedBox';
 import MedicationsListItem from './MedicationsListItem';
 
 type Props = {
   selectedHourId: number;
 };
 
+const ListSeparator = () => <SizedBox height={5} />;
+
 const MedicationsList = ({selectedHourId}: Props) => {
-  const medications = useAppSelector(getAllMedications);
+  const medicationsIds = useAppSelector(getAllMedicationsIds);
 
   return (
-    <ScrollView
-      bounces
-      contentContainerStyle={styles.container}
-      showsVerticalScrollIndicator={false}
-      overScrollMode={'never'}>
-      {medications.map((medication) => (
-        <MedicationsListItem
-          key={medication.id}
-          {...medication}
-          selectedHourId={selectedHourId}
-        />
-      ))}
-    </ScrollView>
+    <FlatList
+      style={styles.container}
+      data={medicationsIds}
+      ItemSeparatorComponent={ListSeparator}
+      keyExtractor={(id) => id}
+      renderItem={({item: id}) => (
+        <MedicationsListItem id={id} selectedHourId={selectedHourId} />
+      )}
+    />
   );
 };
 
@@ -34,4 +33,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default React.memo(MedicationsList);
+export default MedicationsList;

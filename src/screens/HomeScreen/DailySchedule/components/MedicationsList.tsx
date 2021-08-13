@@ -1,13 +1,14 @@
 import React from 'react';
 import {StyleProp, StyleSheet, Text, TextStyle, View} from 'react-native';
+import {shallowEqual} from 'react-redux';
 import {useAppSelector} from 'src/hooks/reduxHooks';
-import {getMedications} from 'src/redux/slices/medications/selectors';
 import {getMedicationsSchedule} from 'src/redux/slices/scheduled_medications/selectors';
 import {typography} from 'src/styles';
-import {Medication} from 'src/types';
 
-const MedicationsListItem = React.memo(({id, name, quantity}: Medication) => {
-  // const medication = useAppSelector(getMedications)[id];
+const MedicationsListItem = React.memo(({id}: {id: string}) => {
+  const {name, quantity} = useAppSelector(
+    (state) => state.medications.byId[id],
+  );
 
   const textStyle: StyleProp<TextStyle> = {
     ...typography.styles.body_bold,
@@ -23,16 +24,16 @@ const MedicationsListItem = React.memo(({id, name, quantity}: Medication) => {
 });
 
 const MedicationsList = ({hourId}: {hourId: number}) => {
-  const medicationsIds = useAppSelector(getMedicationsSchedule).byHourId[
-    hourId
-  ];
-  const medications = useAppSelector(getMedications);
-
+  const medicationsIds = useAppSelector(
+    (state) =>
+      Object.keys(getMedicationsSchedule(state).byHourId[hourId] ?? {}),
+    shallowEqual,
+  );
   return (
     <>
-      {medicationsIds.map((id) => {
-        return <MedicationsListItem key={id} {...medications[id]} />;
-      })}
+      {medicationsIds.map((id) => (
+        <MedicationsListItem key={id} id={id} />
+      ))}
     </>
   );
 };

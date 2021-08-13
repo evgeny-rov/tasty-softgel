@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Dimensions, StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet, View} from 'react-native';
 import {
   NavigationState,
   SceneRendererProps,
@@ -48,6 +48,11 @@ const renderIcon = ({route, color}: {route: Route; color: string}) => {
   return <Icon name={route.icon} color={color} />;
 };
 
+const TabBarItem = (props) => {
+  console.log(props)
+  return <View></View>;
+}
+
 const renderTabBar = (
   props: SceneRendererProps & {navigationState: NavigationState<Route>},
 ) => {
@@ -59,6 +64,7 @@ const renderTabBar = (
       renderIndicator={() => null}
       activeColor={theme.colors.accent}
       inactiveColor={theme.colors.primary}
+      
       renderIcon={renderIcon}
       contentContainerStyle={styles.tabbar_content_container}
       style={styles.tabbar}

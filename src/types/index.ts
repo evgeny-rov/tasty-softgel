@@ -10,6 +10,7 @@ export type MedicationsState = {
 };
 
 export type DailyMedication = {
+  id: string;
   medicationId: string;
   hourId: number;
 };
@@ -18,7 +19,7 @@ export type ScheduledMedicationsState = {
   hourIdNow: number;
   confirmedHourIds: number[];
   lastConfirmationAt: number;
-  daily_medications: DailyMedication[];
+  daily_medications: Record<string, DailyMedication>;
 };
 
 export type MedicationModalState = {

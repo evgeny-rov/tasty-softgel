@@ -13,11 +13,7 @@ const PICKER_DATA = HOURS_AS_TIME_STRING.map((label, hourId) => (
   <Picker.Item key={hourId} label={label} value={hourId} />
 ));
 
-type Props = {
-  jumpTo: (key: 'home' | 'medications' | 'medications_scheduler') => void;
-};
-
-const MedicationsSchedulerScreen = ({jumpTo}: Props) => {
+const MedicationsSchedulerScreen = () => {
   const [pickerSelectedHourId, setPickerSelectedHourId] = useState(12);
   const {showNewMedicationModal} = useMedicationModal();
   const isInEmptyState = false;
@@ -78,4 +74,4 @@ export const styles = StyleSheet.create({
   },
 });
 
-export default React.memo(MedicationsSchedulerScreen);
+export default MedicationsSchedulerScreen;

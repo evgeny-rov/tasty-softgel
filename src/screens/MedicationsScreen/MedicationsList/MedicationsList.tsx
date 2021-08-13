@@ -1,25 +1,20 @@
 import React from 'react';
-import {ScrollView} from 'react-native';
+import {FlatList} from 'react-native';
 import {useAppSelector} from 'src/hooks/reduxHooks';
 
-import {getAllMedications} from 'src/redux/slices/medications/selectors';
+import {getAllMedicationsIds} from 'src/redux/slices/medications/selectors';
 import MedicationsListItem from './MedicationsListItem';
 
 const MedicationsList = () => {
-  const medications = useAppSelector(getAllMedications);
+  const medications = useAppSelector(getAllMedicationsIds);
 
   return (
-    <>
-      <ScrollView
-        bounces
-        showsVerticalScrollIndicator={false}
-        overScrollMode={'never'}>
-        {medications.map((medication) => (
-          <MedicationsListItem key={medication.id} {...medication} />
-        ))}
-      </ScrollView>
-    </>
+    <FlatList
+      data={medications}
+      renderItem={({item: id}) => <MedicationsListItem id={id} />}
+      keyExtractor={(id) => id}
+    />
   );
 };
 
-export default React.memo(MedicationsList);
+export default MedicationsList;

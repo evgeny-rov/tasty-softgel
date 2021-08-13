@@ -1,6 +1,6 @@
 import React from 'react';
 import SizedBox from '@components/SizedBox';
-import {theme, typography} from 'src/styles';
+import {theme} from 'src/styles';
 import {StyleSheet} from 'react-native';
 
 const StatusIndicator = React.memo(

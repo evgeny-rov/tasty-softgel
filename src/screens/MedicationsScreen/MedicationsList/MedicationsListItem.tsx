@@ -1,47 +1,75 @@
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {shallowEqual} from 'react-redux';
 
 import {HOURS_AS_TIME_STRING} from '@constants/';
 import useMedicationModal from 'src/hooks/useMedicationModal';
 import {useAppSelector} from 'src/hooks/reduxHooks';
 import {getMedicationsSchedule} from 'src/redux/slices/scheduled_medications/selectors';
-import {theme, typography} from '@styles/';
+import {common, theme, typography} from '@styles/';
 import SizedBox from '@components/SizedBox';
-import {Medication} from 'src/types';
+
+const ListSeparator = () => <SizedBox width={5} />;
 
 const ScheduledHoursItem = React.memo(({hourId}: {hourId: number}) => {
   return (
     <>
-      <Text>{HOURS_AS_TIME_STRING[hourId]}</Text>
-      <SizedBox width={5} />
+      <Text style={typography.styles.body_sub_gray}>
+        {HOURS_AS_TIME_STRING[hourId]}
+      </Text>
+      <ListSeparator />
     </>
   );
 });
 
-const MedicationsListItem = ({id, name, quantity}: Medication) => {
+const EmptyScheduledListPlaceholder = () => (
+  <Text style={typography.styles.body_sub_gray}>Прием не назначен</Text>
+);
+
+const ScheduledHoursList = React.memo(
+  ({medicationId}: {medicationId: string}) => {
+    const scheduledHourIds = useAppSelector(
+      (state) =>
+        Object.keys(
+          getMedicationsSchedule(state).byMedicationId[medicationId] ?? {},
+        ),
+      shallowEqual,
+    );
+
+    const items = scheduledHourIds.map((hourId) => (
+      <ScheduledHoursItem key={hourId} hourId={Number(hourId)} />
+    ));
+
+    return (
+      <View style={styles.scheduled_items_container}>
+        {scheduledHourIds.length > 0 ? (
+          items
+        ) : (
+          <EmptyScheduledListPlaceholder />
+        )}
+      </View>
+    );
+  },
+);
+
+const MedicationsListItem = ({id}: {id: string}) => {
   const {showUpdateMedicationModal} = useMedicationModal();
-  const scheduledHourIds = useAppSelector(getMedicationsSchedule)
-    .byMedicationId[id];
+  const {name, quantity} = useAppSelector(
+    (state) => state.medications.byId[id],
+  );
 
   const showModal = () => showUpdateMedicationModal({id, name, quantity});
-
-  const getScheduledHourIds = () =>
-    scheduledHourIds.map((hourId) => (
-      <ScheduledHoursItem key={hourId} hourId={hourId} />
-    ));
 
   return (
     <Pressable
       android_ripple={{color: theme.colors.accent}}
       style={styles.container}
       onPress={showModal}>
-      <View>
+      <View style={common.styles.flex}>
         <Text style={typography.styles.body_bold} numberOfLines={1}>
           {name}
         </Text>
-        <Text numberOfLines={1} style={typography.styles.body_sub_gray}>
-          {scheduledHourIds ? getScheduledHourIds() : 'Прием не назначен'}
-        </Text>
+        <ScheduledHoursList medicationId={id} />
       </View>
       <View>
         <Text style={typography.styles.body_sm}>{quantity} шт.</Text>
@@ -58,6 +86,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 10,
     paddingHorizontal: 20,
+  },
+  scheduled_items_container: {
+    ...common.styles.row,
+    flexWrap: 'wrap',
   },
 });
 

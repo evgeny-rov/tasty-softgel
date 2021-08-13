@@ -8,11 +8,7 @@ import {common, theme, typography} from '@styles/';
 import Icon from '@components/Icon';
 import IconButton from '@components/IconButton';
 
-type Props = {
-  jumpTo: (key: 'home' | 'medications' | 'medications_scheduler') => void;
-};
-
-const MedicationsScreen = ({jumpTo}: Props) => {
+const MedicationsScreen = () => {
   const {showNewMedicationModal} = useMedicationModal();
   const isInEmptyState = false;
 
@@ -42,4 +38,4 @@ const MedicationsScreen = ({jumpTo}: Props) => {
   }
 };
 
-export default React.memo(MedicationsScreen);
+export default MedicationsScreen;

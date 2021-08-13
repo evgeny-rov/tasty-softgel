@@ -1,13 +1,20 @@
+import 'react-native-get-random-values';
+import {v4 as uuidv4} from 'uuid';
 import * as TYPES from './actionTypes';
+import isDayPassed from '@utils/isDayPassed';
 import type {DailyMedication} from 'src/types';
 import {AppDispatch, RootState} from 'src/redux/store';
-import isDayPassed from '@utils/isDayPassed';
 
-export type toggleScheduledDailyMedicationStatusAction = {
-  type:
-    | typeof TYPES.ADD_SCHEDULED_DAILY_MEDICATION
-    | typeof TYPES.REMOVE_SCHEDULED_DAILY_MEDICATION;
+const SCHEDULED_MEDICATION_ID_PREFIX = 'scheduled-';
+
+export type addScheduledDailyMedicationAction = {
+  type: typeof TYPES.ADD_SCHEDULED_DAILY_MEDICATION;
   payload: DailyMedication;
+};
+
+export type removeScheduledDailyMedicationAction = {
+  type: typeof TYPES.REMOVE_SCHEDULED_DAILY_MEDICATION;
+  payload: {id: string};
 };
 
 export type scheduledDailyMedicationsRefreshAction = {
@@ -18,23 +25,39 @@ export type scheduledDailyMedicationsRefreshAction = {
 };
 
 export type ScheduledDailyMedicationsActions =
-  | toggleScheduledDailyMedicationStatusAction
+  | addScheduledDailyMedicationAction
+  | removeScheduledDailyMedicationAction
   | scheduledDailyMedicationsRefreshAction;
 
-export const toggleScheduledDailyMedicationStatus = ({
+export const addScheduledDailyMedication = ({
   medicationId,
   hourId,
-  toRemove,
 }: {
   medicationId: string;
   hourId: number;
-  toRemove: boolean;
-}): toggleScheduledDailyMedicationStatusAction => ({
-  type: toRemove
-    ? TYPES.REMOVE_SCHEDULED_DAILY_MEDICATION
-    : TYPES.ADD_SCHEDULED_DAILY_MEDICATION,
-  payload: {medicationId, hourId},
-});
+}): addScheduledDailyMedicationAction => {
+  return {
+    type: TYPES.ADD_SCHEDULED_DAILY_MEDICATION,
+    payload: {
+      id: SCHEDULED_MEDICATION_ID_PREFIX + uuidv4(),
+      medicationId,
+      hourId,
+    },
+  };
+};
+
+export const removeScheduledDailyMedication = ({
+  id,
+}: {
+  id: string;
+}): removeScheduledDailyMedicationAction => {
+  return {
+    type: TYPES.REMOVE_SCHEDULED_DAILY_MEDICATION,
+    payload: {
+      id,
+    },
+  };
+};
 
 export const scheduledDailyMedicationsRefreshThunk = (): any => (
   dispatch: AppDispatch,
