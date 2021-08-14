@@ -5,16 +5,20 @@ import Picker from '@gregfrench/react-native-wheel-picker';
 import {HOURS_AS_TIME_STRING} from '@constants/';
 import useMedicationModal from 'src/hooks/useMedicationModal';
 
-import MedicationsList from './MedicationsList';
 import EmptyState from '@components/EmptyState';
+import MedicationsList from './MedicationsList';
 import {common, typography} from '@styles/';
+
+const PICKER_DEFAULT_HOUR_ID = 12;
 
 const PICKER_DATA = HOURS_AS_TIME_STRING.map((label, hourId) => (
   <Picker.Item key={hourId} label={label} value={hourId} />
 ));
 
 const MedicationsSchedulerScreen = () => {
-  const [pickerSelectedHourId, setPickerSelectedHourId] = useState(12);
+  const [pickerSelectedHourId, setPickerSelectedHourId] = useState(
+    PICKER_DEFAULT_HOUR_ID,
+  );
   const {showNewMedicationModal} = useMedicationModal();
   const isInEmptyState = false;
 
@@ -23,7 +27,7 @@ const MedicationsSchedulerScreen = () => {
       <>
         <View style={common.styles.screen_container}>
           <View style={common.styles.header}>
-            <Text style={typography.styles.h1}>Назначить прием</Text>
+            <Text style={typography.styles.h1}>Выбрать часы приема</Text>
           </View>
           <View style={styles.picker_container}>
             <Picker

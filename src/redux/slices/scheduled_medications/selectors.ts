@@ -5,16 +5,15 @@ import {getMedications} from '../medications/selectors';
 
 import type {DailyMedication} from 'src/types';
 
-type DerivedScheduleByHoursInner = Record<string, DailyMedication>;
-type DerivedScheduleByHours = Record<
-  number,
-  DerivedScheduleByHoursInner | undefined
->;
+type DerivedScheduleByHoursInner = Record<string, DailyMedication> | undefined;
+type DerivedScheduleByHours = Record<number, DerivedScheduleByHoursInner>;
 
-type DerivedScheduleByMedicationIdInner = Record<number, DailyMedication>;
+type DerivedScheduleByMedicationIdInner =
+  | Record<number, DailyMedication>
+  | undefined;
 type DerivedScheduleByMedicationId = Record<
   string,
-  DerivedScheduleByMedicationIdInner | undefined
+  DerivedScheduleByMedicationIdInner
 >;
 
 interface derivedDailyScheduleData {
@@ -63,13 +62,37 @@ export const getMedicationsSchedule = createSelector(
   },
 );
 
+export const getScheduledEntry = (medicationId: string, hourId: number) => (
+  state: RootState,
+) => {
+  return getMedicationsSchedule(state).byMedicationId[medicationId]?.[hourId];
+};
+
+export const getScheduledMedicationsIdsByHourId = (hourId: number) => (
+  state: RootState,
+) => {
+  const schedule = getMedicationsSchedule(state);
+  const medicationsIds = schedule.byHourId[hourId] ?? {};
+
+  return Object.keys(medicationsIds);
+};
+
+export const getScheduledHourIdsByMedicationId = (medicationId: string) => (
+  state: RootState,
+) => {
+  const schedule = getMedicationsSchedule(state);
+  const medicationsIds = schedule.byMedicationId[medicationId] ?? {};
+
+  return Object.keys(medicationsIds);
+};
+
 export const getConfirmableMedicationsByHourId = createSelector(
   [getMedicationsSchedule, getMedications],
   (medicationsSchedule, medications) => {
-    return mapValues(medicationsSchedule.byHourId, (scheduledData) => {
+    return mapValues(medicationsSchedule.byHourId, (scheduledEntries) => {
       const nonEmptyMappedMedications = [];
 
-      for (const medicationId in scheduledData) {
+      for (const medicationId in scheduledEntries) {
         const medication = medications[medicationId];
 
         if (medication.quantity === 0) {
@@ -84,7 +107,12 @@ export const getConfirmableMedicationsByHourId = createSelector(
   },
 );
 
-export const getTodaySchedule = createSelector(
+export const getDailyPlanHourIds = createSelector(
+  [getMedicationsSchedule],
+  (medicationsSchedule) => medicationsSchedule.allHoursIds,
+);
+
+export const getDailyPlan = createSelector(
   [
     getMedicationsSchedule,
     getHourIdNow,
@@ -97,8 +125,8 @@ export const getTodaySchedule = createSelector(
     confirmedHourIds,
     confirmableMedicationsByHourId,
   ) => {
-    return mapValues(medicationsSchedule.byHourId, (_, hourKey) => {
-      const hourId = Number(hourKey);
+    return mapValues(medicationsSchedule.byHourId, (_, key) => {
+      const hourId = Number(key);
       const isSuppliesDepleted =
         confirmableMedicationsByHourId[hourId].length === 0;
       const isMatchingCurrentHour = hourId === hourIdNow;
@@ -114,3 +142,6 @@ export const getTodaySchedule = createSelector(
     });
   },
 );
+
+export const getDailyPlanEntryByHourId = (hourId: number) => (state: RootState) =>
+  getDailyPlan(state)[hourId];

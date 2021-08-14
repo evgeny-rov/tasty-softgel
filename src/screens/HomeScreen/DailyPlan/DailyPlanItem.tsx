@@ -1,10 +1,11 @@
-import React, { useCallback } from 'react';
+import React, {useCallback} from 'react';
 import {Pressable, View, StyleSheet, ViewStyle, ViewProps} from 'react-native';
+import {shallowEqual} from 'react-redux';
 import * as Animatable from 'react-native-animatable';
 
 import {useAppDispatch, useAppSelector} from 'src/hooks/reduxHooks';
 import {confirmConsumptionThunk} from 'src/redux/slices/medications/actions';
-import {getTodaySchedule} from 'src/redux/slices/scheduled_medications/selectors';
+import {getDailyPlanEntryByHourId} from 'src/redux/slices/scheduled_medications/selectors';
 import useAnimatable from 'src/hooks/useAnimatable';
 import SizedBox from '@components/SizedBox';
 import Icon from '@components/Icon';
@@ -12,7 +13,6 @@ import StatusIndicator from './components/StatusIndicator';
 import StatusBar from './components/StatusBar';
 import MedicationsList from './components/MedicationsList';
 import {theme} from 'src/styles';
-import {shallowEqual} from 'react-redux';
 
 const seekerAnimationProps: Animatable.View['defaultProps'] = {
   animation: 'pulse',
@@ -22,15 +22,15 @@ const seekerAnimationProps: Animatable.View['defaultProps'] = {
   useNativeDriver: true,
 };
 
-const DailyScheduleItem = ({hourId}: {hourId: number}) => {
+const DailyPlanItem = ({hourId}: {hourId: number}) => {
+  const dispatch = useAppDispatch();
   const {
     isAlreadyConfirmed,
     isInactive,
     isMatchingCurrentHour,
     isSuppliesDepleted,
-  } = useAppSelector((state) => getTodaySchedule(state)[hourId], shallowEqual);
+  } = useAppSelector(getDailyPlanEntryByHourId(hourId), shallowEqual);
 
-  const dispatch = useAppDispatch();
   const {ref: confirmPopupRef, tryAnimation} = useAnimatable<
     ViewProps,
     ViewStyle
@@ -49,7 +49,7 @@ const DailyScheduleItem = ({hourId}: {hourId: number}) => {
   return (
     <Animatable.View {...animationProps} style={[styles.container, {opacity}]}>
       <Animatable.View ref={confirmPopupRef} style={styles.confirm_popup}>
-        <Icon name="done" size={50} color="white" />
+        <Icon name="done" size={50} color={theme.colors.accent2} />
       </Animatable.View>
       <StatusIndicator
         isInactive={isInactive}
@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
   },
   confirm_popup: {
     opacity: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
     position: 'absolute',
     width: '100%',
     height: '100%',
@@ -107,4 +108,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default React.memo(DailyScheduleItem);
+export default React.memo(DailyPlanItem);

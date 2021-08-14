@@ -1,22 +1,11 @@
 import {pickBy, without} from 'lodash';
 import * as MEDICATIONS_TYPES from './actionTypes';
 
-import {MedicationsActions, updateMedication} from './actions';
-import type {Medication, MedicationsState} from 'src/types';
+import subtractMedicationsQuantites from '@utils/subtractMedicationsQuantities';
+import {MedicationsActions} from './actions';
+import type {MedicationsState} from 'src/types';
 
 type Actions = MedicationsActions;
-
-const getMedicationsWithSubtractedQuantities = (medications: Medication[]) => {
-  return medications.reduce<{[id: string]: Medication}>((acc, medication) => {
-    return {
-      ...acc,
-      [medication.id]: {
-        ...medication,
-        quantity: Math.max(0, medication.quantity - 1),
-      },
-    };
-  }, {});
-};
 
 const initialState: MedicationsState = {
   allIds: [],
@@ -64,9 +53,7 @@ const reducer = (state = initialState, action: Actions): MedicationsState => {
     case MEDICATIONS_TYPES.CONFIRM_CONSUMPTION_UNPLANNED:
     case MEDICATIONS_TYPES.CONFIRM_CONSUMPTION: {
       const {medications} = action.payload;
-      const updatedMedicines = getMedicationsWithSubtractedQuantities(
-        medications,
-      );
+      const updatedMedicines = subtractMedicationsQuantites(medications);
 
       return {
         ...state,

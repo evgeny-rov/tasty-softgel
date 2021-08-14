@@ -3,18 +3,15 @@ import {FlatList, StyleSheet} from 'react-native';
 import {shallowEqual} from 'react-redux';
 import {useAppSelector} from 'src/hooks/reduxHooks';
 
-import {getMedicationsSchedule} from 'src/redux/slices/scheduled_medications/selectors';
-import DailyScheduleItem from './DailyScheduleItem';
+import {getDailyPlanHourIds} from 'src/redux/slices/scheduled_medications/selectors';
+import DailyScheduleItem from './DailyPlanItem';
 
-const DailySchedule = () => {
-  const dailyScheduledHours = useAppSelector(
-    (state) => getMedicationsSchedule(state).allHoursIds,
-    shallowEqual,
-  );
+const DailyPlan = () => {
+  const dailyPlanHourIds = useAppSelector(getDailyPlanHourIds, shallowEqual);
 
   return (
     <FlatList
-      data={dailyScheduledHours}
+      data={dailyPlanHourIds}
       contentContainerStyle={styles.container}
       renderItem={({item: hourId}) => (
         <DailyScheduleItem hourId={Number(hourId)} />
@@ -30,4 +27,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DailySchedule;
+export default DailyPlan;

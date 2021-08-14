@@ -23,6 +23,7 @@ const EmptyState = ({heading, message, action, secondaryAction}: Props) => {
       </Text>
     </Pressable>
   );
+
   return (
     <View style={styles.container}>
       <Image

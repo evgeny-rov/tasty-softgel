@@ -2,14 +2,15 @@ import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {shallowEqual} from 'react-redux';
 
-import Icon from '@components/Icon';
-import {common, theme, typography} from '@styles/';
 import {useAppDispatch, useAppSelector} from 'src/hooks/reduxHooks';
-import {getMedicationsSchedule} from 'src/redux/slices/scheduled_medications/selectors';
+import {getScheduledEntry} from 'src/redux/slices/scheduled_medications/selectors';
+import {getMedicationById} from 'src/redux/slices/medications/selectors';
 import {
   addScheduledDailyMedication,
   removeScheduledDailyMedication,
 } from 'src/redux/slices/scheduled_medications/actions';
+import Icon from '@components/Icon';
+import {common, theme, typography} from '@styles/';
 
 interface Props {
   id: string;
@@ -18,13 +19,10 @@ interface Props {
 
 const MedicationsListItem = ({id, selectedHourId}: Props) => {
   const dispatch = useAppDispatch();
-  const {name, quantity} = useAppSelector(
-    (state) => state.medications.byId[id],
-  );
+  const {name, quantity} = useAppSelector(getMedicationById(id));
 
   const scheduledEntry = useAppSelector(
-    (state) =>
-      getMedicationsSchedule(state).byMedicationId[id]?.[selectedHourId],
+    getScheduledEntry(id, selectedHourId),
     shallowEqual,
   );
 

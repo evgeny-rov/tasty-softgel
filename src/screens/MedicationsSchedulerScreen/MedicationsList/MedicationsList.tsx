@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, ScrollView, StyleSheet} from 'react-native';
+import {FlatList, StyleSheet} from 'react-native';
 import {useAppSelector} from 'src/hooks/reduxHooks';
 import {getAllMedicationsIds} from 'src/redux/slices/medications/selectors';
 import SizedBox from '@components/SizedBox';

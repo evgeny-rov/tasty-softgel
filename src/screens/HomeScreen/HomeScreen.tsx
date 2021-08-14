@@ -1,8 +1,8 @@
 import React from 'react';
-import {ScrollView, Text, View} from 'react-native';
+import {Text, View} from 'react-native';
 
 import useMedicationModal from 'src/hooks/useMedicationModal';
-import DailySchedule from './DailySchedule';
+import DailyPlan from './DailyPlan';
 import FloatingActionButton from '@components/FloatingActionButton';
 import EmptyState from '@components/EmptyState';
 import {common, typography} from 'src/styles';
@@ -19,7 +19,7 @@ const HomeScreen = () => {
         <View style={common.styles.header}>
           <Text style={typography.styles.h1}>Ежедневный план</Text>
         </View>
-        <DailySchedule />
+        <DailyPlan />
         <FloatingActionButton onPress={showNewMedicationModal} />
       </View>
     );

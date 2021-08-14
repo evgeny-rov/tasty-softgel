@@ -2,13 +2,12 @@ import React from 'react';
 import {StyleProp, StyleSheet, Text, TextStyle, View} from 'react-native';
 import {shallowEqual} from 'react-redux';
 import {useAppSelector} from 'src/hooks/reduxHooks';
-import {getMedicationsSchedule} from 'src/redux/slices/scheduled_medications/selectors';
+import {getMedicationById} from 'src/redux/slices/medications/selectors';
+import {getScheduledMedicationsIdsByHourId} from 'src/redux/slices/scheduled_medications/selectors';
 import {typography} from 'src/styles';
 
 const MedicationsListItem = React.memo(({id}: {id: string}) => {
-  const {name, quantity} = useAppSelector(
-    (state) => state.medications.byId[id],
-  );
+  const {name, quantity} = useAppSelector(getMedicationById(id));
 
   const textStyle: StyleProp<TextStyle> = {
     ...typography.styles.body_bold,
@@ -25,8 +24,7 @@ const MedicationsListItem = React.memo(({id}: {id: string}) => {
 
 const MedicationsList = ({hourId}: {hourId: number}) => {
   const medicationsIds = useAppSelector(
-    (state) =>
-      Object.keys(getMedicationsSchedule(state).byHourId[hourId] ?? {}),
+    getScheduledMedicationsIdsByHourId(hourId),
     shallowEqual,
   );
   return (
