@@ -62,6 +62,9 @@ export const getMedicationsSchedule = createSelector(
   },
 );
 
+export const getIsScheduleInEmptyState = (state: RootState) =>
+  getMedicationsSchedule(state).allHoursIds.length === 0;
+
 export const getScheduledEntry = (medicationId: string, hourId: number) => (
   state: RootState,
 ) => {
@@ -143,5 +146,6 @@ export const getDailyPlan = createSelector(
   },
 );
 
-export const getDailyPlanEntryByHourId = (hourId: number) => (state: RootState) =>
-  getDailyPlan(state)[hourId];
+export const getDailyPlanEntryByHourId = (hourId: number) => (
+  state: RootState,
+) => getDailyPlan(state)[hourId];

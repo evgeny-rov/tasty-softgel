@@ -1,1 +1,1 @@
-export {default} from './newNavigation';
+export {default} from './AppNavigation';

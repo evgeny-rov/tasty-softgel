@@ -3,7 +3,9 @@ import {StyleSheet, Text, View} from 'react-native';
 import Picker from '@gregfrench/react-native-wheel-picker';
 
 import {HOURS_AS_TIME_STRING} from '@constants/';
+import {useAppSelector} from 'src/hooks/reduxHooks';
 import useMedicationModal from 'src/hooks/useMedicationModal';
+import {getIsMedicationsInEmptyState} from 'src/redux/slices/medications/selectors';
 
 import EmptyState from '@components/EmptyState';
 import MedicationsList from './MedicationsList';
@@ -20,14 +22,14 @@ const MedicationsSchedulerScreen = () => {
     PICKER_DEFAULT_HOUR_ID,
   );
   const {showNewMedicationModal} = useMedicationModal();
-  const isInEmptyState = false;
+  const isInEmptyState = useAppSelector(getIsMedicationsInEmptyState);
 
   if (!isInEmptyState) {
     return (
       <>
         <View style={common.styles.screen_container}>
           <View style={common.styles.header}>
-            <Text style={typography.styles.h1}>Выбрать часы приема</Text>
+            <Text style={typography.styles.h1}>Часы приема</Text>
           </View>
           <View style={styles.picker_container}>
             <Picker
@@ -50,7 +52,7 @@ const MedicationsSchedulerScreen = () => {
       <EmptyState
         heading={'Сперва добавьте лекарства.'}
         message={
-          'Чтобы запланировать время приема необходимо добавить лекарства.'
+          'Чтобы запланировать время для приема необходимо добавить лекарства.'
         }
         action={{
           content: 'Добавить лекарство',

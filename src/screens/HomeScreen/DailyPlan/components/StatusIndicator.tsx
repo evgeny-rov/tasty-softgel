@@ -1,7 +1,6 @@
 import React from 'react';
-import SizedBox from '@components/SizedBox';
+import {StyleSheet, View} from 'react-native';
 import {theme} from 'src/styles';
-import {StyleSheet} from 'react-native';
 
 const StatusIndicator = React.memo(
   ({
@@ -17,7 +16,7 @@ const StatusIndicator = React.memo(
     const opacity = isInactive ? 0 : 1;
 
     return (
-      <SizedBox style={[styles.status_indicator, {backgroundColor, opacity}]} />
+      <View style={{...styles.status_indicator, backgroundColor, opacity}} />
     );
   },
 );

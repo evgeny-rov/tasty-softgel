@@ -1,16 +1,18 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 
+import {useAppSelector} from 'src/hooks/reduxHooks';
 import useMedicationModal from 'src/hooks/useMedicationModal';
-import MedicationsList from './MedicationsList';
-import EmptyState from '@components/EmptyState';
-import {common, theme, typography} from '@styles/';
+import {getIsMedicationsInEmptyState} from 'src/redux/slices/medications/selectors';
 import Icon from '@components/Icon';
 import IconButton from '@components/IconButton';
+import EmptyState from '@components/EmptyState';
+import MedicationsList from './MedicationsList';
+import {common, theme, typography} from '@styles/';
 
 const MedicationsScreen = () => {
   const {showNewMedicationModal} = useMedicationModal();
-  const isInEmptyState = false;
+  const isInEmptyState = useAppSelector(getIsMedicationsInEmptyState);
 
   if (!isInEmptyState) {
     return (

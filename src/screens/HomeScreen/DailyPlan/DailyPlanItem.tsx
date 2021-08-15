@@ -48,8 +48,12 @@ const DailyPlanItem = ({hourId}: {hourId: number}) => {
 
   return (
     <Animatable.View {...animationProps} style={[styles.container, {opacity}]}>
-      <Animatable.View ref={confirmPopupRef} style={styles.confirm_popup}>
-        <Icon name="done" size={50} color={theme.colors.accent2} />
+      <Animatable.View
+        pointerEvents="none"
+        useNativeDriver
+        ref={confirmPopupRef}
+        style={styles.confirm_popup}>
+        <Icon name="done" size={30} color={theme.colors.primary} />
       </Animatable.View>
       <StatusIndicator
         isInactive={isInactive}
@@ -96,8 +100,8 @@ const styles = StyleSheet.create({
   },
   confirm_popup: {
     opacity: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
     position: 'absolute',
+    zIndex: 10,
     width: '100%',
     height: '100%',
     justifyContent: 'center',
