@@ -1,13 +1,14 @@
 import {applyMiddleware, combineReducers, createStore} from 'redux';
 import {persistStore, persistReducer} from 'redux-persist';
 import thunk from 'redux-thunk';
+import {middleware as medicationsNotificationsMiddleware} from 'src/services/notifications/medications';
 
 import medicationsReducer from '../slices/medications/reducer';
 import scheduledMedicationsReducer from '../slices/scheduled_medications/reducer';
 import medicationModalReducer from '../slices/medication_modal/reducer';
 
 import {onStartUp} from './helpers';
-import {persistConfig} from './persistor';
+import {persistConfig, bootstrapPersistor} from './persistor';
 
 const rootReducer = combineReducers({
   medications: medicationsReducer,
@@ -17,11 +18,14 @@ const rootReducer = combineReducers({
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const store = createStore(persistedReducer, applyMiddleware(thunk));
+const store = createStore(
+  persistedReducer,
+  applyMiddleware(thunk, medicationsNotificationsMiddleware),
+);
 
 const persistor = persistStore(store as any, null, () => onStartUp(store));
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
 
-export {store, persistor};
+export {store, persistor, bootstrapPersistor};

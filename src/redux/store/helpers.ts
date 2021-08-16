@@ -1,4 +1,5 @@
 import hourClockSynchronizer from '@utils/hourClockSynchronizer';
+
 import {scheduledDailyMedicationsRefreshThunk} from '../slices/scheduled_medications/actions';
 
 import type {AppDispatch, RootState} from './store';

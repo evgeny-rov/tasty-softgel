@@ -4,14 +4,6 @@ import PushNotification, {
   ReceivedNotification,
 } from 'react-native-push-notification';
 
-/* spec
-  requirements from api:
-    initialization with received configs 
-    scheduling notifications with received data
-    canceling / clearing notifications
-    handling actions
-*/
-
 type channelConfig = {
   readonly channelId: string;
   readonly channelName: string;
@@ -21,11 +13,12 @@ type channelConfig = {
 
 type initApiArguments = {
   channelsConfigs: Array<channelConfig>;
-  onNotificationActions: (notification: ReceivedNotification) => void;
+  listeners: Array<(notification: ReceivedNotification) => void>;
 };
 
 const baseParams = {
   allowWhileIdle: true,
+  color: '#FFC7DB',
   smallIcon: 'ic_notification',
   priority: 'max',
 } as const;
@@ -45,21 +38,25 @@ export const cancelNotification = (tag: string, id: number, details = {}) => {
   PushNotification.cancelLocalNotifications({id: id.toString(), ...details});
 };
 
-export const configure = ({
-  channelsConfigs,
-  onNotificationActions,
-}: initApiArguments) => {
+const handleAction = (
+  notification: ReceivedNotification,
+  listeners: Array<Function>,
+) => {
+  listeners.forEach((listener) => listener(notification));
+};
+
+export const configure = ({channelsConfigs, listeners}: initApiArguments) => {
   PushNotification.configure({
-    onAction: onNotificationActions,
+    onAction: (notification) => handleAction(notification, listeners),
     requestPermissions: false,
   });
 
   PushNotification.getChannels((existingChannels) => {
-    const channelsAlreadyConfigured = channelsConfigs.every((channel) =>
+    const isChannelsAlreadyConfigured = channelsConfigs.every((channel) =>
       existingChannels.includes(channel.channelId),
     );
 
-    if (channelsAlreadyConfigured) return;
+    if (isChannelsAlreadyConfigured) return;
 
     channelsConfigs.forEach((channel) =>
       PushNotification.createChannel(channel, () => null),

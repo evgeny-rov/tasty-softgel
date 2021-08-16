@@ -3,13 +3,13 @@ import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import SplashScreen from 'react-native-splash-screen';
 
-import {store, persistor} from './redux/store';
-import initNotifications from './services/notifications';
+import {store, persistor, bootstrapPersistor} from './redux/store';
+import {initMedicationsNotifications} from './services/notifications/medications';
 import MedicationModal from './screens/MedicationModal';
 import AppNavigation from './navigation/';
 import AppWrapper from '@components/AppWrapper';
 
-// initNotifications(store, persistor);
+initMedicationsNotifications({store, persistor, bootstrapPersistor});
 
 const App = () => {
   return (
