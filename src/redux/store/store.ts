@@ -6,6 +6,7 @@ import {middleware as medicationsNotificationsMiddleware} from 'src/services/not
 import medicationsReducer from '../slices/medications/reducer';
 import scheduledMedicationsReducer from '../slices/scheduled_medications/reducer';
 import medicationModalReducer from '../slices/medication_modal/reducer';
+import preferencesReducer from '../slices/preferences/reducer';
 
 import {onStartUp} from './helpers';
 import {persistConfig, bootstrapPersistor} from './persistor';
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   medications: medicationsReducer,
   scheduled_medications: scheduledMedicationsReducer,
   medication_modal: medicationModalReducer,
+  preferences: preferencesReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

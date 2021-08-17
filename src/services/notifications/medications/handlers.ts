@@ -2,6 +2,7 @@ import {
   createReminder,
   cancelReminder,
   issueLowSupplyNotifications,
+  cancelAllLocalNotifications,
 } from './api';
 import {HOURS_IN_A_DAY} from '@constants/';
 import {getConfirmableMedicationsByHourId} from 'src/redux/slices/scheduled_medications/selectors';
@@ -28,4 +29,15 @@ export const handleConfirmationAction = (
   cancelReminder(hourId);
   issueLowSupplyNotifications(medications);
   handleMedicationsUpdates(state);
+};
+
+export const handleStateChange = (
+  isNextStateActive: boolean,
+  state: RootState,
+) => {
+  if (isNextStateActive) {
+    handleMedicationsUpdates(state);
+  } else {
+    cancelAllLocalNotifications();
+  }
 };

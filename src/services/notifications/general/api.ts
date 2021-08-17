@@ -3,6 +3,7 @@ import PushNotification, {
   PushNotificationScheduleObject,
   ReceivedNotification,
 } from 'react-native-push-notification';
+import { theme } from 'src/styles';
 
 type channelConfig = {
   readonly channelId: string;
@@ -18,7 +19,7 @@ type initApiArguments = {
 
 const baseParams = {
   allowWhileIdle: true,
-  color: '#FFC7DB',
+  color: theme.colors.accent,
   smallIcon: 'ic_notification',
   priority: 'max',
 } as const;
@@ -36,6 +37,10 @@ export const scheduleNotification = (
 export const cancelNotification = (tag: string, id: number, details = {}) => {
   PushNotification.clearLocalNotification(tag, id);
   PushNotification.cancelLocalNotifications({id: id.toString(), ...details});
+};
+
+export const cancelAllNotifications = () => {
+  PushNotification.cancelAllLocalNotifications();
 };
 
 const handleAction = (

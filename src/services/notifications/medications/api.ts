@@ -84,6 +84,9 @@ export const cancelReminder = (hour: number) => {
   NotificationsAPI.cancelNotification(dailyReminderBaseParams.tag, hour);
 };
 
+export const cancelAllLocalNotifications =
+  NotificationsAPI.cancelAllNotifications;
+
 export const onNotificationAction = async ({
   store,
   persistor,

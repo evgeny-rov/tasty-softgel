@@ -1,10 +1,18 @@
 import {Middleware} from 'redux';
 import * as MEDICATIONS_TYPES from 'src/redux/slices/medications/actionTypes';
 import * as SCHEDULED_TYPES from 'src/redux/slices/scheduled_medications/actionTypes';
+import * as PREFERENCES_TYPES from 'src/redux/slices/preferences/actionTypes';
 import {AppDispatch, RootState} from 'src/redux/store';
-import {handleConfirmationAction, handleMedicationsUpdates} from './handlers';
+import {
+  handleConfirmationAction,
+  handleMedicationsUpdates,
+  handleStateChange,
+} from './handlers';
+import {InteractionManager} from 'react-native';
 
-const expectedStateChangeActionTypes = [];
+const expectedStateChangeActionTypes = [
+  PREFERENCES_TYPES.NOTIFICATIONS_STATE_CHANGE,
+];
 const expectedHandlersActionTypes = [
   MEDICATIONS_TYPES.UPDATE_MEDICATION,
   MEDICATIONS_TYPES.REMOVE_MEDICATION,
@@ -41,8 +49,22 @@ const medicationsNotificationsMiddleware: Middleware = ({
 }) => (next) => (action: ReturnType<AppDispatch>) => {
   const result = next(action);
 
-  if (expectedHandlersActionTypes.includes(action.type))
-    useHandler(action, getState());
+  const isNotificationsActive = getState().preferences.isNotificationsActive;
+
+  if (expectedStateChangeActionTypes.includes(action.type)) {
+    InteractionManager.runAfterInteractions(() => {
+      handleStateChange(isNotificationsActive, getState());
+    });
+  }
+
+  if (
+    isNotificationsActive &&
+    expectedHandlersActionTypes.includes(action.type)
+  ) {
+    InteractionManager.runAfterInteractions(() => {
+      useHandler(action, getState());
+    });
+  }
 
   return result;
 };

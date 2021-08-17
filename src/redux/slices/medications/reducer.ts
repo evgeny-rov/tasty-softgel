@@ -2,7 +2,7 @@ import {pickBy, without} from 'lodash';
 import * as MEDICATIONS_TYPES from './actionTypes';
 
 import subtractMedicationsQuantites from '@utils/subtractMedicationsQuantities';
-import {MedicationsActions} from './actions';
+import type {MedicationsActions} from './actions';
 import type {MedicationsState} from 'src/types';
 
 type Actions = MedicationsActions;

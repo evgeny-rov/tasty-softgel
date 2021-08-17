@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
 
 import {useAppSelector} from 'src/hooks/reduxHooks';
 import useMedicationModal from 'src/hooks/useMedicationModal';
@@ -7,7 +7,8 @@ import {getIsScheduleInEmptyState} from 'src/redux/slices/scheduled_medications/
 import FloatingActionButton from '@components/FloatingActionButton';
 import EmptyState from '@components/EmptyState';
 import DailyPlan from './DailyPlan';
-import {common, typography} from 'src/styles';
+import Header from './Header';
+import {common} from 'src/styles';
 
 import type {ScreenProps} from 'src/navigation/AppNavigation';
 
@@ -18,9 +19,7 @@ const HomeScreen = ({switchScreen}: ScreenProps) => {
   if (!isInEmptyState) {
     return (
       <View style={common.styles.screen_container}>
-        <View style={common.styles.header}>
-          <Text style={typography.styles.h1}>Ежедневный план</Text>
-        </View>
+        <Header />
         <DailyPlan />
         <FloatingActionButton onPress={showNewMedicationModal} />
       </View>
