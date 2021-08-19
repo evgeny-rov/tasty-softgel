@@ -3,13 +3,12 @@ import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {theme, typography} from 'src/styles';
 
 type Props = {
-  isInEditMode: boolean;
-  onRemove: () => void;
-  onSubmit: () => void;
   disabled: boolean;
+  onRemove?: () => void;
+  onSubmit: () => void;
 };
 
-const ModalButtons = ({isInEditMode, disabled, onRemove, onSubmit}: Props) => {
+const ModalButtons = ({disabled, onRemove, onSubmit}: Props) => {
   const submitButtonColor = disabled
     ? theme.colors.secondary_dark
     : theme.colors.primary;
@@ -24,7 +23,7 @@ const ModalButtons = ({isInEditMode, disabled, onRemove, onSubmit}: Props) => {
           Сохранить
         </Text>
       </Pressable>
-      {isInEditMode && (
+      {onRemove && (
         <Pressable onPress={onRemove}>
           <Text style={styles.remove_btn_text}>Удалить</Text>
         </Pressable>
@@ -46,4 +45,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ModalButtons;
+export default React.memo(ModalButtons);

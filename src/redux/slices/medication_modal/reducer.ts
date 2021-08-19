@@ -24,7 +24,10 @@ const reducer = (
       };
     }
     case MEDICATION_MODAL_TYPES.HIDE_MEDICATION_MODAL: {
-      return initialState;
+      return {
+        ...state,
+        isVisible: false,
+      };
     }
     default: {
       return state;

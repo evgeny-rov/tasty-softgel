@@ -1,5 +1,3 @@
-import 'react-native-get-random-values';
-import {v4 as uuidv4} from 'uuid';
 import * as TYPES from './actionTypes';
 import type {Medication} from 'src/types';
 import type {AppDispatch, RootState} from 'src/redux/store';
@@ -7,8 +5,6 @@ import {
   getConfirmableMedicationsByHourId,
   getHourIdNow,
 } from '../scheduled_medications/selectors';
-
-const MEDICATION_ID_PREFIX = 'med-';
 
 export type addMedicationAction = {
   type: typeof TYPES.ADD_MEDICATION;
@@ -42,19 +38,9 @@ export type MedicationsActions =
   | updateMedicationAction
   | confirmConsumptionAction;
 
-export const addMedication = ({
-  name,
-  quantity,
-}: {
-  name: string;
-  quantity: number;
-}): addMedicationAction => ({
+export const addMedication = (medication: Medication): addMedicationAction => ({
   type: TYPES.ADD_MEDICATION,
-  payload: {
-    id: MEDICATION_ID_PREFIX + uuidv4(),
-    name,
-    quantity,
-  },
+  payload: medication,
 });
 
 export const removeMedication = ({

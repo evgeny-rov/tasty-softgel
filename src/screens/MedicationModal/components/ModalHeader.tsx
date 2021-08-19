@@ -32,4 +32,4 @@ const styles = StyleSheet.create({
   card_title: {...typography.styles.h1, flex: 1},
 });
 
-export default ModalHeader;
+export default React.memo(ModalHeader);

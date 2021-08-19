@@ -4,14 +4,18 @@ import {
   hideMedicationModal,
 } from 'src/redux/slices/medication_modal/actions';
 import type {Medication} from 'src/types';
+import {useCallback} from 'react';
 
 export default () => {
   const dispatch = useAppDispatch();
 
   return {
-    showNewMedicationModal: () => dispatch(showMedicationModal()),
+    showNewMedicationModal: useCallback(
+      () => dispatch(showMedicationModal()),
+      [],
+    ),
     showUpdateMedicationModal: (data: Medication) =>
       dispatch(showMedicationModal(data)),
-    hideMedicationModal: () => dispatch(hideMedicationModal()),
+    hideMedicationModal: useCallback(() => dispatch(hideMedicationModal()), []),
   };
 };
