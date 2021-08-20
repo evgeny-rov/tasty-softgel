@@ -1,8 +1,7 @@
 import React from 'react';
-import {GestureResponderEvent} from 'react-native';
-import {Pressable, StyleSheet} from 'react-native';
-import {theme} from '@styles/';
+import {GestureResponderEvent, Pressable, StyleSheet} from 'react-native';
 import Icon from './Icon';
+import {theme} from '@styles/';
 
 interface Props {
   onPress: (event: GestureResponderEvent) => void;

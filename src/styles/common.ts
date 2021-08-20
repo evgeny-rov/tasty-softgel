@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginHorizontal: 20,
-    marginVertical: 30,
+    marginVertical: 20,
   },
   absolutely_full: {
     position: 'absolute',

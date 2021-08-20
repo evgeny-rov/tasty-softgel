@@ -1,42 +1,28 @@
-export type Medicine = {
+export type Medication = {
   id: string;
   name: string;
-  count: number;
+  quantity: number;
 };
 
-export type MedicinesState = {
+export type MedicationsState = {
   allIds: string[];
-  byId: {
-    [id: string]: Medicine;
-  };
+  byId: Record<string, Medication>
 };
 
-export type Assignment = {
+export type DailyMedication = {
   id: string;
-  hour: number;
-  medicineId: string;
+  medicationId: string;
+  hourId: number;
 };
 
-export type AssignmentsState = {
-  byId: {
-    [id: string]: Assignment;
-  };
-};
-
-export type DailyAssignmentsState = {
-  currentHour: number;
-  confirmedHours: number[];
+export type ScheduledMedicationsState = {
+  hourIdNow: number;
+  confirmedHourIds: number[];
   lastConfirmationAt: number;
+  daily_medications: Record<string, DailyMedication>;
 };
 
-export type ModalMedicineState = {
+export type MedicationModalState = {
   isVisible: boolean;
-  data: Medicine | null;
-};
-
-export type AppStateType = {
-  medicines: MedicinesState;
-  assignments: AssignmentsState;
-  daily_assignments: DailyAssignmentsState;
-  modal_medicine: ModalMedicineState;
+  data: Medication | null;
 };

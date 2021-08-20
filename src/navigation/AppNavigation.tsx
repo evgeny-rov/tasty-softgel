@@ -1,92 +1,54 @@
-import React, {useState} from 'react';
-import {StyleSheet} from 'react-native';
-import {
-  NavigationState,
-  SceneMap,
-  SceneRendererProps,
-  TabBar,
-  TabView,
-} from 'react-native-tab-view';
+import React, {useRef, useState} from 'react';
+import {View} from 'react-native';
+import PagerView from 'react-native-pager-view';
 
 import HomeScreen from '../screens/HomeScreen';
-import MedicineManagerScreen from '../screens/MedicineManagerScreen';
-import AssignmentsScreen from '../screens/AssignmentsScreen';
-import Icon from '@components/Icon';
-import {theme} from 'src/styles';
+import MedicationsScreen from '../screens/MedicationsScreen';
+import MedicationsSchedulerScreen from '../screens/MedicationsSchedulerScreen';
+import TabBar from './TabBar';
+import {common} from 'src/styles';
 
-type Route = {
-  key: string;
-  icon: React.ComponentProps<typeof Icon>['name'];
+const routes = {home: 0, medications: 1, medications_scheduler: 2} as const;
+
+export type ScreenProps = {
+  switchScreen: (key: keyof typeof routes) => void;
 };
 
-type State = NavigationState<Route>;
+const Pager = React.memo(
+  ({setPageIndex}: {setPageIndex: (page: number) => void}) => {
+    const pagerRef = useRef<PagerView>(null);
 
-const initialNavigationState: State = {
-  index: 0,
-  routes: [
-    {key: 'home', icon: 'home'},
-    {key: 'medicine_manager', icon: 'pills'},
-    {
-      key: 'medicine_assignments',
-      icon: 'assignment',
-    },
-  ],
-};
+    const setPage: ScreenProps['switchScreen'] = (key) =>
+      pagerRef.current?.setPage(routes[key]);
 
-const renderScene = SceneMap({
-  home: HomeScreen,
-  medicine_manager: MedicineManagerScreen,
-  medicine_assignments: AssignmentsScreen,
-});
+    return (
+      <PagerView
+        initialPage={routes.home}
+        ref={pagerRef}
+        onPageSelected={(e) => setPageIndex(e.nativeEvent.position)}
+        style={common.styles.flex}>
+        <View key={routes.home}>
+          <HomeScreen switchScreen={setPage} />
+        </View>
+        <View key={routes.medications}>
+          <MedicationsScreen />
+        </View>
+        <View key={routes.medications_scheduler}>
+          <MedicationsSchedulerScreen />
+        </View>
+      </PagerView>
+    );
+  },
+);
 
-export default () => {
-  const [state, setState] = useState<State>(initialNavigationState);
-
-  const handleIndexChange = (index: number) => {
-    setState({...state, index});
-  };
-
-  const renderIcon = ({route, focused}: {route: Route; focused: boolean}) => (
-    <Icon
-      name={route.icon}
-      color={focused ? theme.colors.accent : theme.colors.secondary}
-    />
-  );
-
-  const renderTabBar = (
-    props: SceneRendererProps & {navigationState: State},
-  ) => (
-    <TabBar
-      {...props}
-      pressColor={theme.colors.accent}
-      renderLabel={() => null}
-      renderIndicator={() => null}
-      contentContainerStyle={styles.tabbar_content_container}
-      style={styles.tabbar}
-      renderIcon={renderIcon}
-    />
-  );
-
+const AppNavigation = () => {
+  const [pageIndex, setPageIndex] = useState(0);
   return (
     <>
-      <TabView
-        lazyPreloadDistance={3}
-        navigationState={state}
-        onIndexChange={handleIndexChange}
-        // lazy={false}
-        renderScene={renderScene}
-        renderTabBar={renderTabBar}
-        tabBarPosition="bottom"></TabView>
+      <Pager setPageIndex={setPageIndex} />
+      <TabBar pageIndex={pageIndex} />
     </>
   );
 };
 
-const styles = StyleSheet.create({
-  tabbar: {
-    height: 40,
-    backgroundColor: '#000',
-  },
-  tabbar_content_container: {
-    alignItems: 'center',
-  },
-});
+export default AppNavigation;

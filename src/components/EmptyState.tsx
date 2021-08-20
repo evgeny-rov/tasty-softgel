@@ -23,6 +23,7 @@ const EmptyState = ({heading, message, action, secondaryAction}: Props) => {
       </Text>
     </Pressable>
   );
+
   return (
     <View style={styles.container}>
       <Image
@@ -66,4 +67,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EmptyState;
+export default React.memo(EmptyState);

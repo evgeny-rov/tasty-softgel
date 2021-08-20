@@ -1,9 +1,9 @@
 import React from 'react';
 import {createIconSetFromIcoMoon} from 'react-native-vector-icons';
-import {theme} from 'src/styles';
 import icomoonIconFontConfig from '../configs/icomoonIconFontConfig.json';
+import {theme} from 'src/styles';
 
-const Icon = createIconSetFromIcoMoon(icomoonIconFontConfig);
+const IconSet = createIconSetFromIcoMoon(icomoonIconFontConfig);
 
 type iconNames =
   | 'pills'
@@ -27,6 +27,8 @@ type Props = {
   size?: number;
 };
 
-export default ({size, ...props}: Props) => {
-  return <Icon {...props} size={size ? size : theme.icon_size} />;
+const Icon = ({size, ...props}: Props) => {
+  return <IconSet {...props} size={size ? size : theme.icon_size} />;
 };
+
+export default React.memo(Icon);

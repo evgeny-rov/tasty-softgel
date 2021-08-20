@@ -7,7 +7,7 @@ interface Props {
   children?: ReactNode;
 }
 
-const RepeatingButton = ({action, children}: Props) => {
+const RepeatedActionButton = ({action, children}: Props) => {
   const [pressedIn, setPressedIn] = useState(false);
 
   useEffect(() => {
@@ -29,4 +29,4 @@ const RepeatingButton = ({action, children}: Props) => {
   );
 };
 
-export default RepeatingButton;
+export default React.memo(RepeatedActionButton);
