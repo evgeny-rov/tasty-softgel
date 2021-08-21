@@ -1,14 +1,15 @@
+import {InteractionManager} from 'react-native';
 import {Middleware} from 'redux';
 import * as MEDICATIONS_TYPES from 'src/redux/slices/medications/actionTypes';
 import * as SCHEDULED_TYPES from 'src/redux/slices/scheduled_medications/actionTypes';
 import * as PREFERENCES_TYPES from 'src/redux/slices/preferences/actionTypes';
-import {AppDispatch, RootState} from 'src/redux/store';
 import {
   handleConfirmationAction,
   handleMedicationsUpdates,
   handleStateChange,
 } from './handlers';
-import {InteractionManager} from 'react-native';
+
+import type {AppDispatch, RootState} from 'src/redux/store';
 
 const expectedStateChangeActionTypes = [
   PREFERENCES_TYPES.NOTIFICATIONS_STATE_CHANGE,

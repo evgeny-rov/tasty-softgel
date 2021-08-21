@@ -15,6 +15,7 @@ import ModalAmountCounter from './components/ModalAmountCounter';
 import ModalButtons from './components/ModalButtons';
 import {common, theme, typography} from '@styles/';
 import type {Medication} from 'src/types';
+import useSwipeDown from 'src/hooks/useSwipeDown';
 
 const MED_DEFAULT_HEADER_TITLE = 'Новое лекарство';
 
@@ -23,9 +24,10 @@ type Props = {
   isInEditMode: boolean;
 };
 
-const Combined = ({medication, isInEditMode}: Props) => {
+const MedicationModalContent = ({medication, isInEditMode}: Props) => {
   const dispatch = useAppDispatch();
   const {hideMedicationModal} = useMedicationModal();
+  const swipeDownResponderProps = useSwipeDown(150, hideMedicationModal);
 
   const [name, setName] = useState(medication.name);
   const [quantity, setQuantity] = useState(medication.quantity);
@@ -61,7 +63,7 @@ const Combined = ({medication, isInEditMode}: Props) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} {...swipeDownResponderProps}>
       <View style={styles.section}>
         <ModalHeader
           headerTitle={
@@ -124,4 +126,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Combined;
+export default MedicationModalContent;
