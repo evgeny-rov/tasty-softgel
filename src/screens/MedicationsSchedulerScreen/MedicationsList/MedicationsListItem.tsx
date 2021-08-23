@@ -47,9 +47,9 @@ const MedicationsListItem = ({id, selectedHourId}: Props) => {
         hitSlop={15}
         onPress={toggleScheduledStatus}>
         <Icon
-          name={scheduledEntry !== undefined ? 'bell_active' : 'bell_inactive'}
+          name={scheduledEntry !== undefined ? 'bell' : 'bell_outline'}
           color={theme.colors.primary}
-          size={20}
+          size={18}
         />
       </Pressable>
     </View>

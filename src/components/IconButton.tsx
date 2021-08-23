@@ -7,7 +7,7 @@ type Props = {
   children: ReactNode;
 };
 
-export default ({onPress, children}: Props) => (
+const IconButton = ({onPress, children}: Props) => (
   <Pressable
     android_ripple={theme.configs.ripple_sm}
     onPress={onPress}
@@ -15,3 +15,5 @@ export default ({onPress, children}: Props) => (
     {children}
   </Pressable>
 );
+
+export default IconButton;

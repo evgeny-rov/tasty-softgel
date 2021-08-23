@@ -3,23 +3,9 @@ import {createIconSetFromIcoMoon} from 'react-native-vector-icons';
 import icomoonIconFontConfig from '../configs/icomoonIconFontConfig.json';
 import {theme} from 'src/styles';
 
-const IconSet = createIconSetFromIcoMoon(icomoonIconFontConfig);
+const FontIcon = createIconSetFromIcoMoon(icomoonIconFontConfig);
 
-type iconNames =
-  | 'pills'
-  | 'error'
-  | 'add'
-  | 'clear'
-  | 'alarm'
-  | 'arrow_down'
-  | 'arrow_left'
-  | 'arrow_right'
-  | 'arrow_up'
-  | 'bell_active'
-  | 'bell_inactive'
-  | 'assignment'
-  | 'done'
-  | 'home';
+type iconNames = typeof icomoonIconFontConfig.icons[number]['properties']['name'];
 
 type Props = {
   name: iconNames;
@@ -28,7 +14,7 @@ type Props = {
 };
 
 const Icon = ({size, ...props}: Props) => {
-  return <IconSet {...props} size={size ? size : theme.icon_size} />;
+  return <FontIcon {...props} size={size ? size : theme.icon_size} />;
 };
 
 export default React.memo(Icon);

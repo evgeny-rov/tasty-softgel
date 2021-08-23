@@ -20,7 +20,7 @@ const Header = () => {
       <Text style={typography.styles.h1}>Ежедневный план</Text>
       <IconButton onPress={toggleNotifications}>
         <Icon
-          name={isNotificationsActive ? 'bell_active' : 'bell_inactive'}
+          name={isNotificationsActive ? 'bell' : 'bell_outline'}
           size={16}
           color={theme.colors.primary}
         />
