@@ -51,7 +51,7 @@ const MedicationsSchedulerScreen = () => {
       <EmptyState
         heading={'Сперва добавьте лекарства.'}
         message={
-          'Чтобы запланировать время для приема необходимо добавить лекарства.'
+          'Чтобы назначить часы приема сперва добавьте лекарства.'
         }
         action={{
           content: 'Добавить лекарство',
@@ -64,18 +64,16 @@ const MedicationsSchedulerScreen = () => {
 
 export const styles = StyleSheet.create({
   picker_container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    ...common.styles.flex,
+    ...common.styles.centered,
   },
   picker: {
     width: '100%',
-    height: '80%',
+    height: '100%',
   },
   list_container: {
+    flex: 2.5,
     paddingHorizontal: 20,
-    flex: 2,
-    overflow: 'hidden',
   },
 });
 

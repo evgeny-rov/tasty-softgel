@@ -1,5 +1,6 @@
 import React, {useCallback} from 'react';
 import {Pressable, View, StyleSheet, ViewStyle, ViewProps} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import {shallowEqual} from 'react-redux';
 import * as Animatable from 'react-native-animatable';
 
@@ -39,7 +40,7 @@ const DailyPlanItem = ({hourId}: {hourId: number}) => {
   const containerAnimationProps = shouldSeekAttention
     ? seekerAnimationProps
     : null;
-  const opacity = isInactive ? 0.5 : 1;
+  const opacity = isInactive ? 0.8 : 1;
 
   const confirmAction = useCallback(() => {
     dispatch(confirmConsumptionThunk(hourId));
@@ -52,7 +53,15 @@ const DailyPlanItem = ({hourId}: {hourId: number}) => {
   }, [hourId]);
 
   return (
-    <View {...containerAnimationProps} style={[styles.container, {opacity}]}>
+    <Animatable.View
+      {...containerAnimationProps}
+      style={[styles.container, {opacity}]}>
+      <LinearGradient
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 0}}
+        colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0)']}
+        style={styles.container_background}
+      />
       <ConfirmationPopup myRef={confirmPopUpAnims.ref} />
       <Animatable.View
         ref={innerWrapper.ref}
@@ -65,7 +74,7 @@ const DailyPlanItem = ({hourId}: {hourId: number}) => {
         <Pressable
           disabled={isSuppliesDepleted}
           onLongPress={confirmAction}
-          android_ripple={theme.configs.full}
+          android_ripple={{color: theme.colors.accent2}}
           style={styles.main_content}>
           <View style={styles.section}>
             <StatusBar
@@ -80,17 +89,23 @@ const DailyPlanItem = ({hourId}: {hourId: number}) => {
           </View>
         </Pressable>
       </Animatable.View>
-    </View>
+    </Animatable.View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    position: 'relative',
     flex: 1,
-    marginVertical: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    // marginVertical: 10,
+    // backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 7,
     overflow: 'hidden',
+  },
+  container_background: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
   },
   inner_wrapper: {
     backgroundColor: 'transparent',

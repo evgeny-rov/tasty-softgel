@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Image, Text, StyleSheet, Pressable} from 'react-native';
 import SizedBox from './SizedBox';
-import {theme, typography} from 'src/styles';
+import {theme, typography, common} from 'src/styles';
 
 type Action = {
   content: string;
@@ -42,9 +42,8 @@ const EmptyState = ({heading, message, action, secondaryAction}: Props) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    ...common.styles.flex,
+    ...common.styles.centered,
     paddingHorizontal: 40,
     paddingVertical: 30,
   },

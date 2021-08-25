@@ -2,7 +2,7 @@ import Icon from '@components/Icon';
 import React from 'react';
 import {StyleSheet, ViewProps, ViewStyle, View} from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import {theme} from 'src/styles';
+import {common, theme} from 'src/styles';
 
 const ConfirmationPopUp = ({
   myRef,
@@ -24,13 +24,12 @@ const ConfirmationPopUp = ({
 
 const styles = StyleSheet.create({
   confirm_popup: {
+    ...common.styles.centered,
     opacity: 0,
     position: 'absolute',
     zIndex: 10,
     width: '100%',
     height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 

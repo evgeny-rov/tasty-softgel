@@ -22,17 +22,17 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontSize: theme.size.m,
   },
-  body_sm: {
-    color: theme.colors.primary,
-    fontWeight: 'bold',
-    fontSize: theme.size.sm,
-  },
   body_bold: {
     color: theme.colors.primary,
     fontWeight: '700',
     fontSize: theme.size.m,
   },
-  body_sub_gray: {
+  subtext: {
+    color: theme.colors.primary,
+    fontWeight: 'bold',
+    fontSize: theme.size.sm,
+  },
+  subtext_secondary: {
     color: theme.colors.secondary,
     fontSize: theme.size.sm,
     fontWeight: '500',

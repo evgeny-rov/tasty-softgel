@@ -16,7 +16,11 @@ const MedicationsList = ({selectedHourId}: Props) => {
 
   return (
     <FlatList
-      style={styles.container}
+      style={{marginBottom: 30}}
+      contentContainerStyle={styles.container}
+      fadingEdgeLength={100}
+      overScrollMode={'never'}
+      showsVerticalScrollIndicator={false}
       data={medicationsIds}
       ItemSeparatorComponent={ListSeparator}
       keyExtractor={(id) => id}

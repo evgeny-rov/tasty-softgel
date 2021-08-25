@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Alert, StyleSheet, Text, TextInput, View} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 import {useAppDispatch} from 'src/hooks/reduxHooks';
 import useMedicationModal from 'src/hooks/useMedicationModal';
@@ -50,11 +51,11 @@ const MedicationModalContent = ({medication, isInEditMode}: Props) => {
   const requestRemove = () => {
     if (isInEditMode) {
       Alert.alert(
-        'Подтвердите удаление',
+        'Подтверждение',
         'Вы уверены что хотите удалить это лекарство?',
         [
-          {text: 'Нет', style: 'cancel'},
-          {text: 'Да', onPress: handleRemove, style: 'destructive'},
+          {text: 'Отменить', style: 'cancel'},
+          {text: 'Удалить', onPress: handleRemove, style: 'destructive'},
         ],
       );
     } else {
@@ -63,7 +64,10 @@ const MedicationModalContent = ({medication, isInEditMode}: Props) => {
   };
 
   return (
-    <View style={styles.container} {...swipeDownResponderProps}>
+    <LinearGradient
+      colors={['rgba(85, 81, 122, 0.8)', 'rgba(17, 16, 24, 0.8)']}
+      style={styles.container}
+      {...swipeDownResponderProps}>
       <View style={styles.section}>
         <ModalHeader
           headerTitle={
@@ -98,7 +102,7 @@ const MedicationModalContent = ({medication, isInEditMode}: Props) => {
         onSubmit={handleSubmit}
         {...(isInEditMode && {onRemove: requestRemove})}
       />
-    </View>
+    </LinearGradient>
   );
 };
 
@@ -109,7 +113,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     borderTopEndRadius: 30,
     marginTop: 50,
-    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    overflow: 'hidden',
   },
   section: {
     flex: 0,

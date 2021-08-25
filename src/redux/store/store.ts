@@ -9,7 +9,7 @@ import medicationModalReducer from '../slices/medication_modal/reducer';
 import preferencesReducer from '../slices/preferences/reducer';
 
 import {onStartUp} from './helpers';
-import {persistConfig, bootstrapPersistor} from './persistor';
+import {persistConfig, persistorLoadedListener} from './persistor';
 
 const rootReducer = combineReducers({
   medications: medicationsReducer,
@@ -30,4 +30,4 @@ const persistor = persistStore(store as any, null, () => onStartUp(store));
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
 
-export {store, persistor, bootstrapPersistor};
+export {store, persistor, persistorLoadedListener};

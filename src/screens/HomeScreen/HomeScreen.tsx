@@ -28,13 +28,13 @@ const HomeScreen = ({switchScreen}: ScreenProps) => {
     return (
       <EmptyState
         heading={'Здесь совсем пусто...'}
-        message={'Добавьте новые лекарства и выберите время для приема.'}
+        message={'Добавьте новые лекарства и назначьте часы приема.'}
         action={{
           content: 'Добавить лекарство',
           onPress: showNewMedicationModal,
         }}
         secondaryAction={{
-          content: 'Выбрать время для приема',
+          content: 'Назачить часы приема',
           onPress: () => switchScreen('medications_scheduler'),
         }}
       />

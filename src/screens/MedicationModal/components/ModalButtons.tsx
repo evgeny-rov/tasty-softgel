@@ -10,21 +10,18 @@ type Props = {
 
 const ModalButtons = ({disabled, onRemove, onSubmit}: Props) => {
   const submitButtonColor = disabled
-    ? theme.colors.secondary_dark
+    ? theme.colors.secondary
     : theme.colors.primary;
 
   return (
     <View style={styles.wrapper}>
-      <Pressable
-        disabled={disabled}
-        onPress={onSubmit}
-        android_ripple={theme.configs.ripple_xl}>
+      <Pressable hitSlop={20} disabled={disabled} onPress={onSubmit}>
         <Text style={[typography.styles.body_bold, {color: submitButtonColor}]}>
           Сохранить
         </Text>
       </Pressable>
       {onRemove && (
-        <Pressable onPress={onRemove}>
+        <Pressable hitSlop={20} onPress={onRemove}>
           <Text style={styles.remove_btn_text}>Удалить</Text>
         </Pressable>
       )}
