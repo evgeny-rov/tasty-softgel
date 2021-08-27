@@ -3,7 +3,7 @@ import {StyleSheet, View} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 
 import Icon from '@components/Icon';
-import {theme} from 'src/styles';
+import {common, theme} from 'src/styles';
 
 const animations = {
   expand: {
@@ -56,14 +56,13 @@ const TabBar = React.memo(({pageIndex}: {pageIndex: number}) => {
 
 const styles = StyleSheet.create({
   container: {
+    ...common.styles.centered,
     opacity: 0.7,
     position: 'absolute',
     bottom: 0,
     height: 30,
     width: '100%',
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   item: {
     marginHorizontal: 10,

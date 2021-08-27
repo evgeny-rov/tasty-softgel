@@ -25,7 +25,7 @@ const MedicationsListItem = ({id}: {id: string}) => {
         <ScheduledHourIdsList medicationId={id} />
       </View>
       <View>
-        <Text style={typography.styles.body_sm}>{quantity} шт.</Text>
+        <Text style={typography.styles.subtext}>{quantity} шт.</Text>
       </View>
     </Pressable>
   );

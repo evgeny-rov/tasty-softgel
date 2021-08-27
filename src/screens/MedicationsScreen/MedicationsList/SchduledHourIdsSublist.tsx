@@ -9,13 +9,13 @@ import {typography, common} from 'src/styles';
 
 const ListSeparator = () => <SizedBox width={5} />;
 const EmptyListPlaceholder = () => (
-  <Text style={typography.styles.body_sub_gray}>Прием не назначен</Text>
+  <Text style={typography.styles.subtext_secondary}>Прием не назначен</Text>
 );
 
 const ScheduledHourIdsItem = React.memo(({hourId}: {hourId: number}) => {
   return (
     <>
-      <Text style={typography.styles.body_sub_gray}>
+      <Text style={typography.styles.subtext_secondary}>
         {HOURS_AS_TIME_STRING[hourId]}
       </Text>
       <ListSeparator />
@@ -44,7 +44,7 @@ const ScheduledHourIdsList = React.memo(
 
 const styles = StyleSheet.create({
   scheduled_items_container: {
-    ...common.styles.row,
+    flexDirection: 'row',
     flexWrap: 'wrap',
   },
 });

@@ -10,6 +10,10 @@ const MedicationsList = () => {
 
   return (
     <FlatList
+      fadingEdgeLength={300}
+      overScrollMode={'never'}
+      showsVerticalScrollIndicator={false}
+      style={{marginBottom: 20}}
       data={medications}
       renderItem={({item: id}) => <MedicationsListItem id={id} />}
       keyExtractor={(id) => id}

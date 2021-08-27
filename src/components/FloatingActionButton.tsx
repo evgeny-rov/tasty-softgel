@@ -1,34 +1,50 @@
 import React from 'react';
 import {GestureResponderEvent, Pressable, StyleSheet} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import hexToRgb from '@utils/hexToRgb';
 import Icon from './Icon';
-import {theme} from '@styles/';
+import {theme, common} from '@styles/';
 
-interface Props {
+type Props = {
   onPress: (event: GestureResponderEvent) => void;
-}
+};
 
-const FloatingActionButton: React.FC<Props> = ({onPress}) => {
+const FloatingActionButton = ({onPress}: Props) => {
   return (
-    <Pressable
-      style={styles.floatingActionBtn}
-      android_ripple={theme.configs.ripple_contained}
-      onPress={onPress}>
-      <Icon name="pills" color="#000" />
-    </Pressable>
+    <LinearGradient
+      colors={[
+        hexToRgb(theme.colors.accent2, 0.4),
+        hexToRgb(theme.colors.attention, 0.4),
+      ]}
+      start={{x: 1, y: 0}}
+      end={{x: 0, y: 1}}
+      style={styles.container}>
+      <Pressable
+        style={styles.inner}
+        android_ripple={{color: theme.colors.primary}}
+        onPress={onPress}>
+        <Icon name="pills" color={theme.colors.primary} />
+      </Pressable>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
-  floatingActionBtn: {
-    backgroundColor: theme.colors.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
+  container: {
     position: 'absolute',
-    bottom: 30,
-    right: 30,
+    overflow: 'hidden',
+    bottom: 40,
+    right: 35,
     height: 80,
-    width: 50,
-    borderRadius: 100,
+    width: 45,
+    backgroundColor: hexToRgb(theme.colors.accent, 0.8),
+    borderRadius: 50,
+  },
+  inner: {
+    ...common.styles.flex,
+    ...common.styles.centered,
+    width: '100%',
+    height: '100%',
   },
 });
 

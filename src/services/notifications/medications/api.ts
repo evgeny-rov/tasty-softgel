@@ -16,7 +16,7 @@ type NotificationsParams = {
     dispatch: AppDispatch;
   };
   persistor: Persistor;
-  bootstrapPersistor: (persistor: Persistor) => Promise<unknown>;
+  persistorLoadedListener: (persistor: Persistor) => Promise<unknown>;
 };
 
 interface onNotification extends NotificationsParams {
@@ -91,14 +91,14 @@ export const onNotificationAction = async ({
   store,
   persistor,
   notification,
-  bootstrapPersistor,
+  persistorLoadedListener,
 }: onNotification) => {
   const wasAlreadyInvoked = notificationsCache.has(notification.id);
 
   if (!wasAlreadyInvoked) {
     notificationsCache.add(notification.id);
     const hourId = Number(notification.id);
-    await bootstrapPersistor(persistor);
+    await persistorLoadedListener(persistor);
     store.dispatch(confirmConsumptionThunk(hourId));
     await persistor.flush();
   } else {
@@ -109,17 +109,24 @@ export const onNotificationAction = async ({
 export const notificationListener = ({
   store,
   persistor,
-  bootstrapPersistor,
+  persistorLoadedListener,
 }: NotificationsParams) => (notification: ReceivedNotification) =>
-  onNotificationAction({notification, store, persistor, bootstrapPersistor});
+  onNotificationAction({
+    notification,
+    store,
+    persistor,
+    persistorLoadedListener,
+  });
 
 export const initMedicationsNotifications = ({
   store,
   persistor,
-  bootstrapPersistor,
+  persistorLoadedListener,
 }: NotificationsParams) => {
   NotificationsAPI.configure({
     channelsConfigs: Object.values(channelsData.byId),
-    listeners: [notificationListener({store, persistor, bootstrapPersistor})],
+    listeners: [
+      notificationListener({store, persistor, persistorLoadedListener}),
+    ],
   });
 };

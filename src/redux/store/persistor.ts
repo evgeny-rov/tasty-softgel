@@ -9,7 +9,7 @@ const persistConfig = {
   blacklist: ['medication_modal'],
 };
 
-const bootstrapPersistor = (persistor: Persistor) => {
+const persistorLoadedListener = (persistor: Persistor) => {
   return new Promise((resolve, reject) => {
     let unsubscribe: PersistorSubscribeCallback | null = null;
 
@@ -32,4 +32,4 @@ const bootstrapPersistor = (persistor: Persistor) => {
   });
 };
 
-export {persistConfig, bootstrapPersistor};
+export {persistConfig, persistorLoadedListener};

@@ -1,15 +1,14 @@
 import 'react-native-get-random-values';
 import {v4 as uuid} from 'uuid';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {BackHandler, Dimensions, StyleSheet} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 
 import {useAppSelector} from 'src/hooks/reduxHooks';
 import useMedicationModal from 'src/hooks/useMedicationModal';
 import useNonInitialRender from 'src/hooks/useNonInitialRender';
-import MedicationModalInnerContent from './MedicationModalInnerContent';
+import MedicationModalContent from './MedicationModalContent';
 import type {Medication} from 'src/types';
-import {useState} from 'react';
 
 const MEDICATION_ID_PREFIX = 'med-';
 const MED_DEFAULT_NAME = '';
@@ -36,7 +35,7 @@ const getNewMedicationDraft = (): Medication => ({
   quantity: MED_DEFAULT_QUANTITY,
 });
 
-const CustomModal = () => {
+const MedicationModal = () => {
   const {isVisible, data} = useAppSelector((state) => state.medication_modal);
   const {hideMedicationModal} = useMedicationModal();
   const isNonInitialRender = useNonInitialRender();
@@ -68,10 +67,10 @@ const CustomModal = () => {
 
   return (
     <Animatable.View
-      duration={300}
+      duration={400}
       animation={isNonInitialRender ? getAnimation(isVisible) : undefined}
       style={styles.container}>
-      <MedicationModalInnerContent
+      <MedicationModalContent
         key={medication.id}
         medication={medication}
         isInEditMode={data !== null}
@@ -91,4 +90,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomModal;
+export default MedicationModal;

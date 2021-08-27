@@ -40,16 +40,16 @@ const MedicationsListItem = ({id, selectedHourId}: Props) => {
     <View style={styles.container}>
       <View style={common.styles.col}>
         <Text style={typography.styles.body_bold}>{name}</Text>
-        <Text style={typography.styles.body_sub_gray}>{quantity} шт.</Text>
+        <Text style={typography.styles.subtext_secondary}>{quantity} шт.</Text>
       </View>
       <Pressable
         android_ripple={theme.configs.ripple_sm}
         hitSlop={15}
         onPress={toggleScheduledStatus}>
         <Icon
-          name={scheduledEntry !== undefined ? 'bell_active' : 'bell_inactive'}
+          name={scheduledEntry !== undefined ? 'bell' : 'bell_outline'}
           color={theme.colors.primary}
-          size={20}
+          size={18}
         />
       </Pressable>
     </View>
