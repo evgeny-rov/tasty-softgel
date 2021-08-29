@@ -1,11 +1,9 @@
-import {AppState} from 'react-native';
-
 const MS_IN_HOUR = 60 * 60 * 1000;
 const MAX_TICK_TIMEOUT_IN_MS = 30 * 1000;
 
 const hourClockSynchronizer = (
   requestHour: () => number,
-  hoursOutOfSyncCallback: () => void,
+  refreshClock: () => void,
 ) => {
   let timerId: NodeJS.Timeout | null = null;
 
@@ -14,7 +12,7 @@ const hourClockSynchronizer = (
     const msToNextHour = MS_IN_HOUR - (timeNow.getTime() % MS_IN_HOUR);
     const storedHour = requestHour();
 
-    if (storedHour !== timeNow.getHours()) hoursOutOfSyncCallback();
+    if (storedHour !== timeNow.getHours()) refreshClock();
 
     const nextTick =
       msToNextHour > MAX_TICK_TIMEOUT_IN_MS
@@ -25,19 +23,18 @@ const hourClockSynchronizer = (
   };
 
   const start = () => {
+    console.log('clock start')
+    refreshClock();
     timerId && clearTimeout(timerId);
     tick();
   };
 
   const stop = () => {
+    console.log('clock stop')
     timerId && clearTimeout(timerId);
   };
 
-  AppState.addEventListener('change', (state) => {
-    state === 'active' ? start() : stop();
-  });
-
-  start();
+  return {start, stop};
 };
 
 export default hourClockSynchronizer;
