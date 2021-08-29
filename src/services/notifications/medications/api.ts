@@ -2,6 +2,7 @@ import * as NotificationsAPI from '../general/api';
 import {HOURS_AS_TIME_STRING} from '@constants/';
 import groupMedicationsBySupply from '@utils/groupMedicationsBySupply';
 import getAvailableDateFromHour from '@utils/getAvailableDateFromHour';
+import {scheduledDailyMedicationsRefreshThunk} from 'src/redux/slices/scheduled_medications/actions';
 import {confirmConsumptionThunk} from 'src/redux/slices/medications/actions';
 import {channelsData} from './channels';
 
@@ -23,7 +24,7 @@ interface onNotification extends NotificationsParams {
   notification: ReceivedNotification;
 }
 
-const notificationsCache = new Set();
+const notificationsInProcessCache = new Set();
 
 const dailyReminderBaseParams = {
   channelId: channelsData.byId.daily_notifications.channelId,
@@ -93,16 +94,23 @@ export const onNotificationAction = async ({
   notification,
   persistorLoadedListener,
 }: onNotification) => {
-  const wasAlreadyInvoked = notificationsCache.has(notification.id);
+  const wasAlreadyInvoked = notificationsInProcessCache.has(notification.id);
 
-  if (!wasAlreadyInvoked) {
-    notificationsCache.add(notification.id);
-    const hourId = Number(notification.id);
-    await persistorLoadedListener(persistor);
-    store.dispatch(confirmConsumptionThunk(hourId));
-    await persistor.flush();
-  } else {
+  if (wasAlreadyInvoked) {
     return;
+  } else {
+    notificationsInProcessCache.add(notification.id);
+    const hourId = Number(notification.id);
+    try {
+      await persistorLoadedListener(persistor);
+      store.dispatch(scheduledDailyMedicationsRefreshThunk());
+      store.dispatch(confirmConsumptionThunk(hourId));
+      await persistor.flush();
+    } catch {
+      cancelReminder(hourId);
+    } finally {
+      notificationsInProcessCache.delete(notification.id);
+    }
   }
 };
 

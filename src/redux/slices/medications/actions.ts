@@ -4,6 +4,7 @@ import type {AppDispatch, RootState} from 'src/redux/store';
 import {
   getConfirmableMedicationsByHourId,
   getHourIdNow,
+  getConfirmedHourIds,
 } from '../scheduled_medications/selectors';
 
 export type addMedicationAction = {
@@ -85,7 +86,9 @@ export const confirmConsumptionThunk = (hourId: number): any => (
 ) => {
   const state = getState();
   const medications = getConfirmableMedicationsByHourId(state)[hourId];
-  const isUnplanned = hourId > getHourIdNow(state);
+  const isOutOfSchedule = hourId > getHourIdNow(state);
+  const isAlreadyConfirmed = getConfirmedHourIds(state).includes(hourId);
+  const isUnplanned = isOutOfSchedule || isAlreadyConfirmed;
 
   dispatch(confirmConsumption(hourId, medications, isUnplanned));
 };
