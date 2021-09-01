@@ -12,7 +12,7 @@ const Header = () => {
     <View style={common.styles.header}>
       <Text style={typography.styles.h1}>Ваши лекарства</Text>
       <IconButton onPress={showNewMedicationModal}>
-        <Icon name="pills" color={theme.colors.primary} />
+        <Icon name="pills_add" color={theme.colors.primary} />
       </IconButton>
     </View>
   );

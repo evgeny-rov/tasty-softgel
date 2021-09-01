@@ -4,7 +4,6 @@ import {View} from 'react-native';
 import {useAppSelector} from 'src/hooks/reduxHooks';
 import useMedicationModal from 'src/hooks/useMedicationModal';
 import {getIsScheduleInEmptyState} from 'src/redux/slices/scheduled_medications/selectors';
-import FloatingActionButton from '@components/FloatingActionButton';
 import EmptyState from '@components/EmptyState';
 import DailyPlan from './DailyPlan';
 import Header from './Header';
@@ -21,17 +20,19 @@ const HomeScreen = ({switchScreen}: ScreenProps) => {
       <View style={common.styles.screen_container}>
         <Header />
         <DailyPlan />
-        <FloatingActionButton onPress={showNewMedicationModal} />
       </View>
     );
   } else {
     return (
       <EmptyState
         heading={'Здесь совсем пусто...'}
-        message={'Добавьте новые лекарства и назначьте часы приема.'}
+        message={'Ежедневный план появится когда вы добавите лекарства и назначите часы приема.'}
         action={{
           content: 'Добавить лекарство',
-          onPress: showNewMedicationModal,
+          onPress: () => {
+            switchScreen('medications_scheduler');
+            showNewMedicationModal();
+          },
         }}
         secondaryAction={{
           content: 'Назачить часы приема',

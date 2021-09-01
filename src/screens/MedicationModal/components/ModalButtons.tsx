@@ -9,14 +9,12 @@ type Props = {
 };
 
 const ModalButtons = ({disabled, onRemove, onSubmit}: Props) => {
-  const submitButtonColor = disabled
-    ? theme.colors.secondary
-    : theme.colors.primary;
+  const opacity = disabled ? 0.3 : 1;
 
   return (
     <View style={styles.wrapper}>
       <Pressable hitSlop={20} disabled={disabled} onPress={onSubmit}>
-        <Text style={[typography.styles.body_bold, {color: submitButtonColor}]}>
+        <Text style={[typography.styles.body_bold, {opacity}]}>
           Сохранить
         </Text>
       </Pressable>
