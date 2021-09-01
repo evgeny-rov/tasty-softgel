@@ -23,14 +23,12 @@ const hourClockSynchronizer = (
   };
 
   const start = () => {
-    console.log('clock start')
     refreshClock();
     timerId && clearTimeout(timerId);
     tick();
   };
 
   const stop = () => {
-    console.log('clock stop')
     timerId && clearTimeout(timerId);
   };
 

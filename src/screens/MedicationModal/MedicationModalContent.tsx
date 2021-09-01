@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Alert, StyleSheet, Text, TextInput, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -32,6 +32,11 @@ const MedicationModalContent = ({medication, isInEditMode}: Props) => {
 
   const [name, setName] = useState(medication.name);
   const [quantity, setQuantity] = useState(medication.quantity);
+
+  useEffect(() => {
+    setName(medication.name);
+    setQuantity(medication.quantity);
+  }, [medication])
 
   const validNameValue = name.trim();
 

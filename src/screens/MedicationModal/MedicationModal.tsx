@@ -71,7 +71,6 @@ const MedicationModal = () => {
       animation={isNonInitialRender ? getAnimation(isVisible) : undefined}
       style={styles.container}>
       <MedicationModalContent
-        key={medication.id}
         medication={medication}
         isInEditMode={data !== null}
       />

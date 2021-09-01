@@ -40,7 +40,7 @@ const DailyPlanItem = ({hourId}: {hourId: number}) => {
   const containerAnimationProps = shouldSeekAttention
     ? seekerAnimationProps
     : null;
-  const opacity = isInactive ? 0.8 : 1;
+  const opacity = isInactive ? 0.7 : 1;
 
   const confirmAction = useCallback(() => {
     dispatch(confirmConsumptionThunk(hourId));

@@ -36,6 +36,8 @@ const MedicationsListItem = ({id, selectedHourId}: Props) => {
     }
   };
 
+  const opacity = scheduledEntry === undefined ? 0.5 : 1;
+
   return (
     <View style={styles.container}>
       <View style={common.styles.col}>
@@ -45,6 +47,7 @@ const MedicationsListItem = ({id, selectedHourId}: Props) => {
       <Pressable
         android_ripple={theme.configs.ripple_sm}
         hitSlop={15}
+        style={{opacity}}
         onPress={toggleScheduledStatus}>
         <Icon
           name={scheduledEntry !== undefined ? 'bell' : 'bell_outline'}
