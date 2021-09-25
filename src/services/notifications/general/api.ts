@@ -20,6 +20,7 @@ type initApiArguments = {
 const baseParams = {
   allowWhileIdle: true,
   color: theme.colors.accent,
+  bigLargeIcon: 'ic_launcher',
   smallIcon: 'ic_notification',
   priority: 'max',
 } as const;
