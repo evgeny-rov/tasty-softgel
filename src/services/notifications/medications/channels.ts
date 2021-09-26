@@ -3,7 +3,7 @@ export const channelsData = {
   byId: {
     daily_notifications: {
       channelId: 'daily_notifications',
-      channelName: 'Daily Notifications',
+      channelName: 'Ежедневные напоминания',
       vibrate: true,
       importance: 4,
     },

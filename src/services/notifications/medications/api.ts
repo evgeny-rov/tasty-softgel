@@ -28,10 +28,10 @@ const notificationsInProcessCache = new Set();
 
 const dailyReminderBaseParams = {
   channelId: channelsData.byId.daily_notifications.channelId,
+  vibration: 2000,
   title: 'Напоминание о приеме',
   actions: ['Я не забыл'],
   tag: 'reminder',
-  group: 'daily-reminder',
 };
 
 export const scheduleDailyNotification = (
@@ -54,7 +54,6 @@ export const showLowSupplyNotification = (title: string, message: string) => {
   NotificationsAPI.showNotification({
     channelId: channelsData.byId.daily_notifications.channelId,
     tag: 'supply',
-    group: 'supply',
     title,
     message,
   });
