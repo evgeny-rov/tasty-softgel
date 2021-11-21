@@ -18,7 +18,6 @@ const expectedHandlersActionTypes = [
   MEDICATIONS_TYPES.UPDATE_MEDICATION,
   MEDICATIONS_TYPES.REMOVE_MEDICATION,
   MEDICATIONS_TYPES.CONFIRM_CONSUMPTION,
-  MEDICATIONS_TYPES.CONFIRM_CONSUMPTION_UNPLANNED,
   SCHEDULED_TYPES.ADD_SCHEDULED_DAILY_MEDICATION,
   SCHEDULED_TYPES.REMOVE_SCHEDULED_DAILY_MEDICATION,
 ];
@@ -32,8 +31,7 @@ const useHandler = (action: ReturnType<AppDispatch>, state: RootState) => {
       handleMedicationsUpdates(state);
       break;
     }
-    case MEDICATIONS_TYPES.CONFIRM_CONSUMPTION:
-    case MEDICATIONS_TYPES.CONFIRM_CONSUMPTION_UNPLANNED: {
+    case MEDICATIONS_TYPES.CONFIRM_CONSUMPTION: {
       handleConfirmationAction(action.payload, state);
       break;
     }

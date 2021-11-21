@@ -50,7 +50,6 @@ const reducer = (state = initialState, action: Actions): MedicationsState => {
         },
       };
     }
-    case MEDICATIONS_TYPES.CONFIRM_CONSUMPTION_UNPLANNED:
     case MEDICATIONS_TYPES.CONFIRM_CONSUMPTION: {
       const {medications} = action.payload;
       const updatedMedicines = subtractMedicationsQuantites(medications);

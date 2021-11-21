@@ -1,7 +1,7 @@
 import * as NotificationsAPI from '../general/api';
 import {HOURS_AS_TIME_STRING} from '@constants/';
 import groupMedicationsBySupply from '@utils/groupMedicationsBySupply';
-import getAvailableDateFromHour from '@utils/getAvailableDateFromHour';
+import getTimeTillDayEndFromHour from '@utils/getTimeTillDayEndFromHour';
 import {scheduledDailyMedicationsRefreshThunk} from 'src/redux/slices/scheduled_medications/actions';
 import {confirmConsumptionThunk} from 'src/redux/slices/medications/actions';
 import {channelsData} from './channels';
@@ -47,6 +47,7 @@ export const scheduleDailyNotification = (
     invokeApp: false,
     autoCancel: false,
     repeatType: 'day',
+    timeoutAfter: getTimeTillDayEndFromHour(scheduledDate.getHours()),
   });
 };
 
@@ -56,6 +57,9 @@ export const showLowSupplyNotification = (title: string, message: string) => {
     tag: 'supply',
     title,
     message,
+    when: Date.now(),
+    showWhen: true,
+    timeoutAfter: getTimeTillDayEndFromHour(new Date().getHours()),
   });
 };
 
@@ -75,8 +79,7 @@ export const issueLowSupplyNotifications = (medications: Medication[]) => {
     );
 };
 
-export const createReminder = (assignedHour: number) => {
-  const scheduledDate = getAvailableDateFromHour(assignedHour);
+export const createReminder = (scheduledDate: Date) => {
   scheduleDailyNotification(scheduledDate, 'Не забудьте принять лекарства!');
 };
 
