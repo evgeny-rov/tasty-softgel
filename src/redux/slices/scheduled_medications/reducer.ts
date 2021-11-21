@@ -1,4 +1,4 @@
-import {pickBy} from 'lodash';
+import {pickBy, uniq} from 'lodash';
 import * as MEDICATIONS_TYPES from '../medications/actionTypes';
 import * as SCHEDULED_TYPES from './actionTypes';
 
@@ -66,7 +66,7 @@ const reducer = (
       return {
         ...state,
         lastConfirmationAt: timestamp,
-        confirmedHourIds: [...state.confirmedHourIds, hourId],
+        confirmedHourIds: uniq([...state.confirmedHourIds, hourId]),
       };
     }
     case SCHEDULED_TYPES.SCHEDULED_DAILY_MEDICATIONS_REFRESH: {

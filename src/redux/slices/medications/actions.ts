@@ -4,7 +4,6 @@ import type {AppDispatch, RootState} from 'src/redux/store';
 import {
   getConfirmableMedicationsByHourId,
   getHourIdNow,
-  getConfirmedHourIds,
 } from '../scheduled_medications/selectors';
 
 export type addMedicationAction = {
@@ -23,9 +22,7 @@ export type updateMedicationAction = {
 };
 
 export type confirmConsumptionAction = {
-  type:
-    | typeof TYPES.CONFIRM_CONSUMPTION
-    | typeof TYPES.CONFIRM_CONSUMPTION_UNPLANNED;
+  type: typeof TYPES.CONFIRM_CONSUMPTION;
   payload: {
     timestamp: number;
     medications: Medication[];
@@ -63,7 +60,6 @@ export const updateMedication = (
 export const confirmConsumption = (
   hourId: number,
   medications: Medication[],
-  isUnplanned: boolean = false,
 ): confirmConsumptionAction => {
   const timestamp = Date.now();
   const payload = {
@@ -73,9 +69,7 @@ export const confirmConsumption = (
   };
 
   return {
-    type: isUnplanned
-      ? TYPES.CONFIRM_CONSUMPTION_UNPLANNED
-      : TYPES.CONFIRM_CONSUMPTION,
+    type: TYPES.CONFIRM_CONSUMPTION,
     payload,
   };
 };
@@ -86,9 +80,6 @@ export const confirmConsumptionThunk = (hourId: number): any => (
 ) => {
   const state = getState();
   const medications = getConfirmableMedicationsByHourId(state)[hourId];
-  const isOutOfSchedule = hourId > getHourIdNow(state);
-  const isAlreadyConfirmed = getConfirmedHourIds(state).includes(hourId);
-  const isUnplanned = isOutOfSchedule || isAlreadyConfirmed;
 
-  dispatch(confirmConsumption(hourId, medications, isUnplanned));
+  dispatch(confirmConsumption(hourId, medications));
 };

@@ -129,12 +129,15 @@ export const getDailyPlan = createSelector(
     confirmableMedicationsByHourId,
   ) => {
     return mapValues(medicationsSchedule.byHourId, (_, key) => {
-      const hourId = Number(key);
+      const assignedHourId = Number(key);
       const isSuppliesDepleted =
-        confirmableMedicationsByHourId[hourId].length === 0;
-      const isMatchingCurrentHour = hourId === hourIdNow;
-      const isInactive = isSuppliesDepleted || hourId > hourIdNow;
-      const isAlreadyConfirmed = confirmedHourIds.includes(hourId);
+        confirmableMedicationsByHourId[assignedHourId].length === 0;
+      const isMatchingCurrentHour = assignedHourId === hourIdNow;
+      const isAlreadyConfirmed = confirmedHourIds.includes(assignedHourId);
+      const isPendingConfirmation =
+        !isSuppliesDepleted && assignedHourId < hourIdNow;
+
+      const isInactive = !isAlreadyConfirmed && !isPendingConfirmation;
 
       return {
         isSuppliesDepleted,
