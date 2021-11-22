@@ -18,11 +18,9 @@ export const handleMedicationsUpdates = (state: RootState) => {
   const confirmableMedicationsByHour = getConfirmableMedicationsByHourId(state);
 
   for (const hour of HOURS_IN_A_DAY) {
-    const isSupplyDepleted = confirmableMedicationsByHour[hour]?.length === 0;
+    const isHourActive = confirmableMedicationsByHour[hour]?.length > 0;
 
-    if (isSupplyDepleted) {
-      cancelReminder(hour);
-    } else {
+    if (isHourActive) {
       const isConfirmedForToday = getConfirmedHourIds(state).includes(hour);
       const isLateForToday = hour <= state.scheduled_medications.hourIdNow;
 
@@ -31,6 +29,8 @@ export const handleMedicationsUpdates = (state: RootState) => {
       const scheduledDate = getDateFromHour(hour, shouldDelayTillNextDay);
 
       createReminder(scheduledDate);
+    } else {
+      cancelReminder(hour);
     }
   }
 };

@@ -26,21 +26,28 @@ const seekerAnimationProps: Animatable.View['defaultProps'] = {
 const DailyPlanItem = ({hourId}: {hourId: number}) => {
   const dispatch = useAppDispatch();
   const {
-    isAlreadyConfirmed,
-    isInactive,
-    isMatchingCurrentHour,
-    isSuppliesDepleted,
+    isSuspended,
+    isCurrentEvent,
+    isFutureEvent,
+    isConfirmed,
   } = useAppSelector(getDailyPlanEntryByHourId(hourId), shallowEqual);
 
   const innerWrapper = useAnimatable<ViewProps, ViewStyle>();
   const confirmPopUpAnims = useAnimatable<ViewProps, ViewStyle>();
 
-  const shouldSeekAttention =
-    isMatchingCurrentHour && !isAlreadyConfirmed && !isInactive;
-  const containerAnimationProps = shouldSeekAttention
+  const ui = {
+    isGrayedOut: isSuspended || isFutureEvent,
+    hasStatusIndicator: !isSuspended && (!isFutureEvent || isConfirmed),
+    hasConfirmedStatusIndicator: isConfirmed,
+    hasConfirmedStatus: isConfirmed,
+    hasSupplyDepletedStatusText: isSuspended,
+    isSeekingAttention: isCurrentEvent && !isConfirmed && !isSuspended,
+  };
+
+  const containerAnimationProps = ui.isSeekingAttention
     ? seekerAnimationProps
     : null;
-  const opacity = isInactive ? 0.7 : 1;
+  const opacity = ui.isGrayedOut ? 0.7 : 1;
 
   const confirmAction = useCallback(() => {
     dispatch(confirmConsumptionThunk(hourId));
@@ -68,19 +75,19 @@ const DailyPlanItem = ({hourId}: {hourId: number}) => {
         style={styles.inner_wrapper}
         useNativeDriver>
         <StatusIndicator
-          isInactive={isInactive}
-          isAlreadyConfirmed={isAlreadyConfirmed}
+          isVisible={ui.hasStatusIndicator}
+          isActive={ui.hasConfirmedStatusIndicator}
         />
         <Pressable
-          disabled={isSuppliesDepleted}
+          disabled={isSuspended}
           onLongPress={confirmAction}
           android_ripple={{color: theme.colors.accent2}}
           style={styles.main_content}>
           <View style={styles.section}>
             <StatusBar
               hourId={hourId}
-              isAlreadyConfirmed={isAlreadyConfirmed}
-              isSuppliesDepleted={isSuppliesDepleted}
+              isConfirmed={ui.hasConfirmedStatus}
+              isSupplyDepletedTextVisible={ui.hasSupplyDepletedStatusText}
             />
           </View>
           <SizedBox height={10} />

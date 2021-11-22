@@ -132,18 +132,19 @@ export const getDailyPlan = createSelector(
       const assignedHourId = Number(key);
       const isSuppliesDepleted =
         confirmableMedicationsByHourId[assignedHourId].length === 0;
-      const isMatchingCurrentHour = assignedHourId === hourIdNow;
-      const isAlreadyConfirmed = confirmedHourIds.includes(assignedHourId);
-      const isPendingConfirmation =
-        !isSuppliesDepleted && assignedHourId < hourIdNow;
 
-      const isInactive = !isAlreadyConfirmed && !isPendingConfirmation;
+      const isSuspended = isSuppliesDepleted;
+      const isCurrentEvent = assignedHourId === hourIdNow;
+      const isPastEvent = assignedHourId < hourIdNow;
+      const isFutureEvent = assignedHourId > hourIdNow;
+      const isConfirmed = confirmedHourIds.includes(assignedHourId);
 
       return {
-        isSuppliesDepleted,
-        isMatchingCurrentHour,
-        isInactive,
-        isAlreadyConfirmed,
+        isSuspended,
+        isCurrentEvent,
+        isPastEvent,
+        isFutureEvent,
+        isConfirmed,
       };
     });
   },

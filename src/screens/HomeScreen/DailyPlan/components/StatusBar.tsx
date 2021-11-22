@@ -8,26 +8,24 @@ import {theme, typography} from 'src/styles';
 const StatusBar = React.memo(
   ({
     hourId,
-    isAlreadyConfirmed,
-    isSuppliesDepleted,
+    isConfirmed,
+    isSupplyDepletedTextVisible,
   }: {
     hourId: number;
-    isAlreadyConfirmed: boolean;
-    isSuppliesDepleted: boolean;
+    isConfirmed: boolean;
+    isSupplyDepletedTextVisible: boolean;
   }) => {
     return (
       <>
         <Text style={styles.text}>{HOURS_AS_TIME_STRING[hourId]}</Text>
         <SizedBox width={20} />
         <Icon
-          name={isAlreadyConfirmed ? 'done' : 'pills'}
+          name={isConfirmed ? 'done' : 'pills'}
           color={theme.colors.primary}
           size={12}
         />
-        {isSuppliesDepleted && (
-          <Text
-            style={[styles.text, {marginLeft: 20}]}
-            adjustsFontSizeToFit>
+        {isSupplyDepletedTextVisible && (
+          <Text style={[styles.text, {marginLeft: 20}]} adjustsFontSizeToFit>
             Лекарства закончились
           </Text>
         )}

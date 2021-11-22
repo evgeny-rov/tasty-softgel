@@ -3,17 +3,11 @@ import {StyleSheet, View} from 'react-native';
 import {theme} from 'src/styles';
 
 const StatusIndicator = React.memo(
-  ({
-    isInactive,
-    isAlreadyConfirmed,
-  }: {
-    isInactive: boolean;
-    isAlreadyConfirmed: boolean;
-  }) => {
-    const backgroundColor = isAlreadyConfirmed
+  ({isVisible, isActive}: {isVisible: boolean; isActive: boolean}) => {
+    const backgroundColor = isActive
       ? theme.colors.accent2
       : theme.colors.primary;
-    const opacity = isInactive ? 0 : 1;
+    const opacity = isVisible ? 1 : 0;
 
     return (
       <View style={{...styles.status_indicator, backgroundColor, opacity}} />
